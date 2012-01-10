@@ -8,6 +8,7 @@ include_once 'config.inc.php';
 include_once 'classErrorLog.php';
 
 /**
+ * @version 0.3
  * Beschreibung von classSExplorerData
  * Klasse zum Einlesen von csv-Dateien des Sunny-Explorers
  *
@@ -35,6 +36,7 @@ class classSExplorerData {
 		$min = null;
 		//Kopfzeile suchen
 		$this->data = array();
+		$lines = 0;
 		foreach ($inhalt as $zeile) {
 			$zeile = trim($zeile);
 			$data = explode(CSV_DELIMITER, $zeile);
@@ -73,6 +75,7 @@ class classSExplorerData {
 							}
 							$this->data[$datum] = array(self::etag => round(($d1 - $min) * 1000), self::p => $d2 * 1000);
 						}
+						$lines++;
 					} else {
 						$d1 = str_replace(',', '.', trim($data[1]));
 						$this->data[$datum] = array(self::eges => round(($d1 - $min) * 1000), self::etag => $d2 * 1000);
@@ -81,10 +84,12 @@ class classSExplorerData {
 			}
 		}
 		if (count($this->data) == 0) {
-			classErrorLog::LogError(strtotime('Y-m-d H:i:s', time()) . ' - Die Datei ' . $SExplorerFile . ' enthält keine gültigen Daten in ' . __METHOD__);
+			classErrorLog::LogError(date('Y-m-d H:i:s', time()) . ' - Die Datei ' . $SExplorerFile . ' enthält keine gültigen Daten in ' . __METHOD__);
 			$this->data = null;
 		} elseif (count($this->data) < 2) {
-			classErrorLog::LogError(strtotime('Y-m-d H:i:s', time()) . ' - Die Datei ' . $SExplorerFile . ' enthält keine Erträge in ' . __METHOD__);
+			if ($lines == 0) {
+				classErrorLog::LogError(date('Y-m-d H:i:s', time()) . ' - Die Datei ' . $SExplorerFile . ' enthält keine Erträge in ' . __METHOD__);
+			}
 			$this->data = null;
 		} else {
 			$this->sort();
@@ -107,6 +112,7 @@ class classSExplorerData {
 	}
 
 	/**
+	 * @version 0.3
 	 * Hilfsfunktion zum Sortieren des Arrays
 	 * @param type $a
 	 * @param type $b
@@ -131,6 +137,7 @@ class classSExplorerData {
 	}
 
 	/**
+	 * @version 0.3
 	 * erzeugt eine Datei min_day.js
 	 */
 	private function createMin_day() {
@@ -138,25 +145,25 @@ class classSExplorerData {
 		if (file_exists($filename)) {
 			@unlink($filename);
 		}
-		$minYYMMDDFilename=null;
+		$minYYMMDDFilename = null;
 		if (!is_null($this->data)) {
 			$fp = @fopen($filename, 'wb');
 			if ($fp === false) {
-				classErrorLog::LogError(strtotime('Y-m-d H:i:s', time()) . ' - Fehler beim Erzeugen der Datei ' . $filename . ' in ' . __METHOD__);
+				classErrorLog::LogError(date('Y-m-d H:i:s', time()) . ' - Fehler beim Erzeugen der Datei ' . $filename . ' in ' . __METHOD__);
 			} else {
 				foreach ($this->data as $datum => $value) {
 					if ($datum !== self::type) {
-						if(is_null($minYYMMDDFilename)){
-							$minYYMMDDFilename=SLFILE_DATA_PATH.'/min'.substr($datum,6,2).substr($datum,.3,2).substr($datum,0,2).'.js';
+						if (is_null($minYYMMDDFilename)) {
+							$minYYMMDDFilename = SLFILE_DATA_PATH . '/min' . substr($datum, 6, 2) . substr($datum, .3, 2) . substr($datum, 0, 2) . '.js';
 						}
 						if (!fwrite($fp, self::kennung . '"' . $datum . '|' . $value[self::p] . ';' . $value[self::p] . ';' . $value[self::etag] . ';0"' . chr(13))) {
-							classErrorLog::LogError(strtotime('Y-m-d H:i:s', time()) . ' - Fehler beim Schreiben in die Datei ' . $filename . ' in ' . __METHOD__);
+							classErrorLog::LogError(date('Y-m-d H:i:s', time()) . ' - Fehler beim Schreiben in die Datei ' . $filename . ' in ' . __METHOD__);
 						}
 					}
 				}
 				@fclose($fp);
-				if(!@copy($filename,$minYYMMDDFilename)){
-					classErrorLog::LogError(strtotime('Y-m-d H:i:s', time()) . ' - Fehler beim Erzeugen der Datei ' . $minYYMMDDFilename . ' in ' . __METHOD__);
+				if (!@copy($filename, $minYYMMDDFilename)) {
+					classErrorLog::LogError(date('Y-m-d H:i:s', time()) . ' - Fehler beim Erzeugen der Datei ' . $minYYMMDDFilename . ' in ' . __METHOD__);
 				}
 			}
 		}

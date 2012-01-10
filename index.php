@@ -3,9 +3,9 @@
 /*
  * Daten-URL zum Testen http://www.weichel21.de/SunnyExplorer
  * Link zur Anlage Sonnenertrag http://www.sonnenertrag.eu/de/stuttgart/anlage21/17964/17514.html
- *
+ * @version 0.3
  */
-// xdebug_disable();
+//xdebug_disable();
 include_once 'config.inc.php';
 include_once 'classSExplorerData.php';
 include_once 'classErrorLog.php';
@@ -48,6 +48,7 @@ if ($fp = @fopen($filename, 'r')) {
 }
 
 /**
+ * @version 0.3
  * Hilfsfunktion zum Sortieren des Arrays
  * @param type $a
  * @param type $b
@@ -59,6 +60,7 @@ function cmp($a, $b) {
 }
 
 /**
+ * @version 0.3
  * erzeugt die Datei days_hist.js
  *
  * @param array $data
@@ -67,11 +69,11 @@ function createDays_hist($data) {
 	$filename = SLFILE_DATA_PATH . '/days_hist.js';
 	$fp = @fopen($filename, 'wb');
 	if ($fp === false) {
-		classErrorLog::LogError(strtotime('Y-m-d H:i:s', time()) . ' - Fehler beim Öffnen von ' . $filename);
+		classErrorLog::LogError(date('Y-m-d H:i:s', time()) . ' - Fehler beim Öffnen von ' . $filename);
 	} else {
 		foreach ($data as $datum => $value) {
 			if (!fwrite($fp, DaysHistKennung . '"' . $datum . '|' . $value[classSExplorerData::etag] . ';0"' . chr(13))) {
-				classErrorLog::LogError(strtotime('Y-m-d H:i:s', time()) . ' - Fehler beim Schreiben in ' . $filename);
+				classErrorLog::LogError(date('Y-m-d H:i:s', time()) . ' - Fehler beim Schreiben in ' . $filename);
 			}
 		}
 		@fclose($fp);
@@ -87,7 +89,7 @@ function createMonths($data) {
 	$filename = SLFILE_DATA_PATH . '/months.js';
 	$fp = @fopen($filename, 'wb');
 	if ($fp === false) {
-		classErrorLog::LogError(strtotime('Y-m-d H:i:s', time()) . ' - Fehler beim Öffnen von ' . $filename);
+		classErrorLog::LogError(date('Y-m-d H:i:s', time()) . ' - Fehler beim Öffnen von ' . $filename);
 	} else {
 		reset($data);
 		$aktdate = key($data);
@@ -98,7 +100,7 @@ function createMonths($data) {
 				$summe+=$value[classSExplorerData::etag];
 			} else {
 				if (!fwrite($fp, MonthsKennung . '"' . $aktdate . '|' . $summe . '"' . chr(13))) {
-					classErrorLog::LogError(strtotime('Y-m-d H:i:s', time()) . ' - Fehler beim Schreiben in ' . $filename);
+					classErrorLog::LogError(date('Y-m-d H:i:s', time()) . ' - Fehler beim Schreiben in ' . $filename);
 				}
 				$aktdate = $datum;
 				$aktmonth = substr($aktdate, 3);
@@ -107,7 +109,7 @@ function createMonths($data) {
 		}
 		if ($summe > 0) {
 			if (!fwrite($fp, MonthsKennung . '"' . $aktdate . '|' . $summe . '"' . chr(13))) {
-				classErrorLog::LogError(strtotime('Y-m-d H:i:s', time()) . ' - Fehler beim Schreiben in ' . $filename);
+				classErrorLog::LogError(date('Y-m-d H:i:s', time()) . ' - Fehler beim Schreiben in ' . $filename);
 			}
 		}
 		@fclose($fp);

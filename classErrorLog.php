@@ -7,13 +7,13 @@
 include_once 'config.inc.php';
 
 /**
- * Beschreibung von classErrorLog
- *
+ * @version 0.3
  * @author PhotonenSammler <photonensammler@freenet.de>
  */
 class classErrorLog {
 
 	/**
+	 * @version 0.3
 	 * @param string||array $msg
 	 */
 	static function LogError($msg) {
