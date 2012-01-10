@@ -66,7 +66,7 @@ define('CSV_HEAD_MINUTE', 'mm');
  * Pfad und name einer lokalen Datei, in der Fehlermeldungen geloggt werden
  * z.B. C:/Php-Fehlermeldungen/scriptfehler.txt
  */
-define("ERROR_LOG_FILE", "errors\errors.txt");
+define("ERROR_LOG_FILE", "SolarLog/errors.txt");
 
 /*
  * Trennzeichen in den zu konvertierenden csv-dateien
