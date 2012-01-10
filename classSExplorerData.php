@@ -136,8 +136,9 @@ class classSExplorerData {
 	private function createMin_day() {
 		$filename = SLFILE_DATA_PATH . '/' . self::min_day;
 		if (file_exists($filename)) {
-			unlink($filename);
+			@unlink($filename);
 		}
+		$minYYMMDDFilename=null;
 		if (!is_null($this->data)) {
 			$fp = @fopen($filename, 'wb');
 			if ($fp === false) {
@@ -145,12 +146,18 @@ class classSExplorerData {
 			} else {
 				foreach ($this->data as $datum => $value) {
 					if ($datum !== self::type) {
+						if(is_null($minYYMMDDFilename)){
+							$minYYMMDDFilename=SLFILE_DATA_PATH.'/min'.substr($datum,6,2).substr($datum,.3,2).substr($datum,0,2).'.js';
+						}
 						if (!fwrite($fp, self::kennung . '"' . $datum . '|' . $value[self::p] . ';' . $value[self::p] . ';' . $value[self::etag] . ';0"' . chr(13))) {
 							classErrorLog::LogError(strtotime('Y-m-d H:i:s', time()) . ' - Fehler beim Schreiben in die Datei ' . $filename . ' in ' . __METHOD__);
 						}
 					}
 				}
-				fclose($fp);
+				@fclose($fp);
+				if(!@copy($filename,$minYYMMDDFilename)){
+					classErrorLog::LogError(strtotime('Y-m-d H:i:s', time()) . ' - Fehler beim Erzeugen der Datei ' . $minYYMMDDFilename . ' in ' . __METHOD__);
+				}
 			}
 		}
 	}
