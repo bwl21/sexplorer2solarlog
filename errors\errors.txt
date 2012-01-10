@@ -1,0 +1,1 @@
+ - Die Datei ../SunnyExplorer/Anlage1-20120110.csv enthält keine Erträge in classSExplorerData::__construct
