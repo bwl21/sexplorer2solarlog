@@ -154,7 +154,7 @@ class classSExplorerData {
 				foreach ($this->data as $datum => $value) {
 					if ($datum !== self::type) {
 						if (is_null($minYYMMDDFilename)) {
-							$minYYMMDDFilename = SLFILE_DATA_PATH . '/min' . substr($datum, 6, 2) . substr($datum, .3, 2) . substr($datum, 0, 2) . '.js';
+							$minYYMMDDFilename = SLFILE_DATA_PATH . '/min' . substr($datum, 6, 2) . substr($datum, 3, 2) . substr($datum, 0, 2) . '.js';
 						}
 						if (!fwrite($fp, self::kennung . '"' . $datum . '|' . $value[self::p] . ';' . $value[self::p] . ';' . $value[self::etag] . ';0"' . chr(13))) {
 							classErrorLog::LogError(date('Y-m-d H:i:s', time()) . ' - Fehler beim Schreiben in die Datei ' . $filename . ' in ' . __METHOD__);

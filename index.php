@@ -5,7 +5,10 @@
  * Link zur Anlage Sonnenertrag http://www.sonnenertrag.eu/de/stuttgart/anlage21/17964/17514.html
  * @version 0.3
  */
-//xdebug_disable();
+
+if(function_exists('xdebug_disable')){
+	xdebug_disable();
+}
 include_once 'config.inc.php';
 include_once 'classSExplorerData.php';
 include_once 'classErrorLog.php';
