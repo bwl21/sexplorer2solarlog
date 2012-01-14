@@ -21,12 +21,12 @@ array
   'TYPE' => string 'DAILY' (length=5)
   '14.01.12 08:30:00' => //Datum und Zeit
     array  0 =>	//WR-Nummer
-				  array	'ETag' => float 3 //Tagesertrag wr1
-								'P' => float 36 //Leistung wr1
+				  array	'ETag' => integer 3 //Tagesertrag wr1
+								'P' => integer 36 //Leistung wr1
 					1 =>	//WR-Nummer
-					array	'ETag' => float 4 //Tagesertrag wr2
-								'P' => float 25 //Leistung wr2
-	 */
+					array	'ETag' => integer 4 //Tagesertrag wr2
+								'P' => ineteger 25 //Leistung wr2
+*/
 	private $data = array();
 
 	const type='TYPE';
@@ -100,18 +100,25 @@ array
 						}
 					}
 					//Werte für alle WR auslesen und zwischenspeichern - gleich in Wh umrechnen
-					for ($i = 0; $i < CSV_ANZWR; $i++) {
-						if(!isset ($min[$i])){
-							$min[$i]=$data[$spalte1[$i]-1];
+					$d2sum=0;
+					$d1=array();
+					$d2=array();
+					for ($wr = 0; $wr < CSV_ANZWR; $wr++) {
+						if(!isset ($min[$wr])){
+							$min[$wr]=$data[$spalte1[$wr]-1];
 						}
-						$d1=$data[$spalte1[$i]-1];
-						$d2=$data[$spalte2[$i]-1]*1000;
+						$d1[$wr]=$data[$spalte1[$wr]-1];
+						$d2[$wr]=$data[$spalte2[$wr]-1]*1000;
+						$d2sum+=$d2[$wr];
+					}
+					//Werte in $this->data eintragen
+					for ($wr = 0; $wr < CSV_ANZWR; $wr++) {
 						if($this->data[self::type]==self::daily){
-							if($d2>0){
-								$this->data[$datum][$i]=array(self::etag => round(($d1-$min[$i])*1000),self::p => $d2);
+							if($d2sum>0){
+								$this->data[$datum][$wr]=array(self::etag => (int)round(($d1[$wr]-$min[$wr])*1000),self::p => (int)$d2[$wr]);
 							}
 						}else{
-							$this->data[$datum][$i] = array(self::eges => round($d1*1000), self::etag => round($d2));
+							$this->data[$datum][$wr] = array(self::eges => (int)round($d1[$wr]*1000), self::etag => (int)round($d2[$wr]));
 						}
 					}
 					$lines++;

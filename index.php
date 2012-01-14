@@ -17,7 +17,7 @@ define('DaysHistKennung', 'da[dx++]=');
 define('MonthsKennung', 'mo[mx++]=');
 
 //Schauen, ob für den aktuellen Tag schon eine Datei existiert und daraus die Datei min_day.js erzeugen
-$filename = SEXPLORER_DATA_PATH . '/' . CSV_ANLAGEN_NAME .'-'. date('Ymd', time()) . '.csv';
+$filename = SEXPLORER_DATA_PATH . '/' . CSV_ANLAGEN_NAME .'-'. date('Ymd', time()-86400) . '.csv';
 if ($fp = @fopen($filename, 'r')) {
 	@fclose($fp);
 	$sexpl = new classSExplorerData($filename);
