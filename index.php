@@ -3,21 +3,21 @@
 /*
  * Daten-URL zum Testen http://www.weichel21.de/SunnyExplorer
  * Link zur Anlage Sonnenertrag http://www.sonnenertrag.eu/de/stuttgart/anlage21/17964/17514.html
- * @version 0.3
+ * @version 0.4
  */
 
 if(function_exists('xdebug_disable')){
 	xdebug_disable();
 }
-include_once 'config.inc.php';
-include_once 'classSExplorerData.php';
+include_once 'classSExplorerDataNeu.php';
 include_once 'classErrorLog.php';
+include_once 'config.inc.php';
 
 define('DaysHistKennung', 'da[dx++]=');
 define('MonthsKennung', 'mo[mx++]=');
 
 //Schauen, ob für den aktuellen Tag schon eine Datei existiert und daraus die Datei min_day.js erzeugen
-$filename = SEXPLORER_DATA_PATH . '/' . CSV_ANLAGEN_NAME . date('Ymd', time()) . '.csv';
+$filename = SEXPLORER_DATA_PATH . '/' . CSV_ANLAGEN_NAME .'-'. date('Ymd', time()) . '.csv';
 if ($fp = @fopen($filename, 'r')) {
 	@fclose($fp);
 	$sexpl = new classSExplorerData($filename);
