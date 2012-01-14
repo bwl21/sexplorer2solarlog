@@ -9,8 +9,8 @@
 if(function_exists('xdebug_disable')){
 	xdebug_disable();
 }
-include_once 'classSExplorerDataNeu.php';
-include_once 'classErrorLog.php';
+include_once 'Classes/classSExplorerDataNeu.php';
+include_once 'Classes/classErrorLog.php';
 include_once 'config.inc.php';
 
 define('DaysHistKennung', 'da[dx++]=');

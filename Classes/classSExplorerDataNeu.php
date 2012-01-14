@@ -174,7 +174,7 @@ array
 
 	/**
 	 * @version 0.3
-	 * erzeugt eine Datei min_day.js
+	 * erzeugt eine Datei min_day.js und die zugehörige Tagesdatei
 	 */
 	private function createMin_day() {
 		$filename = SLFILE_DATA_PATH . '/' . self::min_day;
