@@ -34,7 +34,7 @@ class classMonths_File {
  */
 	function createMonths() {
 		self::sort();
-		$filename = SLFILE_DATA_PATH . '/months.js';
+		$filename = SLFILE_DATA_PATH . '/'.self::months;
 		$fp = @fopen($filename, 'wb');
 		if ($fp === false) {
 			classErrorLog::LogError(date('Y-m-d H:i:s', time()) . ' - Fehler beim Öffnen von ' . $filename);
@@ -43,13 +43,13 @@ class classMonths_File {
 			$aktdate = key($this->data);
 			$aktmonth = substr($aktdate, 3);
 			$summe = array();
-			for($i=0;$i<CSV_ANZWR;$i++){
-				$summe[$i]=0;
+			for($wr=0;$wr<CSV_ANZWR;$wr++){
+				$summe[$wr]=0;
 			}
 			foreach ($this->data as $datum => $value) {
 				if (substr($datum, 3) == $aktmonth) {
-					for($i=0;$i<CSV_ANZWR;$i++){
-						$summe[$i]+=$value[$i][classSExplorerData::etag];
+					for($wr=0;$wr<CSV_ANZWR;$wr++){
+						$summe[$wr]+=$value[$wr][classSExplorerData::etag];
 					}
 				} else {
 					if (!fwrite($fp,self::getLine($aktdate, $summe))) {
@@ -57,8 +57,8 @@ class classMonths_File {
 					}
 					$aktdate = $datum;
 					$aktmonth = substr($aktdate, 3);
-					for($i=0;$i<CSV_ANZWR;$i++){
-						$summe[$i]=$value[$i][classSExplorerData::etag];
+					for($wr=0;$wr<CSV_ANZWR;$wr++){
+						$summe[$wr]=$value[$wr][classSExplorerData::etag];
 					}
 				}
 			}
@@ -88,7 +88,7 @@ class classMonths_File {
 	}
 
 
-		/**
+	/**
 	 * sortiert self::$data absteigend - neuestes Datum zuerst
 	 */
 	private function sort() {
