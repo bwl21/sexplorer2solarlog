@@ -50,7 +50,7 @@ class classMin_File {
 				$filename = SLFILE_DATA_PATH . '/' . self::min_day;
 			}elseif($fileType==self::fileTypeMinYYMMDD){ //minYYMMDD.js erzeugen
 				//Dateiname der Datei aus dem Datum in den Daten ermitteln
-				$filename = SLFILE_DATA_PATH . '/min' .strrev(str_replace('.','', $aktdate)).'.js';
+				$filename = SLFILE_DATA_PATH . '/min' .substr($aktdate,6,2).substr($aktdate,3,2).substr($aktdate,0,2).'.js';
 			}else{ //ungültiger Dateityp
 				classErrorLog::LogError(date('Y-m-d H:i:s', time()) . ' - Ungültiger Dateityp ' . $filenType . ' übergeben in ' . __METHOD__);
 				return false;
@@ -64,9 +64,9 @@ class classMin_File {
 					if(substr($datum,0,8)==$aktdate){//Datum prüfen
 						$line=self::kennung . '"' . $datum;
 						for($i=0;$i<CSV_ANZWR;$i++){
-							$line.='|' . $value[$i][classSExplorerData::p] . ';' . $value[$i][classSExplorerData::p] . ';' . $value[$i][classSExplorerData::etag] . ';0"';
+							$line.='|' . $value[$i][classSExplorerData::p] . ';' . $value[$i][classSExplorerData::p] . ';' . $value[$i][classSExplorerData::etag] . ';0';
 						}
-						$line.=chr(13);
+						$line.='"'.chr(13);
 						if (!fwrite($fp,$line)) {
 							classErrorLog::LogError(date('Y-m-d H:i:s', time()) . ' - Fehler beim Schreiben in die Datei ' . $filename . ' in ' . __METHOD__);
 							return false;
