@@ -90,7 +90,7 @@ function createSLMonthsFile() {
 
 /**
  * @version 0.5
- * erzeugt die Datei months.js aus allen vorhandenen csv-Monatsdateien
+ * erzeugt die Datei days_hist.js aus allen vorhandenen csv-Monatsdateien
  */
 function createSLDaysHistFile() {
 	//Aus allen csv-Dateien die für jeden Monat gebildet werden, months.js erzeugen
