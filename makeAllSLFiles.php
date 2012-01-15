@@ -13,21 +13,20 @@ include_once 'Classes/classSExplorerDataNeu.php';
 include_once 'Classes/classErrorLog.php';
 include_once 'Classes/classMin_File.php';
 include_once 'Classes/classMonths_File.php';
+include_once 'Classes/classDaysHist.php';
 include_once 'config.inc.php';
 
-define('DaysHistKennung', 'da[dx++]=');
-
 // die minxxxx SL-Dateien aus einer Tagesdatei von SExpl erzeugen
-$startDate=START_DATUM;
-$aktDate=date('Y-m-d',time());
-while($startDate<$aktDate){
-	$fileDate=str_replace('-', '', $startDate);
-	$filename = SEXPLORER_DATA_PATH . '/' . CSV_ANLAGEN_NAME . '-' . $fileDate . '.csv';
-	createSLMinFiles($filename);
-	$startDate=date('Y-m-d',strtotime($startDate)+86400);
-}
-createSLMonthsFile();
-
+//$startDate=START_DATUM;
+//$aktDate=date('Y-m-d',time());
+//while($startDate<$aktDate){
+//	$fileDate=str_replace('-', '', $startDate);
+//	$filename = SEXPLORER_DATA_PATH . '/' . CSV_ANLAGEN_NAME . '-' . $fileDate . '.csv';
+//	createSLMinFiles($filename);
+//	$startDate=date('Y-m-d',strtotime($startDate)+86400);
+//}
+//createSLMonthsFile();
+createSLDaysHistFile();
 
 
 /**
@@ -85,27 +84,40 @@ function createSLMonthsFile() {
 	}
 	$months = new classMonths_File($data);
 	$months->createMonths();
+	unset($months,$data);
 }
 
+
 /**
- * @version 0.3
- * erzeugt die Datei days_hist.js
- *
- * @param array $data
+ * @version 0.5
+ * erzeugt die Datei months.js aus allen vorhandenen csv-Monatsdateien
  */
-function createDays_hist($data) {
-	$filename = SLFILE_DATA_PATH . '/days_hist.js';
-	$fp = @fopen($filename, 'wb');
-	if ($fp === false) {
-		classErrorLog::LogError(date('Y-m-d H:i:s', time()) . ' - Fehler beim Öffnen von ' . $filename);
-	} else {
-		foreach ($data as $datum => $value) {
-			if (!fwrite($fp, DaysHistKennung . '"' . $datum . '|' . $value[classSExplorerData::etag] . ';0"' . chr(13))) {
-				classErrorLog::LogError(date('Y-m-d H:i:s', time()) . ' - Fehler beim Schreiben in ' . $filename);
+function createSLDaysHistFile() {
+	//Aus allen csv-Dateien die für jeden Monat gebildet werden, months.js erzeugen
+	$aktdate = START_DATUM;
+	$enddate = date('Y-m-d', strtotime('+1 month', time()));
+	$data = array();
+	while ($aktdate < $enddate) {
+		$filename = SEXPLORER_DATA_PATH . '/' . CSV_ANLAGEN_NAME . '-' . substr($aktdate, 0, 4) . substr($aktdate, 5, 2) . '.csv';
+		if ($fp = @fopen($filename, 'r')) {
+			@fclose($fp);
+			$sexpl = new classSExplorerData($filename);
+			$d = $sexpl->getData();
+			if ($d[classSExplorerData::type] == classSExplorerData::monthly) {
+				unset($d[classSExplorerData::type]);
+				foreach ($d as $key => $value) {
+					if ($key != classSExplorerData::type) {
+						$data[$key] = $value;
+					}
+				}
 			}
+			unset($d, $sexpl);
 		}
-		@fclose($fp);
+		$aktdate = date('Y-m-d', strtotime('+1 month', strtotime($aktdate)));
 	}
+	$daysHist = new classDaysHist($data);
+	$daysHist->createDays_hist();
+	unset($daysHist,$data);
 }
 
 ?>
