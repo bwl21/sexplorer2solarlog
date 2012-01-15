@@ -9,7 +9,7 @@
 if (function_exists('xdebug_disable')) {
 	xdebug_disable();
 }
-include_once 'Classes/classSExplorerDataNeu.php';
+include_once 'Classes/classSExplorerData.php';
 include_once 'Classes/classErrorLog.php';
 include_once 'Classes/classMin_File.php';
 include_once 'Classes/classMonths_File.php';

@@ -9,7 +9,7 @@
 
 include_once 'config.inc.php';
 include_once 'Classes/classErrorLog.php';
-include_once 'Classes/classSExplorerDataNeu.php';
+include_once 'Classes/classSExplorerData.php';
 
 class classMin_File {
 
