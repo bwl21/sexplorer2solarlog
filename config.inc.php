@@ -20,21 +20,26 @@
  * Ansonsten werden alle Fehlermeldungen in der Error-Datei geloggt
  */
 
+/*
+ * ###########################################################################
+ * ab hier ist die Konfiguration an die Anlage anzupassen
+ * ###########################################################################
+ */
 
 /*
- * Startdatum in der Form yyyy-mm-dd, zu dem die erste csv-Datei mit Erträgen vorliegt
+ * Startdatum in der Form yyyy-mm-dd, zu dem die erste Tages-csv-Datei mit Erträgen vorliegt
  */
 define('START_DATUM', '2011-11-24');
 
 /*
- * Name der Anlage zur Bildung des Dateinamens
+ * Name der Anlage zur Bildung des csv-Dateinamens
  */
 define('CSV_ANLAGEN_NAME', 'Test');
 
 /*
  * Pfad zu den SunnyExplorer-Dateien:
  * lokales Verzeichnis oder URL ohne abschließenden Slash oder Backslash
- * z.B. C:/daten/SunnyExplorer
+ * z.B. C:/daten/SunnyExplorer oder http://www.weichel21.de/SunnyExplorer
  */
 define("SEXPLORER_DATA_PATH", "Test/ZweiWR/SunnyExplorer");
 
@@ -43,6 +48,39 @@ define("SEXPLORER_DATA_PATH", "Test/ZweiWR/SunnyExplorer");
  * z.B. C:/SolarLog
  */
 define('SLFILE_DATA_PATH', 'Test/ZweiWr/SolarLog');
+
+/*
+ * Pfad und name einer lokalen Datei, in der Fehlermeldungen geloggt werden
+ * z.B. C:/Php-Fehlermeldungen/scriptfehler.txt
+ */
+define("ERROR_LOG_FILE", "errors\errors.txt");
+
+/*
+ * Anzahl von Wechselrichtern, deren Daten in den csv-Dateien gespeichert sind
+ */
+define('CSV_ANZWR', 2);
+
+/*
+ * Eintrag muss an die aktuelle csv-Datei - Abhängig von der Anzahl WR angepasst werden
+ * Kopfzeile in der täglich angelegten csv-Datei ab der die Daten beginnen
+ * diese Definition wird nur benötigt, weil ich nicht weiß, ob international
+ * vielleicht z.B. yy/M/D H:mm verwendet wird
+ */
+define('CSV_HEAD_LINE_DAILY', 'dd.MM.yyyy HH:mm:ss;kWh;kW;kWh;kW');
+
+/*
+ * Eintrag muss an die aktuelle csv-Datei - Abhängig von der Anzahl WR angepasst werden
+ * Kopfzeile in der monatlich angelegten csv-Datei ab der die Daten beginnen
+ * diese Definition wird nur benötigt, weil ich nicht weiß, ob international
+ * vielleicht z.B. yy/M/D verwendet wird
+ */
+define('CSV_HEAD_LINE_MONTHLY', 'dd.MM.yyyy;kWh;kWh;kWh;kWh');
+
+/*
+ * ###########################################################################
+ * ab hier sind nur in Ausnahmefällen Änderungen der Eintragungen erforderlich
+ * ###########################################################################
+ */
 
 /*
  * Trennzeichen zwischen den einzelnen Werten in den csv-dateien
@@ -55,55 +93,40 @@ define('CSV_DELIMITER', ';');
 define('CSV_DECIMALPOINT', ',');
 
 /*
- * Anzahl von Wechselrichtern, deren Daten in den csv-Dateien gespeichert sind
- */
-define('CSV_ANZWR', 2);
-
-/*
+ * Eintrag muss nur bei mehr als 4 WR oder Änderung des csv-Datenformats geändert/ergänzt werden
  * Spalte, in der in der Tagesdatei der Gesamtertrag steht
  * Die Spaltenzählung beginnt bei 1 mit der Spalte Datum
  * für 2 WR könnte der Eintrag folgendermaßen aussehen
  * define('CSV_DAILY_YIELDSUM_COLUMN','2,4'));
  */
-define('CSV_DAILY_YIELDSUM_COLUMN', '2,4');
+define('CSV_DAILY_YIELDSUM_COLUMN', '2,4,6,8');
 
 /*
- * Spalte, in der in der Tagesdatei die Leistung steht
- * Die Spaltenzählung beginnt bei 1 mit der Spalte Datum
- * für 2 WR könnte der Eintrag folgendermaßen aussehen
- * define('CSV_DAILY_POWER_COLUMN','3,5');
- */
-define('CSV_DAILY_POWER_COLUMN', '3,5');
-
-/*
- * Spalte, in der in der Monatsdatei der Gesamtertrag steht
- * Die Spaltenzählung beginnt bei 1 mit der Spalte Datum
- * für 2 WR könnte der Eintrag folgendermaßen aussehen
- * define('CSV_MONTHLY_MONTHSUM_COLUMN','2,4');
- */
-define('CSV_MONTHLY_MONTHSUM_COLUMN', '2,4');
-
-/*
+ * Eintrag muss nur bei mehr als 4 WR oder Änderung des csv-Datenformats geändert/ergänzt werden
  * Spalte, in der in der Monatsdatei der Tagesertrag steht
  * Die Spaltenzählung beginnt bei 1 mit der Spalte Datum
  * für 2 WR könnte der Eintrag folgendermaßen aussehen
  * define('CSV_MONTHLY_DAYSUM_COLUMN','3,5');
  */
-define('CSV_MONTHLY_DAYSUM_COLUMN', '3,5');
+define('CSV_MONTHLY_DAYSUM_COLUMN', '3,5,7,9');
 
 /*
- * Kopfzeile in der täglich angelegten csv-Datei ab der die Daten beginnen
- * diese Definition wird nur benötigt, weil ich nicht weiß, ob international
- * vielleicht z.B. yy/M/D H:mm verwendet wird
+ * Eintrag muss nur bei mehr als 4 WR oder Änderung des csv-Datenformats geändert/ergänzt werden
+ * Spalte, in der in der Tagesdatei die Leistung steht
+ * Die Spaltenzählung beginnt bei 1 mit der Spalte Datum
+ * für 2 WR könnte der Eintrag folgendermaßen aussehen
+ * define('CSV_DAILY_POWER_COLUMN','3,5');
  */
-define('CSV_HEAD_LINE_DAILY', 'dd.MM.yyyy HH:mm:ss;kWh;kW;kWh;kW');
+define('CSV_DAILY_POWER_COLUMN', '3,5,7,9');
 
 /*
- * Kopfzeile in der monatlich angelegten csv-Datei ab der die Daten beginnen
- * diese Definition wird nur benötigt, weil ich nicht weiß, ob international
- * vielleicht z.B. yy/M/D verwendet wird
+ * Eintrag muss nur bei mehr als 4 WR oder Änderung des csv-Datenformats geändert/ergänzt werden
+ * Spalte, in der in der Monatsdatei der Gesamtertrag steht
+ * Die Spaltenzählung beginnt bei 1 mit der Spalte Datum
+ * für 2 WR könnte der Eintrag folgendermaßen aussehen
+ * define('CSV_MONTHLY_MONTHSUM_COLUMN','2,4');
  */
-define('CSV_HEAD_LINE_MONTHLY', 'dd.MM.yyyy;kWh;kWh;kWh;kWh');
+define('CSV_MONTHLY_MONTHSUM_COLUMN', '2,4,6,8');
 
 /*
  * Formate von Tag,Monat,Jahr,Stunde und Minute in den Kopfzeilen
@@ -118,11 +141,6 @@ define('CSV_HEAD_YEAR', 'yyyy'); //Bezeichnug füe Jahr
 define('CSV_HEAD_HOUR', 'HH'); //Bezeichnung für Stunde
 define('CSV_HEAD_MINUTE', 'mm'); //Bezeichnung für Minute
 
-/*
- * Pfad und name einer lokalen Datei, in der Fehlermeldungen geloggt werden
- * z.B. C:/Php-Fehlermeldungen/scriptfehler.txt
- */
-define("ERROR_LOG_FILE", "errors\errors.txt");
 ?>
 
 
