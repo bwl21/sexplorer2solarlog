@@ -11,18 +11,18 @@ if(function_exists('xdebug_disable')){
 }
 include_once 'Classes/classSExplorerDataNeu.php';
 include_once 'Classes/classErrorLog.php';
+include_once 'Classes/classMin_File.php';
 include_once 'config.inc.php';
 
 define('DaysHistKennung', 'da[dx++]=');
 define('MonthsKennung', 'mo[mx++]=');
 
-//Schauen, ob für den aktuellen Tag schon eine Datei existiert und daraus die Datei min_day.js erzeugen
-$filename = SEXPLORER_DATA_PATH . '/' . CSV_ANLAGEN_NAME .'-'. date('Ymd', time()-86400) . '.csv';
-if ($fp = @fopen($filename, 'r')) {
-	@fclose($fp);
-	$sexpl = new classSExplorerData($filename);
-	unset($sexpl);
-	//Aus den csv-Dateien die für jeden Monat gebildet werden, months.js und days_hist.js erzeugen
+// die minxxxx SL-Dateien aus einer Tagesdatei von SExpl erzeugen
+$filename = SEXPLORER_DATA_PATH . '/' . CSV_ANLAGEN_NAME .'-'. date('Ymd', time()) . '.csv';
+createSLMinFiles($filename);
+
+
+//Aus den csv-Dateien die für jeden Monat gebildet werden, months.js und days_hist.js erzeugen
 	$aktdate = START_DATUM;
 	$enddate = date('Y-m-d', strtotime('+1 month', time()));
 	$data = array();
@@ -48,6 +48,30 @@ if ($fp = @fopen($filename, 'r')) {
 		createMonths($data);
 		unset($data);
 	}
+
+
+/**
+ * öffnet eine csv-Datei von SunnyExplorer mit Tagesdaten und erzeugt daraus die zugehörigen
+ * Solarlog-Dateien mit Tagesdaten
+ * Bei Erfolg gibt die Funktion True zurück
+ *
+ * @param string $filename
+ * @return boolean
+ */
+function createSLMinFiles($SExplCSVfilename){
+	$ret=false;
+	if ($fp = @fopen($filename, 'r')) {
+		@fclose($fp);
+		$sexpl = new classSExplorerData($filename);
+		$data=$sexpl->getData();
+		$min_file=new classMin_File($data);
+		$ret=$min_file->createMin_day();
+		if($ret){
+			$ret=$min_file->createMinYYMMDD();
+		}
+		unset($min_file,$sexpl);
+	}
+	return $ret;
 }
 
 /**

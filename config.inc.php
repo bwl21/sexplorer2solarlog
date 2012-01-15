@@ -17,6 +17,7 @@
  * 2 -> In die Datei zum Logging der Fehlermeldungen kann nicht geschrieben werden
  * 3 -> Fehler im konstruktor (siehe in Error-Logdatei)
  * 4 -> Fehler im konstruktor (siehe in Error-Logdatei)
+ * 5 -> Fehler im konstruktor (siehe in Error-Logdatei)
  * Ansonsten werden alle Fehlermeldungen in der Error-Datei geloggt
  */
 
