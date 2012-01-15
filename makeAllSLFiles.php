@@ -17,15 +17,15 @@ include_once 'Classes/classDaysHist.php';
 include_once 'config.inc.php';
 
 // die minxxxx SL-Dateien aus einer Tagesdatei von SExpl erzeugen
-//$startDate=START_DATUM;
-//$aktDate=date('Y-m-d',time());
-//while($startDate<$aktDate){
-//	$fileDate=str_replace('-', '', $startDate);
-//	$filename = SEXPLORER_DATA_PATH . '/' . CSV_ANLAGEN_NAME . '-' . $fileDate . '.csv';
-//	createSLMinFiles($filename);
-//	$startDate=date('Y-m-d',strtotime($startDate)+86400);
-//}
-//createSLMonthsFile();
+$startDate=START_DATUM;
+$aktDate=date('Y-m-d',time());
+while($startDate<$aktDate){
+	$fileDate=str_replace('-', '', $startDate);
+	$filename = SEXPLORER_DATA_PATH . '/' . CSV_ANLAGEN_NAME . '-' . $fileDate . '.csv';
+	createSLMinFiles($filename);
+	$startDate=date('Y-m-d',strtotime($startDate)+86400);
+}
+createSLMonthsFile();
 createSLDaysHistFile();
 
 
