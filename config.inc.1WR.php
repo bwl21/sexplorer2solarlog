@@ -24,25 +24,25 @@
 /*
  * Startdatum in der Form yyyy-mm-dd, zu dem die erste csv-Datei mit Erträgen vorliegt
  */
-define('START_DATUM', '2011-11-24');
+define('START_DATUM', '2011-12-01');
 
 /*
  * Name der Anlage zur Bildung des Dateinamens
  */
-define('CSV_ANLAGEN_NAME', 'Test');
+define('CSV_ANLAGEN_NAME', 'Anlage1');
 
 /*
  * Pfad zu den SunnyExplorer-Dateien:
  * lokales Verzeichnis oder URL ohne abschließenden Slash oder Backslash
  * z.B. C:/daten/SunnyExplorer
  */
-define("SEXPLORER_DATA_PATH", "Test/ZweiWR/SunnyExplorer");
+define("SEXPLORER_DATA_PATH", "http://www.weichel21.de/SunnyExplorer");
 
 /*
  * Pfad, in dem die Solarlog-Dateien abgelegt werden ohne abschließenden Slash oder Backslash
  * z.B. C:/SolarLog
  */
-define('SLFILE_DATA_PATH', 'Test/ZweiWr/SolarLog');
+define('SLFILE_DATA_PATH', 'SLFiles');
 
 /*
  * Trennzeichen zwischen den einzelnen Werten in den csv-dateien
@@ -57,7 +57,7 @@ define('CSV_DECIMALPOINT', ',');
 /*
  * Anzahl von Wechselrichtern, deren Daten in den csv-Dateien gespeichert sind
  */
-define('CSV_ANZWR', 2);
+define('CSV_ANZWR', 1);
 
 /*
  * Spalte, in der in der Tagesdatei der Gesamtertrag steht
@@ -65,7 +65,7 @@ define('CSV_ANZWR', 2);
  * für 2 WR könnte der Eintrag folgendermaßen aussehen
  * define('CSV_DAILY_YIELDSUM_COLUMN','2,4'));
  */
-define('CSV_DAILY_YIELDSUM_COLUMN', '2,4');
+define('CSV_DAILY_YIELDSUM_COLUMN', '2');
 
 /*
  * Spalte, in der in der Tagesdatei die Leistung steht
@@ -73,7 +73,7 @@ define('CSV_DAILY_YIELDSUM_COLUMN', '2,4');
  * für 2 WR könnte der Eintrag folgendermaßen aussehen
  * define('CSV_DAILY_POWER_COLUMN','3,5');
  */
-define('CSV_DAILY_POWER_COLUMN', '3,5');
+define('CSV_DAILY_POWER_COLUMN', '3');
 
 /*
  * Spalte, in der in der Monatsdatei der Gesamtertrag steht
@@ -81,7 +81,7 @@ define('CSV_DAILY_POWER_COLUMN', '3,5');
  * für 2 WR könnte der Eintrag folgendermaßen aussehen
  * define('CSV_MONTHLY_MONTHSUM_COLUMN','2,4');
  */
-define('CSV_MONTHLY_MONTHSUM_COLUMN', '2,4');
+define('CSV_MONTHLY_MONTHSUM_COLUMN', '2');
 
 /*
  * Spalte, in der in der Monatsdatei der Tagesertrag steht
@@ -89,21 +89,21 @@ define('CSV_MONTHLY_MONTHSUM_COLUMN', '2,4');
  * für 2 WR könnte der Eintrag folgendermaßen aussehen
  * define('CSV_MONTHLY_DAYSUM_COLUMN','3,5');
  */
-define('CSV_MONTHLY_DAYSUM_COLUMN', '3,5');
+define('CSV_MONTHLY_DAYSUM_COLUMN', '3');
 
 /*
  * Kopfzeile in der täglich angelegten csv-Datei ab der die Daten beginnen
  * diese Definition wird nur benötigt, weil ich nicht weiß, ob international
  * vielleicht z.B. yy/M/D H:mm verwendet wird
  */
-define('CSV_HEAD_LINE_DAILY', 'dd.MM.yyyy HH:mm:ss;kWh;kW;kWh;kW');
+define('CSV_HEAD_LINE_DAILY', 'dd.MM.yyyy HH:mm;kWh;kW');
 
 /*
  * Kopfzeile in der monatlich angelegten csv-Datei ab der die Daten beginnen
  * diese Definition wird nur benötigt, weil ich nicht weiß, ob international
  * vielleicht z.B. yy/M/D verwendet wird
  */
-define('CSV_HEAD_LINE_MONTHLY', 'dd.MM.yyyy;kWh;kWh;kWh;kWh');
+define('CSV_HEAD_LINE_MONTHLY', 'dd.MM.yyyy;kWh;kWh');
 
 /*
  * Formate von Tag,Monat,Jahr,Stunde und Minute in den Kopfzeilen

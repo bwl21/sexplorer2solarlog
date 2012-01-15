@@ -1,9 +1,9 @@
 <?php
 
 /*
- * Daten-URL zum Testen http://www.weichel21.de/SunnyExplorer
- * Link zur Anlage Sonnenertrag http://www.sonnenertrag.eu/de/stuttgart/anlage21/17964/17514.html
- * @version 0.4
+ * erzeugt alle Solarlog-Dateien ausgehned vom in der config.inc.php eingetragenen Startdatum
+ *
+ *  @version 0.1
  */
 
 if (function_exists('xdebug_disable')) {
@@ -13,15 +13,22 @@ include_once 'Classes/classSExplorerDataNeu.php';
 include_once 'Classes/classErrorLog.php';
 include_once 'Classes/classMin_File.php';
 include_once 'Classes/classMonths_File.php';
-;
 include_once 'config.inc.php';
 
 define('DaysHistKennung', 'da[dx++]=');
 
 // die minxxxx SL-Dateien aus einer Tagesdatei von SExpl erzeugen
-$filename = SEXPLORER_DATA_PATH . '/' . CSV_ANLAGEN_NAME . '-' . date('Ymd', time()) . '.csv';
-createSLMinFiles($filename);
+$startDate=START_DATUM;
+$aktDate=date('Y-m-d',time());
+while($startDate<$aktDate){
+	$fileDate=str_replace('-', '', $startDate);
+	$filename = SEXPLORER_DATA_PATH . '/' . CSV_ANLAGEN_NAME . '-' . $fileDate . '.csv';
+	createSLMinFiles($filename);
+	$startDate=date('Y-m-d',strtotime($startDate)+86400);
+}
 createSLMonthsFile();
+
+
 
 /**
  * öffnet eine csv-Datei von SunnyExplorer mit Tagesdaten und erzeugt daraus die zugehörigen
