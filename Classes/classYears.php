@@ -13,7 +13,7 @@ class classYears extends classSLDataFile{
 	const kennung='ye[yx++]';
 
 	function __construct() {
-		parent::__construct(SLFILE_DATA_PATH.'/'.self::years,self::kennung);
+		parent::__construct(realpath(SLFILE_DATA_PATH).'/'.self::years,self::kennung);
 	}
 
 }

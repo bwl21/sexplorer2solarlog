@@ -15,7 +15,7 @@ class classMonths extends classSLDataFile{
 	const kennung='mo[mx++]';
 
 	function __construct() {
-		parent::__construct(SLFILE_DATA_PATH.'/'.self::months.js,self::kennung);
+		parent::__construct(realpath(SLFILE_DATA_PATH).'/'.self::months.js,self::kennung);
 	}
 
 

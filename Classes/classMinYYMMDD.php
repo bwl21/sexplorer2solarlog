@@ -32,7 +32,7 @@ class classMinYYMMDD extends classSLDataFile{
 		}else{ //ungültiges Format
 			trigger_error('Ungültiges Datumsformat '.$datum.' wurde übergeben');
 		}
-		parent::__construct(SLFILE_DATA_PATH.'/min'.$filename.'.js',self::kennung);
+		parent::__construct(realpath(SLFILE_DATA_PATH).'/min'.$filename.'.js',self::kennung);
 	}
 
 

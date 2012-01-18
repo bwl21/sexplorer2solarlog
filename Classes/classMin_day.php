@@ -12,23 +12,23 @@ include_once 'config.inc.php';
 class classMin_day extends classSLDataFile{
 
 	private $isNewDay=false;//True wenn ein neuer Tag
-	
+
 	const min_day='min_day.js'; //Dateiname der min_day.js
 	const kennung='m[mi++]';
 
 	function __construct() {
-		parent::__construct(SLFILE_DATA_PATH.'/'.self::min_day,self::kennung);
+		parent::__construct(realpath(SLFILE_DATA_PATH).'/'.self::min_day,self::kennung);
 	}
 
 	/**
 	 * gibt True zurück wenn ein neuer Tag verarbeitet wurde
-	 *  
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	public function isNewDay(){
-		return $this->isNewDay();
+		return $this->isNewDay;
 	}
-	
+
 	/**
 	 * prüft die Aktualität der min_day.js und erzeugt bei Bedarf auch die min YYMMDD.js
 	 */
@@ -36,7 +36,7 @@ class classMin_day extends classSLDataFile{
 		$NewestDatum=self::getNewestDatum();
 		if($NewestDatum===false){ //Datei existiert nicht, erzeugen
 			self::setWrAnz(CSV_ANZWR);//Anzahl WR setzen
-		}	
+		}
 		//Dateinamen der csv-Datei für aktuelles Datum ermitteln und Datei öffnen
 		$SexplorerData=new classSExplorerData(SEXPLORER_DATA_PATH.'/'.CSV_ANLAGEN_NAME.'-'.date('Ymd',time()).'.csv');
 		$SExplorerNewestDatum=$SexplorerData->getNewestDatum();
@@ -46,7 +46,7 @@ class classMin_day extends classSLDataFile{
 			}else{
 				//Wenn das neueste Datum im min-File älter als das Datum der csv-Datei ist -> neuer Tag
 				//die Datei minYYMMDD mit den Daten aus der alten min-Datei erzeugen
-				//Dadurch wird gewährleistet, dass die Datei vom Vortag erst am nächsten Morgen bei 
+				//Dadurch wird gewährleistet, dass die Datei vom Vortag erst am nächsten Morgen bei
 				//Inbetriebnahmeder WR erzeugt wird
 				if($this->isNewDay=(substr($NewestDatum,0,8)!=substr($SExplorerNewestDatum,0,8))){//Datei Vortag erzeugen
 					$min=new classMinYYMMDD(substr($NewestDatum,0,8));
@@ -55,7 +55,7 @@ class classMin_day extends classSLDataFile{
 					self::setData(null);
 					$NewestDatum=$SexplorerData->getOldestDatum();
 				}
-			}	
+			}
 			if($NewestDatum!=$SExplorerNewestDatum){ //Neue Daten vorhanden
 				$SexplorerData->setPointerToDatum($NewestDatum);
 				$wrAnz=self::getWrAnz();
@@ -73,14 +73,14 @@ class classMin_day extends classSLDataFile{
 					$werte=$SexplorerData->getPrevValues();
 				}
 				unset($werte);
-			}	
+			}
 		}
 		unset($SexplorerData);
 	}
 
-	
-	
-	
+
+
+
 }
 
 ?>

@@ -13,7 +13,7 @@ class classDaysHist extends classSLDataFile{
 	const kennung='da[dx++]';
 
 	function __construct() {
-		parent::__construct(SLFILE_DATA_PATH.'/'.self::days_hist,self::kennung);
+		parent::__construct(realpath(SLFILE_DATA_PATH).'/'.self::days_hist,self::kennung);
 	}
 
 
