@@ -36,6 +36,7 @@ class classMin_day extends classSLDataFile{
 		$NewestDatum=self::getNewestDatum();
 		if($NewestDatum===false){ //Datei existiert nicht, erzeugen
 			self::setWrAnz(CSV_ANZWR);//Anzahl WR setzen
+			$this->isNewDay=true;
 		}
 		//Dateinamen der csv-Datei für aktuelles Datum ermitteln und Datei öffnen
 		$SexplorerData=new classSExplorerData(SEXPLORER_DATA_PATH.'/'.CSV_ANLAGEN_NAME.'-'.date('Ymd',time()).'.csv');

@@ -221,7 +221,7 @@ class classSLDataFile {
 								}
 							}
 						}else{
-							$line.=$wrdata.';';
+							$line.=$wrdata;
 						}
 					}
 					$line.='"' . chr(13);
