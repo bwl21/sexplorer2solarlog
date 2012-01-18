@@ -16,7 +16,9 @@ class classDaysHist extends classSLDataFile{
 		parent::__construct(realpath(SLFILE_DATA_PATH).'/'.self::days_hist,self::kennung);
 	}
 
-
+/**
+ * erzeugt/ergänzt die Datei days_hist.js
+ */
 	public function check(){
 		$NewestDatum=self::getNewestDatum();
 		if($NewestDatum===false){ //Datei existiert nicht, erzeugen
@@ -24,13 +26,13 @@ class classDaysHist extends classSLDataFile{
 		}
 		//Dateinamen der csv-Datei für den Vortag ermitteln und Datei öffnen
 		$SexplorerData=new classSExplorerData(SEXPLORER_DATA_PATH.'/'.CSV_ANLAGEN_NAME.'-'.date('Ym',time()-86400).'.csv');
-		$SExplorerNewestDatum=$SexplorerData->getNewestDatum();
+		$SExplorerNewestDatum=$SexplorerData->getNewestDate();
 		if($SExplorerNewestDatum!==false){ //Es sind Daten vorhanden
 			if($NewestDatum===false){
-				$NewestDatum=$SexplorerData->getOldestDatum();
+				$NewestDatum=$SexplorerData->getOldestDate();
 			}
 			if($NewestDatum!=$SExplorerNewestDatum){ //Neue Daten vorhanden
-				$SexplorerData->setPointerToDatum($NewestDatum);
+				$SexplorerData->setPointerToDate($NewestDatum);
 				$wrAnz=self::getWrAnz();
 				$werte=$SexplorerData->getCurrentValues();
 				while($werte!==false){

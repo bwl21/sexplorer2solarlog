@@ -84,6 +84,18 @@ class classSLDataFile {
 		return false;
 	}
 
+
+	/**
+	 * löscht den zum Datum gehörenden Eintrag aus den Daten
+	 *
+	 * @param string $forDate
+	 */
+	public function DeleteValue($forDate){
+		if(key_exists($forDate, $this->data)){
+			unset($this->data[$forDate]);
+		}
+	}
+
 	/**
 	 * gibt das Array mit den Daten zurück
 	 * @return array
@@ -93,7 +105,7 @@ class classSLDataFile {
 	}
 
 	/**
-	 * setzt das Array mit den Daten 
+	 * setzt das Array mit den Daten
 	 * @param array
 	 */
 	public function setData($data) {
@@ -103,7 +115,7 @@ class classSLDataFile {
 	/**
 	 *
 	 * @param string $datum
-	 * @param array $werte 
+	 * @param array $werte
 	 */
 	public function addData($datum, $werte) {
 		$this->data[$datum] = $werte;
@@ -156,8 +168,8 @@ class classSLDataFile {
 
 	/**
 	 * prüft, ob Daten geändert wurden; sowohl Reihenfolge als auch InHalt der Daten im Array
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	private function isChanged() {
 		return md5(serialize($this->data)) != $this->Hash;
@@ -200,12 +212,16 @@ class classSLDataFile {
 					foreach ($data as $wrdata) {
 						$line.='|';
 						$count = 0;
-						foreach ($wrdata as $d) {
-							$line.=$d;
-							$count++;
-							if ($count < count($wrdata)) {
-								$line.=';';
+						if(is_array($wrdata)){
+							foreach ($wrdata as $d) {
+								$line.=$d;
+								$count++;
+								if ($count < count($wrdata)) {
+									$line.=';';
+								}
 							}
+						}else{
+							$line.=$wrdata.';';
 						}
 					}
 					$line.='"' . chr(13);

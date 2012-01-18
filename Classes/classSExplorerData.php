@@ -113,8 +113,8 @@ class classSExplorerData {
 
 	/**
 	 * gibt den Typ der Daten zurück '	'DAILY' oder 'MONTHLY';
-	 * 
-	 * @return string 
+	 *
+	 * @return string
 	 */
 	public function getDataType() {
 		return $this->DataType;
@@ -123,10 +123,10 @@ class classSExplorerData {
 	/**
 	 * gibt das größte (jüngste) Datum der Daten in der Form DD.MM.YY oder DD.MM.YY HH:NN:SS zurück
 	 * wenn noch keine Daten vorhanden sind, wird false zurückgegeben
-	 * 
-	 * @return string|false 
+	 *
+	 * @return string|false
 	 */
-	public function getNewestDatum() {
+	public function getNewestDate() {
 		if (count($this->data) > 1) { //Daten sind vorhanden
 			self::sort();
 			reset($this->data);
@@ -138,9 +138,9 @@ class classSExplorerData {
 	/**
 	 * funktion gibt den nächsten Wert ausgehend vom gesetzten Arrayzeiger (durch setPointerToDatum() )zurück
 	 * bei sortiertem Array ist das der Eintrag mit dem nächstkleineren (älteren) Datum
-	 * Ist kein Wert mehr vorhanden wird false zurückgegeben 
-	 * 
-	 * @return array 
+	 * Ist kein Wert mehr vorhanden wird false zurückgegeben
+	 *
+	 * @return array
 	 */
 	function getNextValues() {
 		$w = next($this->data);
@@ -153,9 +153,9 @@ class classSExplorerData {
 	/**
 	 * funktion gibt den vorhergehenden Wert ausgehend vom gesetzten Arrayzeiger (durch setPointerToDatum() )zurück
 	 * bei sortiertem Array ist das der Eintrag mit dem nächstgrößeren (jüngeren) Datum
-	 * Ist kein Wert mehr vorhanden wird false zurückgegeben 
-	 * 
-	 * @return array 
+	 * Ist kein Wert mehr vorhanden wird false zurückgegeben
+	 *
+	 * @return array
 	 */
 	function getPrevValues() {
 		$w = prev($this->data);
@@ -167,9 +167,9 @@ class classSExplorerData {
 
 	/**
 	 * funktion gibt den Wert zurück, auf dem der Arrayzeiger (durch setPointerToDatum() gesetzt )zurück
-	 * Ist kein Wert vorhanden wird false zurückgegeben 
-	 * 
-	 * @return array 
+	 * Ist kein Wert vorhanden wird false zurückgegeben
+	 *
+	 * @return array
 	 */
 	function getCurrentValues() {
 		$w= current($this->data);
@@ -178,15 +178,15 @@ class classSExplorerData {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Setzt den Arrayzeiger auf das Element, dessen key übergebene Datum ist
 	 * Die Funktion wird zur Vorbereitung von getNextValues() und getPrvValues() bebnötigt
-	 * 
+	 *
 	 * @param string $datum
-	 * @return boolean 
+	 * @return boolean
 	 */
-	function setPointerToDatum($datum) {
+	function setPointerToDate($datum) {
 		reset($this->data);
 		$c = 0;
 		$l = count($this->data);
@@ -202,10 +202,10 @@ class classSExplorerData {
 	/**
 	 * gibt das kleinste (älteste) Datum der Daten in der Form DD.MM.YY oder DD.MM.YY HH:NN:SS zurück
 	 * wenn noch keine Daten vorhanden sind, wird false zurückgegeben
-	 * 
-	 * @return string|false 
+	 *
+	 * @return string|false
 	 */
-	public function getOldestDatum() {
+	public function getOldestDate() {
 		if (count($this->data) > 0) {
 			self::sort();
 			end($this->data);

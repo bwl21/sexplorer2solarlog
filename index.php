@@ -20,6 +20,7 @@ include_once 'config.inc.php';
 	$min_day->check();
 	if($min_day->isNewDay()){//Neuer Tag,andere Dateien auch ergänzen
 		$days=new classDaysHist();
+		$days->check();
 		$months=new classMonths();
 		$years=new classYears();
 		unset($years,$months,$days);

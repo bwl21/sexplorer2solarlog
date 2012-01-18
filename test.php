@@ -3,11 +3,11 @@
 
 	xdebug_disable();
 
-	$test=new classMin_day();
+	$months=new classMonths();
+	$months->check();
 
 
-
-	unset($test);
+	unset($months);
 
 
 /**

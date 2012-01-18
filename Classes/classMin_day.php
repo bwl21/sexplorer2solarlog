@@ -39,10 +39,10 @@ class classMin_day extends classSLDataFile{
 		}
 		//Dateinamen der csv-Datei für aktuelles Datum ermitteln und Datei öffnen
 		$SexplorerData=new classSExplorerData(SEXPLORER_DATA_PATH.'/'.CSV_ANLAGEN_NAME.'-'.date('Ymd',time()).'.csv');
-		$SExplorerNewestDatum=$SexplorerData->getNewestDatum();
+		$SExplorerNewestDatum=$SexplorerData->getNewestDate();
 		if($SExplorerNewestDatum!==false){ //Es sind Daten vorhanden
 			if($NewestDatum===false){
-				$NewestDatum=$SexplorerData->getOldestDatum();
+				$NewestDatum=$SexplorerData->getOldestDate();
 			}else{
 				//Wenn das neueste Datum im min-File älter als das Datum der csv-Datei ist -> neuer Tag
 				//die Datei minYYMMDD mit den Daten aus der alten min-Datei erzeugen
@@ -53,11 +53,11 @@ class classMin_day extends classSLDataFile{
 					$min->setData(self::getData());
 					unset($min);
 					self::setData(null);
-					$NewestDatum=$SexplorerData->getOldestDatum();
+					$NewestDatum=$SexplorerData->getOldestDate();
 				}
 			}
 			if($NewestDatum!=$SExplorerNewestDatum){ //Neue Daten vorhanden
-				$SexplorerData->setPointerToDatum($NewestDatum);
+				$SexplorerData->setPointerToDate($NewestDatum);
 				$wrAnz=self::getWrAnz();
 				$werte=$SexplorerData->getCurrentValues();
 				while($werte!==false){

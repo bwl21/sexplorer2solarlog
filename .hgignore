@@ -5,3 +5,4 @@
 \.conflict\~$
 syntax: glob
 nbproject
+errors
