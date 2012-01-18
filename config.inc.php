@@ -40,15 +40,20 @@ define('CSV_ANLAGEN_NAME', 'Anlage1');
 /*
  * Pfad zu den SunnyExplorer-Dateien:
  * lokales Verzeichnis oder URL ohne abschließenden Slash oder Backslash
- * z.B. C:/daten/SunnyExplorer oder http://www.weichel21.de/SunnyExplorer
+ * !!!ACHTUNG!!! wenn es sich hier um ein lokales Verzeichnis handelt, bitte den absoluten Pfad verwenden
+ * (unerklärliches Verhalten von PHP, function __destruct wird nur im PHP-Verzeichnis ausgeführt)
+ *  * z.B. C:/daten/SunnyExplorer oder http://www.weichel21.de/SunnyExplorer
  */
-define("SEXPLORER_DATA_PATH", "http://www.weichel21.de/SunnyExplorer");
+define("SEXPLORER_DATA_PATH","http://www.weichel21.de/SunnyExplorer");
 
 /*
- * Pfad, in dem die Solarlog-Dateien abgelegt werden ohne abschließenden Slash oder Backslash
+ * !!!ACHTUNG!!! den absoluten Pfad angeben, in dem die Solarlog-Dateien abgelegt werden ohne
+ * abschließenden Slash oder Backslash
+ * (unerklärliches Verhalten von PHP, function __destruct wird nur im PHP-Verzeichnis ausgeführt)
+ * Auf dieses Verzeichnis muss das Script Schreibrechte haben
  * z.B. C:/SolarLog
  */
-define('SLFILE_DATA_PATH', 'Test/EinWr/SolarLog');
+define('SLFILE_DATA_PATH', 'E:/Documents/NetBeansProjects/SExplorer2Solarlog/Test/SolarlogTest');
 
 /*
  * Pfad und name einer lokalen Datei, in der Fehlermeldungen geloggt werden

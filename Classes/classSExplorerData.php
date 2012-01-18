@@ -5,7 +5,6 @@
  */
 
 include_once 'config.inc.php';
-include_once 'Classes/classErrorLog.php';
 
 /**
  * @version 0.4
@@ -28,8 +27,8 @@ class classSExplorerData {
 //
 // Das Array ist sortiert, die jüngsten (neuesten) Daten stehen an erster Stelle
 	private $data = array();
+	private $DataType = null;
 
-	const type='TYPE';
 	const daily='DAILY';
 	const monthly='MONTHLY';
 	const p='P';
@@ -48,75 +47,171 @@ class classSExplorerData {
 		$Name_Date[1] = $matches[0];
 		unset($matches);
 		//Dateityp bestimmen (Tages- oder Monatsdatei)
-		$this->data[self::type] = strlen($Name_Date[1]) == 8 ? self::daily : self::monthly;
+		$this->DataType = strlen($Name_Date[1]) == 8 ? self::daily : self::monthly;
 		$date = substr($Name_Date[1], 0, 4) . '-' . substr($Name_Date[1], 4, 2) . '-' . substr($Name_Date[1], 6, 2);
 		unset($Name_Date);
 		//Datei einlesen
 		ini_set('auto_detect_line_endings', true);
-		if (!($inhalt = @file($SExplorerFile, FILE_SKIP_EMPTY_LINES))) {
-			classErrorLog::LogError(date('Y-m-d H:i:s') . ' - Fehler beim Öffnen von ' . $SExplorerFile . ' in ' . __METHOD__);
-			die(4);
-		}
-		//Kopfzeile in den Daten suchen, nach der die Werte beginnen
-		$min = array(); //Anfangswert des Tages/Monats
-		$lines = 0;
-		$pos = null;
-		if ($this->data[self::type] == self::daily) {
-			$spalte1 = explode(',', CSV_DAILY_YIELDSUM_COLUMN);
-			$spalte2 = explode(',', CSV_DAILY_POWER_COLUMN);
-			$suchZeile = trim(CSV_HEAD_LINE_DAILY);
-		} else {
-			$spalte1 = explode(',', CSV_MONTHLY_MONTHSUM_COLUMN);
-			$spalte2 = explode(',', CSV_MONTHLY_DAYSUM_COLUMN);
-			$suchZeile = trim(CSV_HEAD_LINE_MONTHLY);
-		}
-		foreach ($inhalt as $zeile) {
-			$zeile = str_replace(CSV_DECIMALPOINT, '.', trim($zeile)); //Dezimalpunkt in numerischen Werten setzen
-			$data = explode(CSV_DELIMITER, $zeile);
-			if ($zeile == $suchZeile) {
-				//Positionen von Tag,Monat,Jahr,Stunde,Minute bestimmen
-				$pos = array();
-				$pos['day'] = strpos($data[0], CSV_HEAD_DAY);
-				$pos['month'] = strpos($data[0], CSV_HEAD_MONTH);
-				$pos['year'] = strpos($data[0], CSV_HEAD_YEAR);
-				$pos['hour'] = strpos($data[0], CSV_HEAD_HOUR);
-				$pos['minute'] = strpos($data[0], CSV_HEAD_MINUTE);
-			} elseif ($datum=self::is_time($pos, $data)) {
-				//Datum(+Zeit?) steht am Anfang der Zeile -> Werte einlesen
-				if (count($data) > 2) {//mindestens Daten für einen WR müssen enthalten sein
-					//Werte für alle WR auslesen und zwischenspeichern - gleich in Wh umrechnen
-					$d2sum = 0;
-					$d1 = array();
-					$d2 = array();
-					for ($wr = 0; $wr < CSV_ANZWR; $wr++) {
-						if (!isset($min[$wr])) {
-							$min[$wr] = @$data[$spalte1[$wr] - 1];
+		if ($inhalt = @file($SExplorerFile, FILE_SKIP_EMPTY_LINES)) {
+			//Kopfzeile in den Daten suchen, nach der die Werte beginnen
+			$min = array(); //Anfangswert des Tages/Monats
+			$lines = 0;
+			$pos = null;
+			if ($this->DataType == self::daily) {
+				$spalte1 = explode(',', CSV_DAILY_YIELDSUM_COLUMN);
+				$spalte2 = explode(',', CSV_DAILY_POWER_COLUMN);
+				$suchZeile = trim(CSV_HEAD_LINE_DAILY);
+			} else {
+				$spalte1 = explode(',', CSV_MONTHLY_MONTHSUM_COLUMN);
+				$spalte2 = explode(',', CSV_MONTHLY_DAYSUM_COLUMN);
+				$suchZeile = trim(CSV_HEAD_LINE_MONTHLY);
+			}
+			foreach ($inhalt as $zeile) {
+				$zeile = str_replace(CSV_DECIMALPOINT, '.', trim($zeile)); //Dezimalpunkt in numerischen Werten setzen
+				$data = explode(CSV_DELIMITER, $zeile);
+				if ($zeile == $suchZeile) {
+					//Positionen von Tag,Monat,Jahr,Stunde,Minute bestimmen
+					$pos = array();
+					$pos['day'] = strpos($data[0], CSV_HEAD_DAY);
+					$pos['month'] = strpos($data[0], CSV_HEAD_MONTH);
+					$pos['year'] = strpos($data[0], CSV_HEAD_YEAR);
+					$pos['hour'] = strpos($data[0], CSV_HEAD_HOUR);
+					$pos['minute'] = strpos($data[0], CSV_HEAD_MINUTE);
+				} elseif ($datum = self::is_time($pos, $data)) {
+					//Datum(+Zeit?) steht am Anfang der Zeile -> Werte einlesen
+					if (count($data) > 2) {//mindestens Daten für einen WR müssen enthalten sein
+						//Werte für alle WR auslesen und zwischenspeichern - gleich in Wh umrechnen
+						$d2sum = 0;
+						$d1 = array();
+						$d2 = array();
+						for ($wr = 0; $wr < CSV_ANZWR; $wr++) {
+							if (!isset($min[$wr])) {
+								$min[$wr] = @$data[$spalte1[$wr] - 1];
+							}
+							$d1[$wr] = @$data[$spalte1[$wr] - 1];
+							$d2[$wr] = @$data[$spalte2[$wr] - 1] * 1000;
+							$d2sum+=$d2[$wr];
 						}
-						$d1[$wr] = @$data[$spalte1[$wr] - 1];
-						$d2[$wr] = @$data[$spalte2[$wr] - 1] * 1000;
-						$d2sum+=$d2[$wr];
-					}
-					//Werte in $this->data eintragen
-					if ($this->data[self::type] == self::daily) {
-						if($d2sum > 0){
+						//Werte in $this->data eintragen
+						if ($this->DataType == self::daily) {
+							if ($d2sum > 0) {
+								for ($wr = 0; $wr < CSV_ANZWR; $wr++) {
+									$this->data[$datum][$wr] = array(self::etag => (int) round(($d1[$wr] - $min[$wr]) * 1000), self::p => (int) $d2[$wr]);
+								}
+							}
+						} else {
 							for ($wr = 0; $wr < CSV_ANZWR; $wr++) {
-								$this->data[$datum][$wr] = array(self::etag => (int) round(($d1[$wr] - $min[$wr]) * 1000), self::p => (int) $d2[$wr]);
+								$this->data[$datum][$wr] = array(self::eges => (int) round($d1[$wr] * 1000), self::etag => (int) round($d2[$wr]));
 							}
 						}
-					}else{
-						for ($wr = 0; $wr < CSV_ANZWR; $wr++) {
-							$this->data[$datum][$wr] = array(self::eges => (int) round($d1[$wr] * 1000), self::etag => (int) round($d2[$wr]));
-						}
+						$lines++;
 					}
-					$lines++;
 				}
 			}
 		}
-//		var_dump($this->data);
-		if (count($this->data) == 0) {
-			classErrorLog::LogError(date('Y-m-d H:i:s', time()) . ' - Die Datei ' . $SExplorerFile . ' enthält keine gültigen Daten in ' . __METHOD__);
-			$this->data = array();
+	}
+
+	/**
+	 * gibt den Typ der Daten zurück '	'DAILY' oder 'MONTHLY';
+	 * 
+	 * @return string 
+	 */
+	public function getDataType() {
+		return $this->DataType;
+	}
+
+	/**
+	 * gibt das größte (jüngste) Datum der Daten in der Form DD.MM.YY oder DD.MM.YY HH:NN:SS zurück
+	 * wenn noch keine Daten vorhanden sind, wird false zurückgegeben
+	 * 
+	 * @return string|false 
+	 */
+	public function getNewestDatum() {
+		if (count($this->data) > 1) { //Daten sind vorhanden
+			self::sort();
+			reset($this->data);
+			return key($this->data);
 		}
+		return false;
+	}
+
+	/**
+	 * funktion gibt den nächsten Wert ausgehend vom gesetzten Arrayzeiger (durch setPointerToDatum() )zurück
+	 * bei sortiertem Array ist das der Eintrag mit dem nächstkleineren (älteren) Datum
+	 * Ist kein Wert mehr vorhanden wird false zurückgegeben 
+	 * 
+	 * @return array 
+	 */
+	function getNextValues() {
+		$w = next($this->data);
+		if ($w !== false) {
+			return array(key($this->data) => $w);
+		}
+		return false;
+	}
+
+	/**
+	 * funktion gibt den vorhergehenden Wert ausgehend vom gesetzten Arrayzeiger (durch setPointerToDatum() )zurück
+	 * bei sortiertem Array ist das der Eintrag mit dem nächstgrößeren (jüngeren) Datum
+	 * Ist kein Wert mehr vorhanden wird false zurückgegeben 
+	 * 
+	 * @return array 
+	 */
+	function getPrevValues() {
+		$w = prev($this->data);
+		if ($w !== false) {
+			return array(key($this->data) => $w);
+		}
+		return false;
+	}
+
+	/**
+	 * funktion gibt den Wert zurück, auf dem der Arrayzeiger (durch setPointerToDatum() gesetzt )zurück
+	 * Ist kein Wert vorhanden wird false zurückgegeben 
+	 * 
+	 * @return array 
+	 */
+	function getCurrentValues() {
+		$w= current($this->data);
+		if ($w !== false) {
+			return array(key($this->data) => $w);
+		}
+		return false;
+	}
+	
+	/**
+	 * Setzt den Arrayzeiger auf das Element, dessen key übergebene Datum ist
+	 * Die Funktion wird zur Vorbereitung von getNextValues() und getPrvValues() bebnötigt
+	 * 
+	 * @param string $datum
+	 * @return boolean 
+	 */
+	function setPointerToDatum($datum) {
+		reset($this->data);
+		$c = 0;
+		$l = count($this->data);
+		while (key($this->data) != $datum) { // jeden Key überprüfen
+			if (++$c >= $l) {
+				return false; // Array-Ende erreicht
+			}
+			next($this->data); // Pointer um 1 verschieben
+		}
+		return true; // Key gefunden
+	}
+
+	/**
+	 * gibt das kleinste (älteste) Datum der Daten in der Form DD.MM.YY oder DD.MM.YY HH:NN:SS zurück
+	 * wenn noch keine Daten vorhanden sind, wird false zurückgegeben
+	 * 
+	 * @return string|false 
+	 */
+	public function getOldestDatum() {
+		if (count($this->data) > 0) {
+			self::sort();
+			end($this->data);
+			return key($this->data);
+		}
+		return false;
 	}
 
 	/**
@@ -127,29 +222,29 @@ class classSExplorerData {
 	 * @param array $data
 	 * @return false|string
 	 */
-	private function is_time($pos,$data){
-		if(is_null($pos)){
+	private function is_time($pos, $data) {
+		if (is_null($pos)) {
 			return false;
 		}
-		$datum=substr($data[0], $pos['year'], strlen(CSV_HEAD_YEAR)) . '-' .
-							substr($data[0], $pos['month'], strlen(CSV_HEAD_MONTH)) . '-' .
-							substr($data[0], $pos['day'], strlen(CSV_HEAD_DAY));
-		if($pos['hour']){
-			$datum.=' '.substr($data[0], $pos['hour'], strlen(CSV_HEAD_HOUR));
-			if($pos['minute']){
-				$datum.=':'.substr($data[0], $pos['minute'], strlen(CSV_HEAD_MINUTE)).':00';
-			}else{
+		$datum = substr($data[0], $pos['year'], strlen(CSV_HEAD_YEAR)) . '-' .
+						substr($data[0], $pos['month'], strlen(CSV_HEAD_MONTH)) . '-' .
+						substr($data[0], $pos['day'], strlen(CSV_HEAD_DAY));
+		if ($pos['hour']) {
+			$datum.=' ' . substr($data[0], $pos['hour'], strlen(CSV_HEAD_HOUR));
+			if ($pos['minute']) {
+				$datum.=':' . substr($data[0], $pos['minute'], strlen(CSV_HEAD_MINUTE)) . ':00';
+			} else {
 				$datum.=':00:00';
 			}
 		}
-		return strtotime($datum)==false?false:substr($datum,8,2).'.'.substr($datum,5,2).'.'.substr($datum,2,2). substr($datum,10);
+		return strtotime($datum) == false ? false : substr($datum, 8, 2) . '.' . substr($datum, 5, 2) . '.' . substr($datum, 2, 2) . substr($datum, 10);
 	}
 
 	/**
 	 * sortiert self::$data absteigend - neuestes Datum zuerst
 	 */
 	private function sort() {
-		if (!is_null($this->data)) {
+		if (count($this->data) > 1) {
 			uksort($this->data, array($this, "cmp"));
 		}
 	}
@@ -161,11 +256,6 @@ class classSExplorerData {
 	 * @param type $b
 	 */
 	private function cmp($a, $b) {
-		if ($a == self::type) {
-			return -1;
-		} elseif ($b == self::type) {
-			return 1;
-		}
 		$a = explode('.', $a);
 		$a1 = substr($a[2], 3);
 		$a[2] = '20' . substr($a[2], 0, 2);
@@ -184,12 +274,9 @@ class classSExplorerData {
 		return $this->data;
 	}
 
-
 	function __destruct() {
 		unset($this->data);
 	}
-
-
 
 }
 
