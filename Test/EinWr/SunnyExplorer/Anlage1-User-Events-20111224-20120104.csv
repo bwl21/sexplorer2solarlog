@@ -1,0 +1,21 @@
+sep=;
+Version CSV1|Tool SE|Linebreaks CR/LF|Delimiter semicolon
+
+DeviceType;DeviceLocation;SusyId;SerNo;TimeStamp;EntryId;EventCode;EventType;Category;Group;Tag
+SB 5000TL-20;SN: 2100530599;78;2100530599;24.12.2011 08:39:21;455;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;25.12.2011 08:42:53;471;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;26.12.2011 08:57:55;490;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;27.12.2011 09:09:00;509;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;28.12.2011 08:47:30;525;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;29.12.2011 08:45:12;537;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;29.12.2011 09:19:05;539;39;Incoming;Info;DC-Seite;Warten auf DC-Startbedingungen
+SB 5000TL-20;SN: 2100530599;78;2100530599;29.12.2011 09:26:42;543;39;Outgoing;Info;DC-Seite;Warten auf DC-Startbedingungen
+SB 5000TL-20;SN: 2100530599;78;2100530599;30.12.2011 09:05:30;560;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;31.12.2011 08:59:10;579;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;01.01.2012 08:42:53;613;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;01.01.2012 23:06:03;617;10109;Event;Info;Gerät;Zeitstellung erfolgt / neue Zeit
+SB 5000TL-20;SN: 2100530599;78;2100530599;01.01.2012 23:06:18;616;10108;Event;Info;Gerät;Zeitstellung erfolgt / alte Zeit
+SB 5000TL-20;SN: 2100530599;78;2100530599;02.01.2012 09:03:58;634;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;03.01.2012 08:44:30;650;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;04.01.2012 09:09:54;678;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;04.01.2012 10:56:44;679;10102;Event;Info;Gerät;Parameter 'OptiTrac Global Peak eingeschaltet' erfolgreich gesetzt
