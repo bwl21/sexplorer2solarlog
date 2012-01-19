@@ -6,3 +6,4 @@
 syntax: glob
 nbproject
 errors
+Test/SolarlogTest

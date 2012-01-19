@@ -13,9 +13,6 @@ include_once 'config.inc.php';
 //######################## main # Hauptprogramm #############################################################
 //###########################################################################################################
 	set_error_handler('myErrorHandler');
-	if (function_exists('xdebug_disable')) {
-		xdebug_disable();
-	}
 	$min_day=new classMin_day();
 	$min_day->check();
 	if($min_day->isNewDay()){//Neuer Tag,andere Dateien auch ergänzen
