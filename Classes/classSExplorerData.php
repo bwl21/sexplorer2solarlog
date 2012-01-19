@@ -28,6 +28,8 @@ class classSExplorerData {
 // Das Array ist sortiert, die jüngsten (neuesten) Daten stehen an erster Stelle
 	private $data = array();
 	private $DataType = null;
+	private $SerNoWR = array(); //Seriennummern der WR
+	private $wrAnz = null; //Anzahl WR aus den Seriennummern der WR ermittelt
 
 	const daily='DAILY';
 	const monthly='MONTHLY';
@@ -69,7 +71,24 @@ class classSExplorerData {
 			foreach ($inhalt as $zeile) {
 				$zeile = str_replace(CSV_DECIMALPOINT, '.', trim($zeile)); //Dezimalpunkt in numerischen Werten setzen
 				$data = explode(CSV_DELIMITER, $zeile);
-				if ($zeile == $suchZeile) {
+				//Seriennummer der WR ermitteln Format für 2WR:    ;SN: 2100071167;SN: 2100071167;SN: 2130002605;SN: 2130002605
+				if (count($this->SerNoWR) == 0) {
+					$snFound = true;
+					if (count($data) > 2) {
+						for ($i = 1; $i < count($data); $i++) {
+							$snFound = $snFound && preg_match('/^SN:\s+\d+$/', $data[$i]);
+							if (!$snFound)
+								break;
+						}
+						if ($snFound) {
+							$this->wrAnz = (count($data) - 1) / 2;
+							for ($i = 0; $i < $this->wrAnz; $i++) {
+								preg_match('/\d+$/', $data[$i + $i + 1], $matches);
+								$this->SerNoWR[$i] = $matches[0];
+							}
+						}
+					}
+				} elseif ($zeile == $suchZeile) {
 					//Positionen von Tag,Monat,Jahr,Stunde,Minute bestimmen
 					$pos = array();
 					$pos['day'] = strpos($data[0], CSV_HEAD_DAY);
@@ -108,7 +127,31 @@ class classSExplorerData {
 					}
 				}
 			}
+			//Fehlerprüfung Anzahl WR und Seriennummern
+			if (is_null($this->wrAnz) || ($this->wrAnz != CSV_ANZWR)) { //ermittelte WR-Anz unterscheidet sich von der in config.inc.php
+				classErrorLog::LogError('Die Anzahl Wechselrichter in der csv Datei (' . $this->wrAnz . ') unterscheidet sich von der Anzahl Wechselrichter in config.inc.php (' . CSV_ANZWR . ')');
+			} elseif (count($this->SerNoWR) != $this->wrAnz) { //Seriennummern konnten nicht ermittelt werden
+				classErrorLog::LogError('Die Anzahl angeschlossener Wechselrichter konnte aus der csv-Datei nicht ermittelt werden');
+			}
 		}
+	}
+
+	/**
+	 * funktion gibt ein Array mit den Seriennummern der angeschlossenen WR zurück
+	 *
+	 * @return array
+	 */
+	public function getSerNoWR() {
+		return $this->SerNoWR;
+	}
+
+	/**
+	 * Die Funktion gibt die Anzahl WR zurück, die aus der csv-Datei ermittelt wurde
+	 *
+	 * @return integer
+	 */
+	public function getWrAnz() {
+		return $this->wrAnz;
 	}
 
 	/**
@@ -172,7 +215,7 @@ class classSExplorerData {
 	 * @return array
 	 */
 	function getCurrentValues() {
-		$w= current($this->data);
+		$w = current($this->data);
 		if ($w !== false) {
 			return array(key($this->data) => $w);
 		}
