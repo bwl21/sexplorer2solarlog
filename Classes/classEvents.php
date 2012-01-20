@@ -23,6 +23,9 @@ class classEvents extends classSLDataFile {
 	 *          2 => string '0' (length=1)		//Fehlercode
 	 */
 
+	const events = 'events.js'; //Dateiname der events.js
+	const kennung = 'e[ev++]';
+
 	/**
 	 * der constructor liest die Datei ein wenn sie existiert und legt die Daten auf $this->data ab
 	 * wenn die Datei nicht existiert, wird die übergebene Kennung zum Erzeugen der Datei verwendet
@@ -31,8 +34,8 @@ class classEvents extends classSLDataFile {
 	 * @param string $filename
 	 * @param string $kennung
 	 */
-	function __construct($filename, $kennung=null) {
-		self::setFilename($filename);
+	function __construct() {
+		self::setFilename(realpath(SLFILE_DATA_PATH) . '/' . self::events);
 		if (@file_exists(self::getFilename())) {//Wenn Datei da ist, öffnen und einlesen
 			ini_set('auto_detect_line_endings', true);
 			$arr = @file(self::getFilename(), FILE_SKIP_EMPTY_LINES && FILE_IGNORE_NEW_LINES);
@@ -45,7 +48,7 @@ class classEvents extends classSLDataFile {
 						$matches = explode('=', $line);
 						self::setKennung($matches[0]);
 						if (count($matches) != 2) {
-							trigger_error('Ungültige Zeile "' . $line . '" in Datei ' . $this->filename);
+							trigger_error('Ungültige Zeile "' . $line . '" in Datei ' . self::getFilename());
 						} else {
 							$matches = explode(';', $matches[1]);
 							$datum = $matches[0];
@@ -59,18 +62,14 @@ class classEvents extends classSLDataFile {
 								$matches = array_values($matches);
 								self::addData($datum, array($wr => $matches));
 							} else {
-								trigger_error('Ungültige Zeile "' . $line . '" in Datei ' . $this->filename);
+								trigger_error('Ungültige Zeile "' . $line . '" in Datei ' . self::getFilename());
 							}
 						}
 					}
 				}
 			}
-		} else {
-			if (is_null(self::getKennung())) {
-				trigger_error('Die Datei "' . self::getFilename() . '" existiert nicht und der Parameter $kennung ist auch leer - Parameter $kennung muss bei neuen Dateien angegeben werden !');
-			} else {
-				self::setKennung($kennung);
-			}
+		} elseif (is_null(self::getKennung())) {
+			self::setKennung(self::kennung);
 		}
 		self::setHash();
 	}
