@@ -5,8 +5,7 @@
  *
  * @author PhotonenSammler <photonensammler@freenet.de>
  */
-class classEvents extends classSLDataFile{
-
+class classEvents extends classSLDataFile {
 	/* Datenformat von $this->data
 	 *
 	 * array
@@ -54,11 +53,11 @@ class classEvents extends classSLDataFile{
 							if (count($matches) == 4) {
 								$wr = $matches[2];
 								unset($matches[2]);
-								if((is_null(self::getWrAnz()))|| (self::getWrAnz() < $wr + 1) ){
-									self::setWrAnz($wr+1);
+								if ((is_null(self::getWrAnz())) || (self::getWrAnz() < $wr + 1)) {
+									self::setWrAnz($wr + 1);
 								}
-								$matches=array_values($matches);
-								self::addData($datum, array($wr=>$matches));
+								$matches = array_values($matches);
+								self::addData($datum, array($wr => $matches));
 							} else {
 								trigger_error('Ungültige Zeile "' . $line . '" in Datei ' . $this->filename);
 							}
@@ -76,7 +75,6 @@ class classEvents extends classSLDataFile{
 		self::setHash();
 	}
 
-
 	/**
 	 * falls $this->data geändert wurde, wird die Datei neu geschrieben
 	 */
@@ -85,9 +83,9 @@ class classEvents extends classSLDataFile{
 		if (self::isChanged()) {
 			if ($fp = @fopen(self::getFilename(), 'wb')) {
 				foreach (self::getData() as $datum => $data) {
-					$line = self::getKennung() . '="' . $datum.';';
-					foreach ($data as $wr=>$wrdata) {
-						$line.=$wrdata[0].';'.$wr.';'.$wrdata[1].';'.$wrdata[2].'"'.chr(13);
+					$line = self::getKennung() . '="' . $datum . ';';
+					foreach ($data as $wr => $wrdata) {
+						$line.=$wrdata[0] . ';' . $wr . ';' . $wrdata[1] . ';' . $wrdata[2] . '"' . chr(13);
 					}
 					if (!fwrite($fp, $line)) {
 						trigger_error('Fehler beim Schreiben in Datei ' . self::getFilename());
