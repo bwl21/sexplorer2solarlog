@@ -13,7 +13,6 @@ class classSLDataFile {
 	private $WrAnz = null; //Anzahl erkannter WR in der Datei
 	private $data = array(); //Die Daten aus der Datei
 	private $Hash = null; //Checksumme des Daten_Arrays nach dem constructor
-	private $fileTypes = array('m[mi++]' => 'min', 'da[dx++]' => 'days', 'mo[mx++]' => 'months', 'ye[yx++]' => 'years');
 
 	/**
 	 * der constructor liest die Datei ein wenn sie existiert und legt die Daten auf $this->data ab
@@ -23,7 +22,8 @@ class classSLDataFile {
 	 * @param string $filename
 	 * @param string $kennung
 	 */
-	function __construct($filename, $kennung=null) {
+
+	public function __construct($filename, $kennung=null) {
 		$this->filename = $filename;
 		if (@file_exists($this->filename)) {//Wenn Datei da ist, öffnen und einlesen
 			ini_set('auto_detect_line_endings', true);
@@ -84,14 +84,13 @@ class classSLDataFile {
 		return false;
 	}
 
-
 	/**
 	 * löscht den zum Datum gehörenden Eintrag aus den Daten
 	 *
 	 * @param string $forDate
 	 */
-	public function DeleteValue($forDate){
-		if(key_exists($forDate, $this->data)){
+	public function DeleteValue($forDate) {
+		if (key_exists($forDate, $this->data)) {
 			unset($this->data[$forDate]);
 		}
 	}
@@ -154,16 +153,11 @@ class classSLDataFile {
 	}
 
 	/**
-	 * gibt den Dateityp der Daten zurück:
-	 * 'min' -> min_day.js oder minYYMMDD.js
-	 * 'days' -> days.js oder days_hist.js
-	 * 'months' -> months.js
-	 * 'years' -> years.js
-	 *
-	 * @return string
+	 * setzt die Kennung
+	 * @param string $kennung
 	 */
-	public function getFileType() {
-		return $this->fileTypes[$this->kennung];
+	protected function setKennung($kennung) {
+		$this->kennung = $kennung;
 	}
 
 	/**
@@ -171,16 +165,21 @@ class classSLDataFile {
 	 *
 	 * @return boolean
 	 */
-	private function isChanged() {
+	protected function isChanged() {
 		return md5(serialize($this->data)) != $this->Hash;
 	}
 
 	/**
 	 * sortiert $this->$data absteigend - neuestes Datum zuerst
+	 * ist $updateHash==true wird auch der hash erneuert
+	 * 
+	 * @param boolean $updateHash
 	 */
-	private function sort() {
-		if (count($this->data) > 0 && self::isChanged()) {
+	protected function sort($updateHash=false) {
+		if ((count($this->data) > 0) && (self::isChanged())) {
 			uksort($this->data, array($this, "cmp"));
+			if ($updateHash)
+				self::setHash();
 		}
 	}
 
@@ -201,6 +200,37 @@ class classSLDataFile {
 	}
 
 	/**
+	 * 	setzt $this->filename
+	 * @param string $filename
+	 */
+	protected function setFilename($filename) {
+		$this->filename = $filename;
+	}
+
+	/**
+	 * 	gibt den Dateinamen zurück
+	 * @return string
+	 */
+	protected function getFilename() {
+		return $this->filename;
+	}
+
+	/**
+	 * berechnet den Hash-Wert und setzt ihn
+	 */
+	protected function setHash() {
+		$this->Hash = md5(serialize($this->data));
+	}
+
+	/**
+	 *
+	 * @return string
+	 */
+	protected function getHash() {
+		return $this->Hash;
+	}
+
+	/**
 	 * falls $this->data geändert wurde, wird die Datei neu geschrieben
 	 */
 	function __destruct() {
@@ -212,7 +242,7 @@ class classSLDataFile {
 					foreach ($data as $wrdata) {
 						$line.='|';
 						$count = 0;
-						if(is_array($wrdata)){
+						if (is_array($wrdata)) {
 							foreach ($wrdata as $d) {
 								$line.=$d;
 								$count++;
@@ -220,7 +250,7 @@ class classSLDataFile {
 									$line.=';';
 								}
 							}
-						}else{
+						} else {
 							$line.=$wrdata;
 						}
 					}

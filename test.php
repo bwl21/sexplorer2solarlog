@@ -3,11 +3,11 @@
 
 	xdebug_disable();
 
-	$years=new classYears();
-	$years->check();
+	$events=new classEvents('C:\\Users\\WebAdmin\\Documents\\NetBeansProjects\\SExplorer2Solarlog\\Test\\SolarlogTest\\events.js' ,'e[ev++]');
+	//$events->check();
 
 
-	unset($years);
+	unset($events);
 
 
 /**
