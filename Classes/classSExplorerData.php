@@ -7,7 +7,6 @@
 include_once 'config.inc.php';
 
 /**
- * @version 0.4
  * Klasse zum Einlesen von csv-Dateien des Sunny-Explorers
  *
  * @author PhotonenSammler <photonensammler@freenet.de>
@@ -31,11 +30,11 @@ class classSExplorerData {
 	private $SerNoWR = array(); //Seriennummern der WR
 	private $wrAnz = null; //Anzahl WR aus den Seriennummern der WR ermittelt
 
-	const daily='DAILY';
-	const monthly='MONTHLY';
-	const p='P';
-	const etag='ETag';
-	const eges='EGes';
+	const daily = 'DAILY';
+	const monthly = 'MONTHLY';
+	const p = 'P';
+	const etag = 'ETag';
+	const eges = 'EGes';
 
 	function __construct($SExplorerFile) {
 		//Dateinamen vom Pfad abtrennen
@@ -54,84 +53,86 @@ class classSExplorerData {
 		unset($Name_Date);
 		//Datei einlesen
 		ini_set('auto_detect_line_endings', true);
-		if ($inhalt = @file($SExplorerFile, FILE_SKIP_EMPTY_LINES)) {
-			//Kopfzeile in den Daten suchen, nach der die Werte beginnen
-			$min = array(); //Anfangswert des Tages/Monats
-			$lines = 0;
-			$pos = null;
-			if ($this->DataType == self::daily) {
-				$spalte1 = explode(',', CSV_DAILY_YIELDSUM_COLUMN);
-				$spalte2 = explode(',', CSV_DAILY_POWER_COLUMN);
-				$suchZeile = trim(CSV_HEAD_LINE_DAILY);
-			} else {
-				$spalte1 = explode(',', CSV_MONTHLY_MONTHSUM_COLUMN);
-				$spalte2 = explode(',', CSV_MONTHLY_DAYSUM_COLUMN);
-				$suchZeile = trim(CSV_HEAD_LINE_MONTHLY);
-			}
-			foreach ($inhalt as $zeile) {
-				$zeile = str_replace(CSV_DECIMALPOINT, '.', trim($zeile)); //Dezimalpunkt in numerischen Werten setzen
-				$data = explode(CSV_DELIMITER, $zeile);
-				//Seriennummer der WR ermitteln Format für 2WR:    ;SN: 2100071167;SN: 2100071167;SN: 2130002605;SN: 2130002605
-				if (count($this->SerNoWR) == 0) {
-					$snFound = true;
-					if (count($data) > 2) {
-						for ($i = 1; $i < count($data); $i++) {
-							$snFound = $snFound && preg_match('/^SN:\s+\d+$/', $data[$i]);
-							if (!$snFound)
-								break;
-						}
-						if ($snFound) {
-							$this->wrAnz = (count($data) - 1) / 2;
-							for ($i = 0; $i < $this->wrAnz; $i++) {
-								preg_match('/\d+$/', $data[$i + $i + 1], $matches);
-								$this->SerNoWR[$i] = $matches[0];
+		if (file_exists($SExplorerFile)) {
+			if ($inhalt = @file($SExplorerFile, FILE_SKIP_EMPTY_LINES)) {
+				//Kopfzeile in den Daten suchen, nach der die Werte beginnen
+				$min = array(); //Anfangswert des Tages/Monats
+				$lines = 0;
+				$pos = null;
+				if ($this->DataType == self::daily) {
+					$spalte1 = explode(',', CSV_DAILY_YIELDSUM_COLUMN);
+					$spalte2 = explode(',', CSV_DAILY_POWER_COLUMN);
+					$suchZeile = trim(CSV_HEAD_LINE_DAILY);
+				} else {
+					$spalte1 = explode(',', CSV_MONTHLY_MONTHSUM_COLUMN);
+					$spalte2 = explode(',', CSV_MONTHLY_DAYSUM_COLUMN);
+					$suchZeile = trim(CSV_HEAD_LINE_MONTHLY);
+				}
+				foreach ($inhalt as $zeile) {
+					$zeile = str_replace(CSV_DECIMALPOINT, '.', trim($zeile)); //Dezimalpunkt in numerischen Werten setzen
+					$data = explode(CSV_DELIMITER, $zeile);
+					//Seriennummer der WR ermitteln Format für 2WR:    ;SN: 2100071167;SN: 2100071167;SN: 2130002605;SN: 2130002605
+					if (count($this->SerNoWR) == 0) {
+						$snFound = true;
+						if (count($data) > 2) {
+							for ($i = 1; $i < count($data); $i++) {
+								$snFound = $snFound && preg_match('/^SN:\s+\d+$/', $data[$i]);
+								if (!$snFound)
+									break;
 							}
-						}
-					}
-				} elseif ($zeile == $suchZeile) {
-					//Positionen von Tag,Monat,Jahr,Stunde,Minute bestimmen
-					$pos = array();
-					$pos['day'] = strpos($data[0], CSV_HEAD_DAY);
-					$pos['month'] = strpos($data[0], CSV_HEAD_MONTH);
-					$pos['year'] = strpos($data[0], CSV_HEAD_YEAR);
-					$pos['hour'] = strpos($data[0], CSV_HEAD_HOUR);
-					$pos['minute'] = strpos($data[0], CSV_HEAD_MINUTE);
-				} elseif ($datum = self::is_time($pos, $data)) {
-					//Datum(+Zeit?) steht am Anfang der Zeile -> Werte einlesen
-					if (count($data) > 2) {//mindestens Daten für einen WR müssen enthalten sein
-						//Werte für alle WR auslesen und zwischenspeichern - gleich in Wh umrechnen
-						$d2sum = 0;
-						$d1 = array();
-						$d2 = array();
-						for ($wr = 0; $wr < CSV_ANZWR; $wr++) {
-							if (!isset($min[$wr])) {
-								$min[$wr] = @$data[$spalte1[$wr] - 1];
-							}
-							$d1[$wr] = @$data[$spalte1[$wr] - 1];
-							$d2[$wr] = @$data[$spalte2[$wr] - 1] * 1000;
-							$d2sum+=$d2[$wr];
-						}
-						//Werte in $this->data eintragen
-						if ($this->DataType == self::daily) {
-							if ($d2sum > 0) {
-								for ($wr = 0; $wr < CSV_ANZWR; $wr++) {
-									$this->data[$datum][$wr] = array(self::etag => (int) round(($d1[$wr] - $min[$wr]) * 1000), self::p => (int) $d2[$wr]);
+							if ($snFound) {
+								$this->wrAnz = (count($data) - 1) / 2;
+								for ($i = 0; $i < $this->wrAnz; $i++) {
+									preg_match('/\d+$/', $data[$i + $i + 1], $matches);
+									$this->SerNoWR[$i] = $matches[0];
 								}
 							}
-						} else {
-							for ($wr = 0; $wr < CSV_ANZWR; $wr++) {
-								$this->data[$datum][$wr] = array(self::eges => (int) round($d1[$wr] * 1000), self::etag => (int) round($d2[$wr]));
-							}
 						}
-						$lines++;
+					} elseif ($zeile == $suchZeile) {
+						//Positionen von Tag,Monat,Jahr,Stunde,Minute bestimmen
+						$pos = array();
+						$pos['day'] = strpos($data[0], CSV_HEAD_DAY);
+						$pos['month'] = strpos($data[0], CSV_HEAD_MONTH);
+						$pos['year'] = strpos($data[0], CSV_HEAD_YEAR);
+						$pos['hour'] = strpos($data[0], CSV_HEAD_HOUR);
+						$pos['minute'] = strpos($data[0], CSV_HEAD_MINUTE);
+					} elseif ($datum = self::is_time($pos, $data)) {
+						//Datum(+Zeit?) steht am Anfang der Zeile -> Werte einlesen
+						if (count($data) > 2) {//mindestens Daten für einen WR müssen enthalten sein
+							//Werte für alle WR auslesen und zwischenspeichern - gleich in Wh umrechnen
+							$d2sum = 0;
+							$d1 = array();
+							$d2 = array();
+							for ($wr = 0; $wr < CSV_ANZWR; $wr++) {
+								if (!isset($min[$wr])) {
+									$min[$wr] = @$data[$spalte1[$wr] - 1];
+								}
+								$d1[$wr] = @$data[$spalte1[$wr] - 1];
+								$d2[$wr] = @$data[$spalte2[$wr] - 1] * 1000;
+								$d2sum+=$d2[$wr];
+							}
+							//Werte in $this->data eintragen
+							if ($this->DataType == self::daily) {
+								if ($d2sum > 0) {
+									for ($wr = 0; $wr < CSV_ANZWR; $wr++) {
+										$this->data[$datum][$wr] = array(self::etag => (int) round(($d1[$wr] - $min[$wr]) * 1000), self::p => (int) $d2[$wr]);
+									}
+								}
+							} else {
+								for ($wr = 0; $wr < CSV_ANZWR; $wr++) {
+									$this->data[$datum][$wr] = array(self::eges => (int) round($d1[$wr] * 1000), self::etag => (int) round($d2[$wr]));
+								}
+							}
+							$lines++;
+						}
 					}
 				}
-			}
-			//Fehlerprüfung Anzahl WR und Seriennummern
-			if (is_null($this->wrAnz) || ($this->wrAnz != CSV_ANZWR)) { //ermittelte WR-Anz unterscheidet sich von der in config.inc.php
-				classErrorLog::LogError('Die Anzahl Wechselrichter in der csv Datei (' . $this->wrAnz . ') unterscheidet sich von der Anzahl Wechselrichter in config.inc.php (' . CSV_ANZWR . ')');
-			} elseif (count($this->SerNoWR) != $this->wrAnz) { //Seriennummern konnten nicht ermittelt werden
-				classErrorLog::LogError('Die Anzahl angeschlossener Wechselrichter konnte aus der csv-Datei nicht ermittelt werden');
+				//Fehlerprüfung Anzahl WR und Seriennummern
+				if (is_null($this->wrAnz) || ($this->wrAnz != CSV_ANZWR)) { //ermittelte WR-Anz unterscheidet sich von der in config.inc.php
+					classErrorLog::LogError('Die Anzahl Wechselrichter=' . $this->wrAnz . ' in der csv Datei ' . $SExplorerFile . ' unterscheidet sich von der Anzahl Wechselrichter=' . CSV_ANZWR . ' in config.inc.php');
+				} elseif (count($this->SerNoWR) != $this->wrAnz) { //Seriennummern konnten nicht ermittelt werden
+					classErrorLog::LogError('Die Anzahl angeschlossener Wechselrichter konnte aus der csv-Datei nicht ermittelt werden');
+				}
 			}
 		}
 	}
@@ -293,7 +294,6 @@ class classSExplorerData {
 	}
 
 	/**
-	 * @version 0.3
 	 * Hilfsfunktion zum Sortieren des Arrays
 	 * @param type $a
 	 * @param type $b

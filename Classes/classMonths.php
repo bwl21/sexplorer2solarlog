@@ -3,7 +3,6 @@
 /**
  * Klasse zur Verwaltung/Erzeugung der months.js Datei des Solarlog
  *
- * @version 0.1
  * @author PhotonenSammler <photonensammler@freenet.de>
  */
 include_once 'config.inc.php';
@@ -21,34 +20,41 @@ class classMonths extends classSLDataFile {
 	 */
 	public function check() {
 		$SLNewestDate = self::getNewestDatum();
+		$endDate=time()-86400;
 		if ($SLNewestDate === false) { //Datei existiert nicht, erzeugen
 			self::setWrAnz(CSV_ANZWR); //Anzahl WR setzen
+			$startDate=strtotime(START_DATUM);
+		}else{
+			$startDate=$endDate;
 		}
-		//Dateinamen der csv-Datei für den Vortag ermitteln und Datei öffnen
-		$SexplorerData = new classSExplorerData(SEXPLORER_DATA_PATH . '/' . CSV_ANLAGEN_NAME . '-' . date('Ym', time() - 86400) . '.csv');
-		$SExplNewestDate = $SexplorerData->getNewestDate();
-		if ($SExplNewestDate !== false) { //Es sind Daten vorhanden
-			$SExplOldestDate = $SexplorerData->getOldestDate();
-			if ($SLNewestDate !== false) {
-				if (($SExplNewestDate != $SLNewestDate) && (substr($SExplNewestDate, 2) == substr($SLNewestDate, 2))) {
-					self::DeleteValue($SLNewestDate); //Eintrag für den Monat löschen wenn das Monatsende noch nicht erreicht ist
+		while($startDate<=$endDate){
+			//Dateinamen der csv-Datei für den Vortag ermitteln und Datei öffnen
+			$SexplorerData = new classSExplorerData(SEXPLORER_DATA_PATH . '/' . CSV_ANLAGEN_NAME . '-' . date('Ym', $startDate) . '.csv');
+			$SExplNewestDate = $SexplorerData->getNewestDate();
+			if ($SExplNewestDate !== false) { //Es sind Daten vorhanden
+				$SExplOldestDate = $SexplorerData->getOldestDate();
+				if ($SLNewestDate !== false) {
+					if (($SExplNewestDate != $SLNewestDate) && (substr($SExplNewestDate, 2) == substr($SLNewestDate, 2))) {
+						self::DeleteValue($SLNewestDate); //Eintrag für den Monat löschen wenn das Monatsende noch nicht erreicht ist
+					}
 				}
-			}
-			$SexplorerData->setPointerToDate($SExplOldestDate);
-			$w = array_fill(0, self::getWrAnz(), 0);
-			$werte = $SexplorerData->getCurrentValues();
-			//Summe über alle WR ETag des Monats bilden
-			while ($werte !== false) {
-				$key=key($werte);
-				for ($i = 0; $i < self::getWrAnz(); $i++) {
-					$w[$i]+=$werte[$key][$i][classSExplorerData::etag];
+				$SexplorerData->setPointerToDate($SExplOldestDate);
+				$w = array_fill(0, self::getWrAnz(), 0);
+				$werte = $SexplorerData->getCurrentValues();
+				//Summe über alle WR ETag des Monats bilden
+				while ($werte !== false) {
+					$key=key($werte);
+					for ($i = 0; $i < self::getWrAnz(); $i++) {
+						$w[$i]+=$werte[$key][$i][classSExplorerData::etag];
+					}
+					$werte = $SexplorerData->getPrevValues();
 				}
-				$werte = $SexplorerData->getPrevValues();
+				self::addData($SExplNewestDate, $w);
+				unset($w);
 			}
-			$this->addData($SExplNewestDate, $w);
-			unset($w);
+			unset($SexplorerData);
+			$startDate=  strtotime("+1 month", $startDate);
 		}
-		unset($SexplorerData);
 	}
 
 }

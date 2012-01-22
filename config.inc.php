@@ -6,6 +6,7 @@
  * 2012-07-01
  *
  * Konvertierung von SunnyExplorer-Dateien in das Solarlog-Datenformat
+ * Testdateien unter http://www.weichel21.de/SunnyExplorer
  */
 
 /* allgemeine Hinweise
@@ -30,7 +31,7 @@
 /*
  * Startdatum in der Form yyyy-mm-dd, zu dem die erste Tages-csv-Datei mit Erträgen vorliegt
  */
-define('START_DATUM', '2011-12-01');
+define('START_DATUM', '2011-12-02');
 
 /*
  * Name der Anlage zur Bildung des csv-Dateinamens
@@ -39,10 +40,10 @@ define('CSV_ANLAGEN_NAME', 'Anlage1');
 
 /*
  * Pfad zu den SunnyExplorer-Dateien:
- * lokales Verzeichnis oder URL ohne abschließenden Slash oder Backslash
- * z.B. C:/daten/SunnyExplorer oder http://www.weichel21.de/SunnyExplorer
+ * lokales Verzeichnis ohne abschließenden Slash oder Backslash
+ * z.B. C:/daten/SunnyExplorer
  */
-define("SEXPLORER_DATA_PATH","http://www.weichel21.de/SunnyExplorer");
+define('SEXPLORER_DATA_PATH','Test/EinWr/SunnyExplorer');
 
 /*
  * Pfad angeben, in dem die Solarlog-Dateien abgelegt werden ohne abschließenden Slash oder Backslash
@@ -54,7 +55,7 @@ define('SLFILE_DATA_PATH', 'Test/SolarlogTest');
  * Pfad und name einer lokalen Datei, in der Fehlermeldungen geloggt werden
  * z.B. C:/Php-Fehlermeldungen/scriptfehler.txt
  */
-define("ERROR_LOG_FILE", "errors\errors.txt");
+define('ERROR_LOG_FILE', 'errors/errors.txt');
 
 /*
  * Anzahl von Wechselrichtern, deren Daten in den csv-Dateien gespeichert sind

@@ -4,7 +4,6 @@
  * Daten-URL zum Testen http://www.weichel21.de/SunnyExplorer
  * SL-Dateien unter http://www.weichel21.de/SolarLog
  * Link zur Anlage Sonnenertrag http://www.sonnenertrag.eu/de/stuttgart/anlage21/17964/17514.html
- * @version 0.5
  */
 include_once 'config.inc.php';
 

@@ -3,7 +3,6 @@
 /**
  * Klasse zur Verwaltung/Erzeugung von minYYMMDD.js files des Solarlog
  *
- * @version 0.1
  * @author PhotonenSammler <photonensammler@freenet.de>
  */
 
