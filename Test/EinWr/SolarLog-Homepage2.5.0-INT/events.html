@@ -1,0 +1,480 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><!--SolarLog500/SolarLog800e/SolarLog1000 - Anlagenvisualisierung über externen Web-Server, © Solare Datensysteme GmbH, www.solare-datensysteme.de -->
+<!--V2.0.0 Homepage-Version -->
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"><title>SolarLog</title>
+<meta name="keywords" content="SolarLog, SolarLog500, SolarLog1000, SolarLog800e, SolarLog100, SolarLog400, SolarLog100e, SolarLog400e, Solare Datensysteme, Datenlogger, Solar, Solaranlage, Photovoltaik, Überwachung, Statistik, Auswertung, Online, Internet, Banner, Email, SMS, Störungen">
+<style type="text/css">
+  h1 { font-family:Verdana,Helvetica,Arial,sans-serif;font-size:12pt;margin-bottom:4;font-weight:bold; }
+  td { font-family:Verdana,Helvetica,Arial,sans-serif;font-size:12px; }
+</style>
+
+<script language="JavaScript">if ((document.layers)&&(history.length==1)) location.href=location.href+"#";</script>
+<link rel="stylesheet" type="text/css" href="events.css">
+<script language="JavaScript">
+      var DateFormat ="dd.mm.yy"
+      var TimeFormat ="HH:MM:ss"
+      var TimeFormatNoSec ="HH:MM"
+      var Currency ="€"
+      var CurrencySub ="Cent"
+      var CurrencyFirst ="0"
+      var ISOCode ="DE"
+      var DSTMode ="1"
+      var Dezimalseparator =","
+
+   var AnlagenGrp = new Array();
+   var AnzahlGrp = 0;
+   var TableColor = "silver";
+   var e = new Array();
+</script>
+<script language="JavaScript" src="dateformat.js"></script>
+<script language="JavaScript">document.write("<script language='JavaScript' src='base_vars.js'><\/script>")</script>
+<script language="JavaScript">document.write("<script language='JavaScript' src='lang_"+Lang+".js'><\/script>")</script>
+<script language="JavaScript">
+   //Browserermittlung   
+   var browser = browserCheck();
+   var max_events = 5000;
+   if(browser == "IE") max_events = 1000;
+   if(browser == "NN") max_events = 2000;
+   var events = new Array(AnzahlWR);
+   for( i=0; i<AnzahlWR; i++ )
+      events[i] = new Array()
+   var ev = 0;
+   var i, data;
+   var EventFields = 5;
+   var StatusField = 3;
+   var ErrorField = 4;
+   var WRField = 2;
+   var WRCol = new Array("Red","Green","brown","lime","olive","pink","fuchsia","lightblue","aqua","#C0C0C0","gray","#009900","#009933","#009966","#009999","#0099CC","#0099FF","#00CCFF","#00FFFF","#33FFFF")
+   var inv = -1;
+   var grp = -1;
+   var day = -1;
+   var stati = -1;
+   var err = -1;
+   var relevant_events = new Array();
+   var array_date=new Array();
+   var array_status=new Array();
+   var array_fehler=new Array();
+
+   //Alle Funktionen für die events in einem Block....
+   function browserCheck() {
+      check=[
+         ['window.postMessage',
+          'window.XMLHttpRequest&&(document.postMessage||window.external)',
+          'document.compatMode',
+          '(document.detachEvent||document.contentType)'],
+         ['window.execScript','window.pkcs11','window.opera','window.navigator&&window.navigator.vendor'],
+         [['IE','FF','OP','KDE'],['IE','FF','OP','KDE'],['IE','FF','OP','KDE'],['IE','NN','OP','KDE']]];
+      var j; var b; for(n=0;n<check[1].length;n++){if(!eval(check[1][n])==0)b=n;}
+      for(n=check[0].length;n>-1;n--){if(!eval(check[0][n])==0)j=n;}
+      return check[2][j][b];
+   }
+   function DateSort( a, b) {
+    date_part=a.split(".")
+    var date_a = Date.UTC(date_part[2], (date_part[1]-1), date_part[0]);
+	date_part=b.split(".")
+	var date_b = Date.UTC(date_part[2], (date_part[1]-1), date_part[0]);
+	return date_b - date_a;
+}
+   function unique(inputArray) {
+
+      label:for(var i=0; i<inputArray.length;i++ ) {
+         var event = enumEventData(inputArray[i], ";");
+		 if(event.length != EventFields) { continue label;}
+		 var WR = event[WRField];
+		 var Datum_Uhrzeit_Start = event[0].split(" ");
+		 var Datum_Uhrzeit_End = event[1].split(" ");
+		 var timestamp_start = 0;
+		 var timestamp_end = 0;
+		 if(Datum_Uhrzeit_Start[0] != "") {
+		    var temp = Datum_Uhrzeit_Start[0].split(".");
+		    timestamp_start = parseInt(temp[0],10)+""+temp[1]+""+temp[2];
+         }
+		 if(Datum_Uhrzeit_End[0] != "") {
+		    var temp = Datum_Uhrzeit_End[0].split(".");
+		    timestamp_end = parseInt(temp[0],10)+""+temp[1]+""+temp[2];
+		 }
+		 var status = enumEventData(StatusCodes[WR],",");
+         if(status.length < 256) {
+            for(var j=status.length; j < 255; j++)  status.push("");
+   	        status.push("Offline");
+         }
+		 var fehler = enumEventData(FehlerCodes[WR],",");
+         if(fehler.length == 0) fehler.push("");
+         array_status[array_status.length] = status[event[StatusField]];
+         array_fehler[array_fehler.length] = fehler[event[ErrorField]];
+         if(timestamp_start != 0 ) 
+            array_date[timestamp_start] = Datum_Uhrzeit_Start[0];
+         if(timestamp_end != 0 ) 
+            array_date[timestamp_end] = Datum_Uhrzeit_End[0];
+      }
+	  var newArray=new Array();
+      label2:for(var i=0; i<array_status.length;i++ ) {  
+         for(var j=0; j<newArray.length;j++ ) {
+            if(newArray[j]==array_status[i]) 
+               continue label2;
+         }
+         newArray[newArray.length] = array_status[i];
+      }
+	  array_status = newArray;
+	  var newArray=new Array();
+      label2:for(var i=0; i<array_fehler.length;i++ ) {  
+         for(var j=0; j<newArray.length;j++ ) {
+            if(newArray[j]==array_fehler[i]) 
+               continue label2;
+         }
+         newArray[newArray.length] = array_fehler[i];
+      }
+	  array_fehler = newArray;
+	  var newArray=new Array();
+      label2:for(var i=0; i<array_date.length;i++ ) {  
+         for(var j=0; j<newArray.length;j++ ) {
+            if(newArray[j]==array_date[i]) 
+               continue label2;
+         }
+		 if(array_date[i] != "")
+            newArray[newArray.length] = array_date[i];
+      }
+      array_date = newArray;
+	  array_date.shift();
+      array_date.sort(DateSort);
+      array_fehler.sort();
+      array_status.sort();
+   }
+   function GoLocation( type ) {
+      if(type == "reset") 
+         window.location.href="events.html";
+      else {
+		 if( AnzahlGrp > 0 ) {
+		    grp_new = document.form.Gruppe.options[document.form.Gruppe.selectedIndex].value;
+         } else grp_new = -1;
+		 if( AnzahlWR > 1 ) {
+		    inv_new = document.form.WR.options[document.form.WR.selectedIndex].value;
+         } else inv_new = -1;
+		 day_new = document.form.Tag.options[document.form.Tag.selectedIndex].value;
+		 stati_new = document.form.Status.options[document.form.Status.selectedIndex].value;
+		 err_new = document.form.Fehler.options[document.form.Fehler.selectedIndex].value;
+		 in_group = 0;
+		 if(grp_new != -1) {
+		    // Check if selected WR is in selected Group
+            if(inv_new == -1) {
+			   // Alle WR gewaehlt
+			   in_group = 1;
+            } else {
+			   for(var i=0; i<AnlagenGrp[grp_new][1].length; i++ ) {
+			      if( inv_new == AnlagenGrp[grp_new][1][i] ) in_group = 1;
+			   }
+			}
+		 } else { in_group = 1; }
+		 if(in_group == 0) inv_new = -1;
+         window.location.href="events.html?inv="+inv_new+"&grp="+grp_new+"&day="+day_new+"&stati="+stati_new+"&err="+err_new
+      }
+   }
+   function split_events(eventsArray) {
+      for(i=0; i<eventsArray.length; i++) {
+         data = enumEventData( eventsArray[i],";" );
+		 if(data.length == EventFields) {
+		    if(data[2] < AnzahlWR)
+               events[data[2]].push(eventsArray[i]);
+		 }
+      }
+   }
+   function sortDate( d ) {
+      return d.substr(6,2)+d.substr(3,2)+d.substr(0,2)+d.substr(9);
+   }
+   function sortEvent( a, b) {
+      var data1 = enumEventData(a,";");
+      var data2 = enumEventData(b,";");
+	  if(data1[2] == data2[2]) {
+        if( ""+sortDate(data1[0]) < ""+sortDate(data2[0]) )
+           return 1;
+        else
+           return -1;
+      } else {
+	     if(parseInt(data1[2],10) > parseInt(data2[2],10))
+		    return 1;
+         else
+            return -1;
+	  }
+   }
+   function writeTD( value, width, align, color) {
+      var output = "<td";
+      if (width != null) output +=" width=\""+width+"\"";
+      if (align != null) output +=" align=\""+align+"\"";
+      if (color != null) output +=" bgcolor="+color;
+      output +=">"+value+"<\/td>";
+	  return output;
+   }
+			function enumEventData( d, c ) {
+				var data=new Array();
+				var pnt=0, pnt2=0, s=0;
+				if ( d != null ) {
+					while( true ) {
+						pnt2 = d.indexOf(c,pnt);
+						if( pnt2 < 0 ) {
+							data[s] = d.substr(pnt);
+							break;
+						}
+						else {
+							data[s] = d.substr(pnt, pnt2-pnt);
+						}
+						pnt=pnt2+1;
+						s++;
+					}
+				}
+				else {
+					data[0] = "";
+				}
+				return data;
+			}
+
+   function filterEvents(eventsArray, filter, filterType) {
+      var newArray=new Array();
+	  label:for(var i=0; i<eventsArray.length;i++ ) {
+	     var event = enumEventData(eventsArray[i], ";");
+		 if(event.length != EventFields) { continue label;}
+		 var WR = event[WRField];
+		 if(filterType == "Tag") {
+            day = String(filter);
+            if(day.length == 5) day = "0"+day.substr(0,1)+"."+day.substr(1,2)+"."+day.substr(3,2);
+            if(day.length == 6) day = ""+day.substr(0,2)+"."+day.substr(2,2)+"."+day.substr(4,2);
+		    Datum_Uhrzeit_Start = event[0].split(" ");
+		    Datum_Uhrzeit_End = event[1].split(" ");
+			if(Datum_Uhrzeit_Start[0] == day || Datum_Uhrzeit_End[0] == day) {
+			   newArray[newArray.length] = eventsArray[i];
+            }
+         } else if(filterType == "Fehler") {
+		    var fehler = enumEventData(FehlerCodes[WR],",");
+            if(fehler.length == 0) fehler.push("");
+		    if(filter == fehler[event[ErrorField]])
+               newArray[newArray.length] = eventsArray[i];
+         } else if(filterType == "Status") {
+		    var status = enumEventData(StatusCodes[WR],",");
+            if(status.length < 256) {
+               for(var j=status.length; j < 255; j++)  status.push("");
+   	           status.push("Offline");
+            }
+		    if(filter == status[event[StatusField]])
+               newArray[newArray.length] = eventsArray[i];
+         }
+      }
+      return newArray;
+   }
+</script>
+<script language="JavaScript">document.write("<script language='JavaScript' src='events.js'><\/script>")</script>
+</head><body style="">
+<div style="text-align: center; font-family: Verdana;">
+   <big>
+      <span style="font-weight: bold;"></span>
+      <span style="font-size:16pt;line-height:18pt; color: #125fae;" align="center"><script>document.write(getText(LBL_EREIGNIS))</script></span>
+   </big>
+</div>
+<div style="position: absolute; top: 55px; left: 10px; font-weight: bold;">
+<script language="JavaScript">
+   // CGI-Parameterstring extrahieren
+   cgiIdx = this.document.URL.indexOf('?');
+   if (cgiIdx != -1) {
+      cgiString = this.document.URL.substring(cgiIdx + 1, this.document.URL.length);
+	  // Gewaehlte WR ermitteln
+      pnt = cgiString.indexOf('inv=')
+       if ( pnt != -1) {
+          invURL = cgiString.substring( pnt+4 )
+          inv=parseInt(invURL,10)
+       }
+	   // Gewaehlte Anlagengruppe ermitteln
+	   pnt = cgiString.indexOf('grp=')
+       if ( pnt != -1) {
+          grpURL = cgiString.substring( pnt+4 )
+          grp=parseInt(grpURL,10)
+       }
+	   // Gewaehlten Tag ermitteln
+	   pnt = cgiString.indexOf('day=')
+       if ( pnt != -1) {
+          dayURL = cgiString.substring( pnt+4 )
+          day=parseInt(dayURL,10)
+       }
+	   // Gewaehlte Status ermitteln
+	   pnt = cgiString.indexOf('stati=')
+       if ( pnt != -1) {
+          statiURL = cgiString.substring( pnt+6 )
+		  var cgi_parts = statiURL.split('&');
+		  stati=cgi_parts[0]
+       }
+	   // Gewaehlte Fehler ermitteln
+	   pnt = cgiString.indexOf('err=')
+       if ( pnt != -1) {
+          errURL = cgiString.substring( pnt+4 )
+		  var cgi_parts = errURL.split('&');
+		  err=cgi_parts[0]
+       }
+   }
+   var data_output = "";
+   data_output += "<form name=\"form\" onsubmit=\"GoLocation('reset')\">";
+   if(grp == -1 && inv == -1) {
+     //ALLE WR überhaupt --> nicht splitten
+	 relevant_events = e;
+   } else {
+      // Events auf WR aufsplitten
+      split_events(e);
+      relevant_events = e;
+   }
+   // Anlagengruppenauswahl definieren
+   if( AnzahlGrp > 0 ) {
+      data_output += "<select name=\"Gruppe\" size=\"1\" onchange=\"GoLocation()\">";
+      data_output += "<option value=-1";
+      if(grp == -1) data_output += " selected";
+      data_output += ">"+getText(LBL_ALLE)+" "+getText(LBL_GRUPPEN)+"</option>";
+      for(i=0; i<AnzahlGrp; i++ ) {
+         data_output += "<option value="+i+"";
+	     if(grp == i) data_output += " selected";
+	     data_output += ">"+getText(LBL_ANLAGENGRP)+" - "+AnlagenGrp[i][0]+"</option>";
+      }
+      data_output += "</select> ";
+   }
+   // WR-Auswahl definieren
+   if( AnzahlWR > 1 ) {
+      data_output += "<select name=\"WR\" size=\"1\" onchange=\"GoLocation()\">";
+      data_output += "<option value=-1";
+      if(inv == -1) data_output += " selected";
+      data_output += ">"+getText(LBL_ALLEWR2)+"</option>";
+      if(grp == -1) {
+         // Alle Anlagenpruppen, oder es existieren keine
+		 for( i=0; i<AnzahlWR; i++ ) {
+            data_output += "<option value="+(i+1)+"";
+		    if( inv == (i+1)) { data_output += " selected"; relevant_events = events[i]; }
+		    data_output += ">"+getText(LBL_WR)+""+(i+1)+" - "+WRInfo[i][4]+"</option>";
+         }
+      } else {
+         // Gewaehlte Anlagenpruppe
+		 relevant_events = new Array();
+         for(i=0; i<AnlagenGrp[grp][1].length; i++ ) {
+		    if(inv == -1) {
+			   // Alle WR ausgewaehlt  -> Alle WR der Anlagengruppe werden ausgewertet
+			   relevant_events = relevant_events.concat(events[(AnlagenGrp[grp][1][i]-1)]);
+            }
+	        data_output += "<option value="+AnlagenGrp[grp][1][i];
+		    if( inv == AnlagenGrp[grp][1][i] ) { data_output += " selected"; relevant_events = events[(AnlagenGrp[grp][1][i]-1)]; }
+               data_output += ">"+getText(LBL_WR)+""+(AnlagenGrp[grp][1][i])+" - "+WRInfo[(AnlagenGrp[grp][1][i]-1)][4]+"</option>";
+         }
+      }
+      data_output += "</select> ";
+   }
+   document.write(data_output);
+
+   //Events sortieren aus Performancegründen beim IE deaktiviert
+   if(browser != "IE" && browser != "NN") 
+      relevant_events.sort(sortEvent);
+   
+   // Alle Tage, Stati-Meldungen, Fehler ermitteln
+   unique(relevant_events);
+
+   // Tagesliste zur Auswahl
+   var data_output = "";
+   data_output += "<select name=\"Tag\" size=\"1\" onchange=\"GoLocation()\">";
+   data_output += "<option value=-1";
+   if(day == -1) data_output += " selected";
+   data_output += ">"+getText(LBL_ALLE)+" "+getText(LBL_TAGE)+"</option>";
+   for(i=0; i<array_date.length; i++ ) {
+       var datum = new Date(parseInt(20+array_date[i].substr(6,2),10),(Number(array_date[i].substr(3,2))-1), Number(array_date[i].substr(0,2)));
+
+      data_output += "<option value=\""+array_date[i].substr(0,2)+""+array_date[i].substr(3,2)+""+array_date[i].substr(6,2)+"\""; 
+      if(day == array_date[i].substr(0,2)+""+array_date[i].substr(3,2)+""+array_date[i].substr(6,2)) data_output += " selected";
+      data_output += ">"+datum.format(DateFormat)+"</option>";
+   }
+   data_output += "</select> ";
+   document.write(data_output);
+   
+   // Statusliste zur Auswahl
+   var data_output = "";
+   data_output += "<select name=\"Status\" size=\"1\" onchange=\"GoLocation()\">";
+   data_output += "<option value=-1";
+   if(stati == -1) data_output += " selected";
+   data_output += ">"+getText(LBL_ALLE)+" "+getText(LBL_STATI)+"</option>";
+   for(i=0; i<array_status.length; i++ ) {
+      data_output += "<option value=\""+escape(array_status[i])+"\"";
+      if(stati == escape(array_status[i])) data_output += " selected";
+      data_output += ">"+array_status[i]+"</option>";
+   }
+   data_output += "</select> ";
+   document.write(data_output);
+   // Fehlerliste zur Auswahl
+   var data_output = "";
+   data_output += "<select name=\"Fehler\" size=\"1\" onchange=\"GoLocation()\">";
+   data_output += "<option value=-1";
+   if(err==-1)  data_output += " selected";
+   data_output += ">"+getText(LBL_ALLE)+" "+getText(LBL_FEHLER)+"</option>";
+   for(i=0; i<array_fehler.length; i++ ) {
+      data_output += "<option value=\""+escape(array_fehler[i])+"\"";
+      if(err == escape(array_fehler[i])) data_output += " selected";
+      data_output += ">"+array_fehler[i]+"</option>";
+   }
+   data_output += "</select> ";
+   document.write(data_output);
+   
+   // Clear-Button
+   var data_output = "";
+   data_output += " <input type=\"submit\" value=\""+getText(LBL_CLEARLIST)+"\">";
+   data_output += "</form>";
+   if(day != -1) relevant_events = filterEvents(relevant_events, day, "Tag");
+   if(stati != -1) relevant_events = filterEvents(relevant_events, unescape(stati), "Status");
+   if(err != -1) relevant_events = filterEvents(relevant_events, unescape(err), "Fehler");
+   data_output += "</div><br>";
+   data_output += "<br><br><br>";
+   document.write(data_output);
+
+   //Tabelle erzeugen
+   var data_output = "";
+   data_output +="<table border=1 cellpadding=2 cellspacing=2 style=\"border-collapse:collapse; background-color: rgb(204, 208, 242);\" width=\"95%\">";
+   data_output +="<tbody>";
+   data_output +="<tr>";
+   data_output +=writeTD("<b>"+getText(LBL_WR)+"</b>")
+   data_output +=writeTD("<b>"+getText(LBL_EVENT_VONBIS)+"</b>")
+   data_output +=writeTD("<b>"+getText(LBL_STATUS)+"</b>")
+   data_output +=writeTD("<b>"+getText(LBL_FEHLER)+"</b>")
+   data_output +="</tr>";
+   document.write(data_output);
+   data_output = "";
+   if(relevant_events.length < max_events) max_events = relevant_events.length;
+   for(i=0; i<max_events; i++ ) {
+	  data_output += "<tr>";
+      data = enumEventData( relevant_events[i],";" );
+	  if(data[WRField] >= WRCol.length) {
+         wr = data[WRField];
+	     while(wr >= WRCol.length) {
+	        wr = wr - (WRCol.length);
+         }
+	     col=WRCol[wr];
+      } else {	  
+	     col = WRCol[data[WRField]];
+      }
+	  data_output +=writeTD((1+parseInt(data[WRField],10)), "", "center", col);
+      var beginn = new Date(parseInt(20+data[0].substr(6,4),10),(Number(data[0].substr(3,4))-1), Number(data[0].substr(0,2)),Number(data[0].substr(9,2)),Number(data[0].substr(12,2)),Number(data[0].substr(15,2)));
+      var ende = new Date(parseInt(20+data[1].substr(6,4),10),(Number(data[1].substr(3,4))-1), Number(data[1].substr(0,2)),Number(data[1].substr(9,2)),Number(data[1].substr(12,2)),Number(data[1].substr(15,2)));
+      if(beginn.getFullYear() == ende.getFullYear() && (beginn.getMonth() == ende.getMonth()) && (beginn.getDay() == ende.getDay())) 
+         data_output += writeTD(beginn.format(DateFormat+" "+TimeFormat) +" - "+ende.format(TimeFormat),"","", TableColor )
+      else
+      {
+         if (data[1]=="")
+            data_output +=writeTD(beginn.format(DateFormat+" "+TimeFormat)+" - "+data[1], "", "", TableColor);
+         else
+            data_output +=writeTD(beginn.format(DateFormat+" "+TimeFormat)+" - "+ende.format(DateFormat+" "+TimeFormat), "", "", TableColor);
+      }
+      status_ausgabe = enumEventData(StatusCodes[data[WRField]],",");
+      if(status_ausgabe.length < 256) {
+         for(var j=status_ausgabe.length; j < 255; j++)  status_ausgabe.push("");
+		 status_ausgabe.push("Offline");
+      }
+      fehler_ausgabe = enumEventData(FehlerCodes[data[WRField]],",");
+      if(fehler_ausgabe.length == 0) fehler_ausgabe.push("");		 
+      data_output +=writeTD(data[3]+" - "+status_ausgabe[parseInt(data[StatusField],10)], "", "", TableColor);
+      data_output +=writeTD((parseInt(data[ErrorField],10)==0?"":data[4])+" - "+fehler_ausgabe[parseInt(data[ErrorField],10)], "", "center", TableColor);
+	  data_output += "</tr>";
+   }
+   document.write(data_output)
+   document.write("</tbody></table>");
+   document.write("<br>");
+   if(relevant_events.length > max_events) {
+      document.write(relevant_events.length-max_events+""+getText(LBL_MOREROWS)+"<br>");
+   }
+   document.write("<br>");
+</script>
+</body></html>
