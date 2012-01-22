@@ -1,9 +1,7 @@
 <?php
-
-
 /*
  * © PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
- * 2012-07-01
+ * 2012-22-01
  *
  * Konvertierung von SunnyExplorer-Dateien in das Solarlog-Datenformat
  * Testdateien unter http://www.weichel21.de/SunnyExplorer
@@ -16,10 +14,8 @@
  * 0 -> alles fehlerfrei abgearbeitet, eventuelle Fehler wurden in Datei geloggt
  * 1 -> Die Datei zum Logging der Fehlermeldungen kann nicht geöffnet werden
  * 2 -> In die Datei zum Logging der Fehlermeldungen kann nicht geschrieben werden
- * 3 -> Fehler im konstruktor (siehe in Error-Logdatei)
- * 4 -> Fehler im konstruktor (siehe in Error-Logdatei)
- * 5 -> Fehler im konstruktor (siehe in Error-Logdatei)
- * Ansonsten werden alle Fehlermeldungen in der Error-Datei geloggt
+ * 3 -> Fehler im konstruktor (siehe auch in Error-Logdatei)
+ * Alle anderen Fehlermeldungen werden in der Error-Datei geloggt
  */
 
 /*
@@ -43,13 +39,13 @@ define('CSV_ANLAGEN_NAME', 'Anlage1');
  * lokales Verzeichnis ohne abschließenden Slash oder Backslash
  * z.B. C:/daten/SunnyExplorer
  */
-define('SEXPLORER_DATA_PATH','Test/EinWr/SunnyExplorer');
+define('SEXPLORER_DATA_PATH','Y:\\WebServer\\BernhardPV_Test\\SExplorerData');
 
 /*
  * Pfad angeben, in dem die Solarlog-Dateien abgelegt werden ohne abschließenden Slash oder Backslash
  * Auf dieses Verzeichnis muss das Script Schreibrechte haben z.B. C:/SolarLog
  */
-define('SLFILE_DATA_PATH', 'Test/SolarlogTest');
+define('SLFILE_DATA_PATH', 'Y:\\WebServer\\BernhardPV_Test');
 
 /*
  * Pfad und name einer lokalen Datei, in der Fehlermeldungen geloggt werden
