@@ -8,7 +8,6 @@ var MaxWRP=new Array(AnzahlWR)
 MaxWRP[0]=new Array(5000,40000,800000,2500000)
 
 var Boot=99
-var AnlagenKWP=8000
 var time_start = new Array(8,8,6,6,6,6,6,7,7,7,7,8)
 var time_end = new Array(17,18,20,21,21,22,22,21,20,19,17,17)
 var sollMonth = new Array(2,6,9,11,11,13,13,12,10,6,4,3)
