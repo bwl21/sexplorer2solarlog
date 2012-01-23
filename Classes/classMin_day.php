@@ -33,7 +33,7 @@ class classMin_day extends classSLDataFile {
 	 *
 	 * @return boolean
 	 */
-	public function isOnline(){
+	public function isOnline() {
 		return $this->isOnline;
 	}
 
@@ -53,7 +53,7 @@ class classMin_day extends classSLDataFile {
 		while ($startDate <= $endDate) {
 			//Dateinamen der csv-Datei für aktuelles Datum ermitteln und Datei öffnen
 			$SexplorerData = new classSExplorerData(realpath(SEXPLORER_DATA_PATH) . '/' . CSV_ANLAGEN_NAME . '-' . date('Ymd', $startDate) . '.csv');
-			$this->isOnline=$SexplorerData->isOnline(); //aktuellen Onlinestatus des WR erfragen
+			$this->isOnline = $SexplorerData->isOnline(); //aktuellen Onlinestatus des WR erfragen
 			$SExplorerNewestDate = $SexplorerData->getNewestDate();
 			if ($SExplorerNewestDate !== false) { //Es sind Daten vorhanden
 				if ($NewestDatum === false) {
@@ -72,6 +72,8 @@ class classMin_day extends classSLDataFile {
 					}
 				}
 				if ($NewestDatum != $SExplorerNewestDate) { //Neue Daten vorhanden
+					$eTag = array();
+					$etag=array_fill(0, self::getWrAnz(), 0);
 					$SexplorerData->setPointerToDate($NewestDatum);
 					$wrAnz = self::getWrAnz();
 					$werte = $SexplorerData->getCurrentValues();
@@ -81,13 +83,24 @@ class classMin_day extends classSLDataFile {
 						for ($i = 0; $i < $wrAnz; $i++) {
 							$w[$i][] = $werte[$datum][$i][classSExplorerData::p]; //PAC
 							$w[$i][] = $werte[$datum][$i][classSExplorerData::p]; //PDC
-							$w[$i][] = $werte[$datum][$i][classSExplorerData::etag]; //ETag
+							$w1 = $werte[$datum][$i][classSExplorerData::etag]; //ETag
+							$w[$i][] = $w1;
+							if ($etag[$i] < $w1) {
+								$etag[$i] = $w1;//größten eTag pro WR für days.js speichern
+								$dat = substr($datum, 0, 8);
+							}
 							$w[$i][] = 0; //UDC
 						}
 						self::addData($datum, $w);
 						$werte = $SexplorerData->getPrevValues();
 					}
-					unset($werte);
+					$werte = array();
+					for ($i = 0; $i < $wrAnz; $i++) {
+						$werte[$i] = array(classSExplorerData::etag => $etag[$i], classSExplorerData::p => 0);
+					}
+					//datei days.js erzeugen
+					$days = new classDays($dat, $werte);
+					unset($werte, $days,$etag);
 				}
 			}
 			unset($SexplorerData);
