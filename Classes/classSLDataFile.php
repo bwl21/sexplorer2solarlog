@@ -23,7 +23,7 @@ class classSLDataFile {
 	 * @param string $kennung
 	 */
 
-	public function __construct($filename, $kennung=null) {
+	public function __construct($filename, $kennung = null) {
 		$this->filename = $filename;
 		if (@file_exists($this->filename)) {//Wenn Datei da ist, öffnen und einlesen
 			ini_set('auto_detect_line_endings', true);
@@ -172,10 +172,10 @@ class classSLDataFile {
 	/**
 	 * sortiert $this->$data absteigend - neuestes Datum zuerst
 	 * ist $updateHash==true wird auch der hash erneuert
-	 * 
+	 *
 	 * @param boolean $updateHash
 	 */
-	protected function sort($updateHash=false) {
+	protected function sort($updateHash = false) {
 		if ((count($this->data) > 0) && (self::isChanged())) {
 			uksort($this->data, array($this, "cmp"));
 			if ($updateHash)
@@ -259,12 +259,13 @@ class classSLDataFile {
 						trigger_error('Fehler beim Schreiben in Datei ' . $this->filename);
 					}
 				}
+				unset($data);
 			} else {
 				trigger_error('Fehler beim Anlegen der Datei ' . $this->filename);
 			}
 			fclose($fp);
 		}
-		unset($data);
+		unset($this->data);
 	}
 
 }

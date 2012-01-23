@@ -33,7 +33,7 @@ class classYears extends classSLDataFile {
 			$SexplorerData=array();
 			$aktMonth=date('n', $startDate);
 			for($i=1;$i<=$aktMonth;$i++){
-				$filename=SEXPLORER_DATA_PATH . '/' . CSV_ANLAGEN_NAME . '-' . $year.  str_pad($i, 2,'0',STR_PAD_LEFT) . '.csv';
+				$filename=realpath(SEXPLORER_DATA_PATH) . '/' . CSV_ANLAGEN_NAME . '-' . $year.  str_pad($i, 2,'0',STR_PAD_LEFT) . '.csv';
 				$SexplorerData[$i] = new classSExplorerData($filename);
 				if($SexplorerData[$i]->getNewestDate()===false){
 					unset($SexplorerData[$i]);

@@ -29,7 +29,7 @@ class classDaysHist extends classSLDataFile{
 		}
 		while($startDate<=$endDate){
 			//Dateinamen der csv-Datei für den Vortag ermitteln und Datei öffnen
-			$SexplorerData=new classSExplorerData(SEXPLORER_DATA_PATH.'/'.CSV_ANLAGEN_NAME.'-'.date('Ym',$startDate).'.csv');
+			$SexplorerData=new classSExplorerData(realpath(SEXPLORER_DATA_PATH).'/'.CSV_ANLAGEN_NAME.'-'.date('Ym',$startDate).'.csv');
 			$SExplorerNewestDatum=$SexplorerData->getNewestDate();
 			if($SExplorerNewestDatum!==false){ //Es sind Daten vorhanden
 				if($NewestDatum===false){

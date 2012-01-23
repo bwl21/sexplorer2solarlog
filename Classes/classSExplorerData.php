@@ -29,6 +29,7 @@ class classSExplorerData {
 	private $DataType = null;
 	private $SerNoWR = array(); //Seriennummern der WR
 	private $wrAnz = null; //Anzahl WR aus den Seriennummern der WR ermittelt
+	private $isOnline=false; //Online-Status des WR
 
 	const daily = 'DAILY';
 	const monthly = 'MONTHLY';
@@ -99,8 +100,10 @@ class classSExplorerData {
 								}
 								$d1[$wr] = @$data[$spalte1[$wr] - 1];
 								$d2[$wr] = @$data[$spalte2[$wr] - 1] * 1000;
-								$d2sum+=$d2[$wr];
+								$d2sum+=$d2[$wr];//WR-Leistung
 							}
+							//Onlinestatus WR setzen -> Online wenn Leistung >0
+							$this->isOnline=$d2sum>0;
 							//Werte in $this->data eintragen
 							if ($this->DataType == self::daily) {
 								if ($d2sum > 0) {
@@ -124,6 +127,23 @@ class classSExplorerData {
 					classErrorLog::LogError('Die Anzahl angeschlossener Wechselrichter konnte aus der csv-Datei nicht ermittelt werden');
 				}
 			}
+		}
+	}
+
+
+	/**
+	 * Gibt den Online-Status der WR zurück
+	 * Ein Funktionsaufruf macht nur sinn, wenn Tagesdaten gespeichert sind.
+	 * Deshalb wird ein Fehlereintrag generiert falls die Funktion bei anderen Daten aufgerufen wird
+	 *
+	 * @return boolean||null
+	 */
+	public function isOnline(){
+		if(($this->DataType==self::daily) || (count($this->data)==0)){
+			return $this->isOnline;
+		}else{
+			classErrorLog::LogError('Die Funktion '.__FUNCTION__.' wurde für nicht-Tagesdaten aufgerufen');
+			return null;
 		}
 	}
 
