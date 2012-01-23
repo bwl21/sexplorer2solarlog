@@ -17,7 +17,7 @@ $min_day->check();
 $base_vars = new classBaseVars();
 $base_vars->setOnline($min_day->isOnline());
 if ($min_day->isNewDay()) {//Neuer Tag,andere Dateien auch ergänzen
-	$SLObject = new classDaysHist();
+	$SLObject = new classDaysHist($min_day->getPMax());
 	$SLObject->check();
 	unset($SLObject);
 	$SLObject = new classMonths();

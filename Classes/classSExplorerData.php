@@ -30,6 +30,7 @@ class classSExplorerData {
 	private $SerNoWR = array(); //Seriennummern der WR
 	private $wrAnz = null; //Anzahl WR aus den Seriennummern der WR ermittelt
 	private $isOnline=false; //Online-Status des WR
+	private $pmax=array();
 
 	const daily = 'DAILY';
 	const monthly = 'MONTHLY';
@@ -38,6 +39,7 @@ class classSExplorerData {
 	const eges = 'EGes';
 
 	function __construct($SExplorerFile) {
+		$this->pmax=array_fill(0, CSV_ANZWR, 0);
 		//Dateinamen vom Pfad abtrennen
 		if (!preg_match('/\w+-\d{6,8}\.csv/', $SExplorerFile, $matches)) {
 			classErrorLog::LogError(date('Y-m-d H:i:s') . ' - unbekanntes Format des Dateinamens ' . $SExplorerFile . ' in ' . __METHOD__);
@@ -50,7 +52,6 @@ class classSExplorerData {
 		unset($matches);
 		//Dateityp bestimmen (Tages- oder Monatsdatei)
 		$this->DataType = strlen($Name_Date[1]) == 8 ? self::daily : self::monthly;
-		$date = substr($Name_Date[1], 0, 4) . '-' . substr($Name_Date[1], 4, 2) . '-' . substr($Name_Date[1], 6, 2);
 		unset($Name_Date);
 		//Datei einlesen
 		ini_set('auto_detect_line_endings', true);
@@ -59,7 +60,6 @@ class classSExplorerData {
 				//Kopfzeile in den Daten suchen, nach der die Werte beginnen
 				$min = array(); //Anfangswert des Tages/Monats
 				$lines = 0;
-				$pos = null;
 				if ($this->DataType == self::daily) {
 					$spalte1 = explode(',', CSV_DAILY_YIELDSUM_COLUMN);
 					$spalte2 = explode(',', CSV_DAILY_POWER_COLUMN);
@@ -67,6 +67,7 @@ class classSExplorerData {
 					$spalte1 = explode(',', CSV_MONTHLY_MONTHSUM_COLUMN);
 					$spalte2 = explode(',', CSV_MONTHLY_DAYSUM_COLUMN);
 				}
+				$pmax=array();
 				foreach ($inhalt as $zeile) {
 					$zeile = str_replace(CSV_DECIMALPOINT, '.', trim($zeile)); //Dezimalpunkt in numerischen Werten setzen
 					$data = explode(CSV_DELIMITER, $zeile);
@@ -109,6 +110,9 @@ class classSExplorerData {
 								if ($d2sum > 0) {
 									for ($wr = 0; $wr < $this->wrAnz; $wr++) {
 										$this->data[$datum][$wr] = array(self::etag => (int) round(($d1[$wr] - $min[$wr]) * 1000), self::p => (int) $d2[$wr]);
+										if($this->pmax[$wr]<$d2[$wr]){
+											$this->pmax[$wr]=$d2[$wr];
+										}
 									}
 								}
 							} else {
@@ -145,6 +149,14 @@ class classSExplorerData {
 			classErrorLog::LogError('Die Funktion '.__FUNCTION__.' wurde für nicht-Tagesdaten aufgerufen');
 			return null;
 		}
+	}
+
+	/**
+	 * gibt Pmax des Tages zurück wenn es sich um Tagesdaten handelt
+	 * @return array
+	 */
+	public function getPmax(){
+		return $this->pmax;
 	}
 
 	/**
