@@ -62,11 +62,9 @@ class classSExplorerData {
 				if ($this->DataType == self::daily) {
 					$spalte1 = explode(',', CSV_DAILY_YIELDSUM_COLUMN);
 					$spalte2 = explode(',', CSV_DAILY_POWER_COLUMN);
-					$suchZeile = trim(CSV_HEAD_LINE_DAILY);
 				} else {
 					$spalte1 = explode(',', CSV_MONTHLY_MONTHSUM_COLUMN);
 					$spalte2 = explode(',', CSV_MONTHLY_DAYSUM_COLUMN);
-					$suchZeile = trim(CSV_HEAD_LINE_MONTHLY);
 				}
 				foreach ($inhalt as $zeile) {
 					$zeile = str_replace(CSV_DECIMALPOINT, '.', trim($zeile)); //Dezimalpunkt in numerischen Werten setzen
@@ -88,22 +86,14 @@ class classSExplorerData {
 								}
 							}
 						}
-					} elseif ($zeile == $suchZeile) {
-						//Positionen von Tag,Monat,Jahr,Stunde,Minute bestimmen
-						$pos = array();
-						$pos['day'] = strpos($data[0], CSV_HEAD_DAY);
-						$pos['month'] = strpos($data[0], CSV_HEAD_MONTH);
-						$pos['year'] = strpos($data[0], CSV_HEAD_YEAR);
-						$pos['hour'] = strpos($data[0], CSV_HEAD_HOUR);
-						$pos['minute'] = strpos($data[0], CSV_HEAD_MINUTE);
-					} elseif ($datum = self::is_time($pos, $data)) {
+					} elseif (($datum = self::getDateTime($data[0])) !== false) {
 						//Datum(+Zeit?) steht am Anfang der Zeile -> Werte einlesen
 						if (count($data) > 2) {//mindestens Daten für einen WR müssen enthalten sein
 							//Werte für alle WR auslesen und zwischenspeichern - gleich in Wh umrechnen
 							$d2sum = 0;
 							$d1 = array();
 							$d2 = array();
-							for ($wr = 0; $wr < CSV_ANZWR; $wr++) {
+							for ($wr = 0; $wr < $this->wrAnz; $wr++) {
 								if (!isset($min[$wr])) {
 									$min[$wr] = @$data[$spalte1[$wr] - 1];
 								}
@@ -114,12 +104,12 @@ class classSExplorerData {
 							//Werte in $this->data eintragen
 							if ($this->DataType == self::daily) {
 								if ($d2sum > 0) {
-									for ($wr = 0; $wr < CSV_ANZWR; $wr++) {
+									for ($wr = 0; $wr < $this->wrAnz; $wr++) {
 										$this->data[$datum][$wr] = array(self::etag => (int) round(($d1[$wr] - $min[$wr]) * 1000), self::p => (int) $d2[$wr]);
 									}
 								}
 							} else {
-								for ($wr = 0; $wr < CSV_ANZWR; $wr++) {
+								for ($wr = 0; $wr < $this->wrAnz; $wr++) {
 									$this->data[$datum][$wr] = array(self::eges => (int) round($d1[$wr] * 1000), self::etag => (int) round($d2[$wr]));
 								}
 							}
@@ -262,26 +252,18 @@ class classSExplorerData {
 	 * Hilfsfunktion zum Prüfen, ob es sich um ein Datum handelt
 	 * gibt false oder das Datum in der Form DD.MM.YY oder DD.MM.YY HH:NN:SS zurück
 	 *
-	 * @param array $pos
-	 * @param array $data
+	 * @param string $data
 	 * @return false|string
 	 */
-	private function is_time($pos, $data) {
-		if (is_null($pos)) {
-			return false;
+	private function getDateTime($DateTime) {
+		$format = 'd.m.y';
+		//kürzest mögliches Datum angenommen 2.1.12 1:25
+		//längstes Datum z.B. 2012-22-01
+		if (strlen($DateTime) > 10) {
+			$format.=' H:i:s';
 		}
-		$datum = substr($data[0], $pos['year'], strlen(CSV_HEAD_YEAR)) . '-' .
-						substr($data[0], $pos['month'], strlen(CSV_HEAD_MONTH)) . '-' .
-						substr($data[0], $pos['day'], strlen(CSV_HEAD_DAY));
-		if ($pos['hour']) {
-			$datum.=' ' . substr($data[0], $pos['hour'], strlen(CSV_HEAD_HOUR));
-			if ($pos['minute']) {
-				$datum.=':' . substr($data[0], $pos['minute'], strlen(CSV_HEAD_MINUTE)) . ':00';
-			} else {
-				$datum.=':00:00';
-			}
-		}
-		return strtotime($datum) == false ? false : substr($datum, 8, 2) . '.' . substr($datum, 5, 2) . '.' . substr($datum, 2, 2) . substr($datum, 10);
+		$datum = strtotime($DateTime);
+		return $datum === false ? false : date($format, $datum);
 	}
 
 	/**
