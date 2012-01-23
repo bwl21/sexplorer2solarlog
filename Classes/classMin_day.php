@@ -11,6 +11,7 @@ class classMin_day extends classSLDataFile {
 
 	private $isNewDay = false; //True wenn ein neuer Tag
 	private $isOnline = false; //Online-Status des WR
+	private $pMax=array(); //Array mit allen PMax der erzeugten Dateien
 
 	const min_day = 'min_day.js'; //Dateiname der min_day.js
 	const kennung = 'm[mi++]';
@@ -35,6 +36,15 @@ class classMin_day extends classSLDataFile {
 	 */
 	public function isOnline() {
 		return $this->isOnline;
+	}
+
+	/**
+	 * gibt PMax für alle erzeugten Dateien auf einem Array zurück
+	 *
+	 * @return array
+	 */
+	public function getPMax(){
+		return $this->pMax;
 	}
 
 	/**
@@ -72,7 +82,7 @@ class classMin_day extends classSLDataFile {
 					}
 				}
 				if ($NewestDatum != $SExplorerNewestDate) { //Neue Daten vorhanden
-					$eTag = array();
+					$etag = array();
 					$etag=array_fill(0, self::getWrAnz(), 0);
 					$SexplorerData->setPointerToDate($NewestDatum);
 					$wrAnz = self::getWrAnz();
@@ -95,8 +105,10 @@ class classMin_day extends classSLDataFile {
 						$werte = $SexplorerData->getPrevValues();
 					}
 					$werte = array();
+					$pmax=$SexplorerData->getPmax();
+					$this->pMax[substr($datum,0,8)]=$pmax;
 					for ($i = 0; $i < $wrAnz; $i++) {
-						$werte[$i] = array(classSExplorerData::etag => $etag[$i], classSExplorerData::p => 0);
+						$werte[$i] = array(classSExplorerData::etag => $etag[$i], classSExplorerData::p => $pmax[$i]);
 					}
 					//datei days.js erzeugen
 					$days = new classDays($dat, $werte);
@@ -106,6 +118,12 @@ class classMin_day extends classSLDataFile {
 			unset($SexplorerData);
 			$startDate+=86400;
 		}
+	}
+
+
+	public function __destruct() {
+		parent::__destruct();
+		unset($this->pMax);
 	}
 
 }

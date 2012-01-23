@@ -140,7 +140,7 @@ class classSLDataFile {
 		if (is_null($this->WrAnz)) {
 			$this->WrAnz = $wrAnz;
 		} elseif ($this->WrAnz != $wrAnz) { //Ist schon gesetzt und ungleich
-			trigger_error('Die übergebene Anzahl $wrAnz=' . $wrAnz . ' unterscheidet sich von der schon gesetzten Anzahl $this->WrAnz=' . $this->WrAnz);
+			trigger_error('Die $uuml;bergebene Anzahl $wrAnz=' . $wrAnz . ' unterscheidet sich von der schon gesetzten Anzahl $this->WrAnz=' . $this->WrAnz);
 		}
 	}
 
