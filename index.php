@@ -16,6 +16,21 @@ $min_day = new classMin_day();
 $min_day->check();
 $base_vars = new classBaseVars();
 $base_vars->setOnline($min_day->isOnline());
+$min_cur = new classMinCur();
+$p = $min_day->getP();
+$min_cur->setDatum(substr($p['datum_zeit'], 0, 8));
+$min_cur->setUhrzeit(substr($p['datum_zeit'], 9));
+$sumP = 0;
+for ($wr = 0; $wr < $min_day->getWrAnz(); $wr++) {
+	$sumP+=$p[$wr];
+}
+$min_cur->setPac($sumP);
+if (!key_exists(1, $p)) {
+	$p[1] = 0;
+}
+$p[2] = 0;
+$min_cur->setaPdc($p[0], $p[1], $p[2]);
+unset($min_cur);
 if ($min_day->isNewDay()) {//Neuer Tag,andere Dateien auch ergänzen
 	$SLObject = new classDaysHist($min_day->getPMax());
 	$SLObject->check();

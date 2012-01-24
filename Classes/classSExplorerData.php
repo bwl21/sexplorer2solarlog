@@ -42,7 +42,7 @@ class classSExplorerData {
 		$this->pmax=array_fill(0, CSV_ANZWR, 0);
 		//Dateinamen vom Pfad abtrennen
 		if (!preg_match('/\w+-\d{6,8}\.csv/', $SExplorerFile, $matches)) {
-			classErrorLog::LogError(date('Y-m-d H:i:s') . ' - unbekanntes Format des Dateinamens ' . $SExplorerFile . ' in ' . __METHOD__);
+			trigger_error(date('Y-m-d H:i:s') . ' - unbekanntes Format des Dateinamens ' . $SExplorerFile);
 			die(3);
 		}
 		//Datum und Dateinamen trennen
@@ -126,9 +126,9 @@ class classSExplorerData {
 				}
 				//Fehlerprüfung Anzahl WR und Seriennummern
 				if (is_null($this->wrAnz) || ($this->wrAnz != CSV_ANZWR)) { //ermittelte WR-Anz unterscheidet sich von der in config.inc.php
-					classErrorLog::LogError('Die Anzahl Wechselrichter=' . $this->wrAnz . ' in der csv Datei ' . $SExplorerFile . ' unterscheidet sich von der Anzahl Wechselrichter=' . CSV_ANZWR . ' in config.inc.php');
+					trigger_error('Die Anzahl Wechselrichter=' . $this->wrAnz . ' in der csv Datei ' . $SExplorerFile . ' unterscheidet sich von der Anzahl Wechselrichter=' . CSV_ANZWR . ' in config.inc.php');
 				} elseif (count($this->SerNoWR) != $this->wrAnz) { //Seriennummern konnten nicht ermittelt werden
-					classErrorLog::LogError('Die Anzahl angeschlossener Wechselrichter konnte aus der csv-Datei nicht ermittelt werden');
+					trigger_error('Die Anzahl angeschlossener Wechselrichter konnte aus der csv-Datei nicht ermittelt werden');
 				}
 			}
 		}
@@ -146,7 +146,7 @@ class classSExplorerData {
 		if(($this->DataType==self::daily) || (count($this->data)==0)){
 			return $this->isOnline;
 		}else{
-			classErrorLog::LogError('Die Funktion '.__FUNCTION__.' wurde für nicht-Tagesdaten aufgerufen');
+			trigger_error('Die Funktion '.__FUNCTION__.' wurde für nicht-Tagesdaten aufgerufen');
 			return null;
 		}
 	}

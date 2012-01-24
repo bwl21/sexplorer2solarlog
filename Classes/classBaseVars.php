@@ -43,7 +43,7 @@ class classBaseVars {
 	 * @return boolean
 	 */
 	public function isOnline(){
-		return $this->data['isOnline']=='true'?true:false;
+		return $this->data['var isOnline']=='true'?true:false;
 	}
 
 
@@ -53,7 +53,7 @@ class classBaseVars {
 	 * @param boolean $status
 	 */
 	public function setOnline($status){
-		$this->data['isOnline']=$status?'true':'false';
+		$this->data['var isOnline']=$status?'true':'false';
 	}
 
 	/**

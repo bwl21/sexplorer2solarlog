@@ -24,7 +24,7 @@ class classMinYYMMDD extends classSLDataFile{
 			$fn=explode('.', $datum);
 			$filename=$fn[2].$fn[1].$fn[0];
 			unset($fn);
-		}elseif(preg_match('/^\d{4}-\d{2}-\d{2}/', $subject)){ //Form YYYY-MM-DD
+		}elseif(preg_match('/^\d{4}-\d{2}-\d{2}/', $datum)){ //Form YYYY-MM-DD
 			$fn=explode('-', $datum);
 			$filename=substr($fn[0],2,2).$fn[1].$fn[2];
 			unset($fn);

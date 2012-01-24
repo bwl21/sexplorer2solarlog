@@ -32,11 +32,11 @@ class classDays {
 			}
 			$line.='"'.chr(13);
 			if(!@fwrite($fp,$line)){
-				classErrorLog::LogError('Fehler beim Schreiben in die Datei '.$filename);
+				trigger_error('Fehler beim Schreiben in die Datei '.$filename);
 			}
 			@fclose($fp);
 		}else{
-			classErrorLog::LogError('Fehler beim Öffnen der Datei '.$filename);
+			trigger_error('Fehler beim Öffnen der Datei '.$filename);
 		}
 	}
 }

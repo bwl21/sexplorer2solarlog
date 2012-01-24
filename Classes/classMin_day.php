@@ -11,7 +11,8 @@ class classMin_day extends classSLDataFile {
 
 	private $isNewDay = false; //True wenn ein neuer Tag
 	private $isOnline = false; //Online-Status des WR
-	private $pMax=array(); //Array mit allen PMax der erzeugten Dateien
+	private $pMax = array(); //Array mit allen PMax der erzeugten Dateien
+	private $p = array(); //Array mit den aktuellen Leistungen der Wr
 
 	const min_day = 'min_day.js'; //Dateiname der min_day.js
 	const kennung = 'm[mi++]';
@@ -43,12 +44,21 @@ class classMin_day extends classSLDataFile {
 	 *
 	 * @return array
 	 */
-	public function getPMax(){
+	public function getPMax() {
 		return $this->pMax;
 	}
 
 	/**
-	 * prüft die Aktualität der min_day.js und erzeugt bei Bedarf auch die min YYMMDD.js
+	 * gibt die aktuellen Momentanleistungen der WR auf einem Array zurück
+	 *
+	 * @return array
+	 */
+	public function getP() {
+		return $this->p;
+	}
+
+	/**
+	 * prüft die Aktualität der min_day.js und erzeugt bei Bedarf auch die minYYMMDD.js
 	 */
 	public function check() {
 		$NewestDatum = self::getNewestDatum();
@@ -60,6 +70,7 @@ class classMin_day extends classSLDataFile {
 		} else {
 			$startDate = $endDate;
 		}
+		$this->p=array_fill(0, self::getWrAnz(),0);
 		while ($startDate <= $endDate) {
 			//Dateinamen der csv-Datei für aktuelles Datum ermitteln und Datei öffnen
 			$SexplorerData = new classSExplorerData(realpath(SEXPLORER_DATA_PATH) . '/' . CSV_ANLAGEN_NAME . '-' . date('Ymd', $startDate) . '.csv');
@@ -83,7 +94,7 @@ class classMin_day extends classSLDataFile {
 				}
 				if ($NewestDatum != $SExplorerNewestDate) { //Neue Daten vorhanden
 					$etag = array();
-					$etag=array_fill(0, self::getWrAnz(), 0);
+					$etag = array_fill(0, self::getWrAnz(), 0);
 					$SexplorerData->setPointerToDate($NewestDatum);
 					$wrAnz = self::getWrAnz();
 					$werte = $SexplorerData->getCurrentValues();
@@ -91,12 +102,14 @@ class classMin_day extends classSLDataFile {
 						$datum = key($werte);
 						$w = array();
 						for ($i = 0; $i < $wrAnz; $i++) {
+							$this->p[$i]=$werte[$datum][$i][classSExplorerData::p];//Momentanleistungen speichern
+							$this->p['datum_zeit']=$datum; //zugehöriges Datum Zeit merken
 							$w[$i][] = $werte[$datum][$i][classSExplorerData::p]; //PAC
 							$w[$i][] = $werte[$datum][$i][classSExplorerData::p]; //PDC
 							$w1 = $werte[$datum][$i][classSExplorerData::etag]; //ETag
 							$w[$i][] = $w1;
 							if ($etag[$i] < $w1) {
-								$etag[$i] = $w1;//größten eTag pro WR für days.js speichern
+								$etag[$i] = $w1; //größten eTag pro WR für days.js speichern
 								$dat = substr($datum, 0, 8);
 							}
 							$w[$i][] = 0; //UDC
@@ -105,21 +118,43 @@ class classMin_day extends classSLDataFile {
 						$werte = $SexplorerData->getPrevValues();
 					}
 					$werte = array();
-					$pmax=$SexplorerData->getPmax();
-					$this->pMax[substr($datum,0,8)]=$pmax;
+					$pmax = $SexplorerData->getPmax();
+					$this->pMax[substr($datum, 0, 8)] = $pmax;
 					for ($i = 0; $i < $wrAnz; $i++) {
 						$werte[$i] = array(classSExplorerData::etag => $etag[$i], classSExplorerData::p => $pmax[$i]);
 					}
 					//datei days.js erzeugen
 					$days = new classDays($dat, $werte);
-					unset($werte, $days,$etag);
+					unset($werte, $days, $etag);
+				}
+			}
+			if (!self::isOnline()) {
+				//wenn WR offline sind, als letzten (neuesten) Wert noch 0 für p eintragen
+				$datum = self::getNewestDatum();
+				$werte = self::getValue($datum);
+				$w = 0;
+				if (!is_null($werte)) {
+					for ($i = 0; $i < self::getWrAnz(); $i++) {
+						$w+=$werte[$i][0] + $werte[$i][1]; //Summe bilden zum Prüfen, ob schon 0 drinsteht
+						$werte[$i][0] = 0; //PAC
+						$werte[$i][1] = 0; //PDC
+					}
+					if ($w > 0) {
+						//Zeit+5 Minuten auf 0 setzen
+						self::addData(date('d.m.y H:i:s', strtotime('20' . substr($datum, 6, 2) . '-' . substr($datum, 3, 2) . '-' . substr($datum, 0, 2) . substr($datum, 8)) + 300), $werte);
+					}
+					unset($werte);
+				}
+				$datum=date('d.m.y H:i:00',time());
+				for ($i = 0; $i < self::getWrAnz(); $i++) {
+					$this->p[$i]=0;//Momentanleistungen 0 speichern
+					$this->p['datum_zeit']=$datum; //zugehöriges Datum Zeit merken
 				}
 			}
 			unset($SexplorerData);
 			$startDate+=86400;
 		}
 	}
-
 
 	public function __destruct() {
 		parent::__destruct();
