@@ -83,6 +83,11 @@ define('CSV_HEAD_LINE_MONTHLY', 'dd.MM.yyyy;kWh;kWh;kWh;kWh');
  */
 
 /*
+ * Zeitzone des Anlagenstandorts (siehe http://php.net/manual/en/datetime.configuration.php )
+ */
+define('TIMEZONE', "Europe/Berlin");
+
+/*
  * Trennzeichen zwischen den einzelnen Werten in den csv-dateien
  */
 define('CSV_DELIMITER', ';');

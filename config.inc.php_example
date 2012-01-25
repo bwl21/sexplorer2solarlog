@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * © PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
  * 2012-07-01
@@ -42,7 +41,7 @@ define('CSV_ANLAGEN_NAME', 'Anlage1');
  * lokales Verzeichnis ohne abschließenden Slash oder Backslash
  * z.B. C:/daten/SunnyExplorer
  */
-define('SEXPLORER_DATA_PATH','<add path here>/SunnyExplorer');
+define('SEXPLORER_DATA_PATH', '<add path here>/SunnyExplorer');
 
 /*
  * Pfad angeben, in dem die Solarlog-Dateien abgelegt werden ohne abschließenden Slash oder Backslash
@@ -82,6 +81,11 @@ define('CSV_HEAD_LINE_MONTHLY', 'dd.MM.yyyy;kWh;kWh');
  * ab hier sind nur in Ausnahmefällen Änderungen der Eintragungen erforderlich
  * ###########################################################################
  */
+
+/*
+ * Zeitzone des Anlagenstandorts (siehe http://php.net/manual/en/datetime.configuration.php )
+ */
+define('TIMEZONE', "Europe/Berlin");
 
 /*
  * Trennzeichen zwischen den einzelnen Werten in den csv-dateien
@@ -141,7 +145,6 @@ define('CSV_HEAD_MONTH', 'MM'); //Bezeichnung für den Monat
 define('CSV_HEAD_YEAR', 'yyyy'); //Bezeichnug füe Jahr
 define('CSV_HEAD_HOUR', 'HH'); //Bezeichnung für Stunde
 define('CSV_HEAD_MINUTE', 'mm'); //Bezeichnung für Minute
-
 ?>
 
 

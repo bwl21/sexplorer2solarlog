@@ -8,12 +8,13 @@
 include_once 'config.inc.php';
 
 class classMonths extends classSLDataFile {
-	const months='months.js'; //Dateiname der months.js
-	const kennung='mo[mx++]';
+
+	const months = 'months.js'; //Dateiname der months.js
+	const kennung = 'mo[mx++]';
 
 	function __construct() {
 		ini_set('date.timezone', TIMEZONE);
-		parent::__construct(realpath(SLFILE_DATA_PATH) . '/' . self::months , self::kennung);
+		parent::__construct(realpath(SLFILE_DATA_PATH) . '/' . self::months, self::kennung);
 	}
 
 	/**
@@ -21,14 +22,14 @@ class classMonths extends classSLDataFile {
 	 */
 	public function check() {
 		$SLNewestDate = self::getNewestDatum();
-		$endDate=time()-86400;
+		$endDate = time() - 86400;
 		if ($SLNewestDate === false) { //Datei existiert nicht, erzeugen
 			self::setWrAnz(CSV_ANZWR); //Anzahl WR setzen
-			$startDate=strtotime(START_DATUM);
-		}else{
-			$startDate=$endDate;
+			$startDate = strtotime(START_DATUM);
+		} else {
+			$startDate = $endDate;
 		}
-		while($startDate<=$endDate){
+		while ($startDate <= $endDate) {
 			//Dateinamen der csv-Datei für den Vortag ermitteln und Datei öffnen
 			$SexplorerData = new classSExplorerData(realpath(SEXPLORER_DATA_PATH) . '/' . CSV_ANLAGEN_NAME . '-' . date('Ym', $startDate) . '.csv');
 			$SExplNewestDate = $SexplorerData->getNewestDate();
@@ -44,7 +45,7 @@ class classMonths extends classSLDataFile {
 				$werte = $SexplorerData->getCurrentValues();
 				//Summe über alle WR ETag des Monats bilden
 				while ($werte !== false) {
-					$key=key($werte);
+					$key = key($werte);
 					for ($i = 0; $i < self::getWrAnz(); $i++) {
 						$w[$i]+=$werte[$key][$i][classSExplorerData::etag];
 					}
@@ -54,7 +55,7 @@ class classMonths extends classSLDataFile {
 				unset($w);
 			}
 			unset($SexplorerData);
-			$startDate=  strtotime("+1 month", $startDate);
+			$startDate = strtotime("+1 month", $startDate);
 		}
 	}
 

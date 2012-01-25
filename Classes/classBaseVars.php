@@ -42,18 +42,17 @@ class classBaseVars {
 	 *
 	 * @return boolean
 	 */
-	public function isOnline(){
-		return $this->data['var isOnline']=='true'?true:false;
+	public function isOnline() {
+		return $this->data['var isOnline'] == 'true' ? true : false;
 	}
-
 
 	/**
 	 * setzt den Online-Status des WR in der base_vars.js
 	 *
 	 * @param boolean $status
 	 */
-	public function setOnline($status){
-		$this->data['var isOnline']=$status?'true':'false';
+	public function setOnline($status) {
+		$this->data['var isOnline'] = $status ? 'true' : 'false';
 	}
 
 	/**

@@ -29,8 +29,8 @@ class classSExplorerData {
 	private $DataType = null;
 	private $SerNoWR = array(); //Seriennummern der WR
 	private $wrAnz = null; //Anzahl WR aus den Seriennummern der WR ermittelt
-	private $isOnline=false; //Online-Status des WR
-	private $pmax=array();
+	private $isOnline = false; //Online-Status des WR
+	private $pmax = array();
 
 	const daily = 'DAILY';
 	const monthly = 'MONTHLY';
@@ -39,7 +39,7 @@ class classSExplorerData {
 	const eges = 'EGes';
 
 	function __construct($SExplorerFile) {
-		$this->pmax=array_fill(0, CSV_ANZWR, 0);
+		$this->pmax = array_fill(0, CSV_ANZWR, 0);
 		//Dateinamen vom Pfad abtrennen
 		if (!preg_match('/\w+-\d{6,8}\.csv/', $SExplorerFile, $matches)) {
 			trigger_error(date('Y-m-d H:i:s') . ' - unbekanntes Format des Dateinamens ' . $SExplorerFile);
@@ -67,7 +67,7 @@ class classSExplorerData {
 					$spalte1 = explode(',', CSV_MONTHLY_MONTHSUM_COLUMN);
 					$spalte2 = explode(',', CSV_MONTHLY_DAYSUM_COLUMN);
 				}
-				$pmax=array();
+				$pmax = array();
 				foreach ($inhalt as $zeile) {
 					$zeile = str_replace(CSV_DECIMALPOINT, '.', trim($zeile)); //Dezimalpunkt in numerischen Werten setzen
 					$data = explode(CSV_DELIMITER, $zeile);
@@ -101,17 +101,17 @@ class classSExplorerData {
 								}
 								$d1[$wr] = @$data[$spalte1[$wr] - 1];
 								$d2[$wr] = @$data[$spalte2[$wr] - 1] * 1000;
-								$d2sum+=$d2[$wr];//WR-Leistung
+								$d2sum+=$d2[$wr]; //WR-Leistung
 							}
 							//Onlinestatus WR setzen -> Online wenn Leistung >0
-							$this->isOnline=$d2sum>0;
+							$this->isOnline = $d2sum > 0;
 							//Werte in $this->data eintragen
 							if ($this->DataType == self::daily) {
 								if ($d2sum > 0) {
 									for ($wr = 0; $wr < $this->wrAnz; $wr++) {
 										$this->data[$datum][$wr] = array(self::etag => (int) round(($d1[$wr] - $min[$wr]) * 1000), self::p => (int) $d2[$wr]);
-										if($this->pmax[$wr]<$d2[$wr]){
-											$this->pmax[$wr]=$d2[$wr];
+										if ($this->pmax[$wr] < $d2[$wr]) {
+											$this->pmax[$wr] = $d2[$wr];
 										}
 									}
 								}
@@ -134,7 +134,6 @@ class classSExplorerData {
 		}
 	}
 
-
 	/**
 	 * Gibt den Online-Status der WR zurück
 	 * Ein Funktionsaufruf macht nur sinn, wenn Tagesdaten gespeichert sind.
@@ -142,11 +141,11 @@ class classSExplorerData {
 	 *
 	 * @return boolean||null
 	 */
-	public function isOnline(){
-		if(($this->DataType==self::daily) || (count($this->data)==0)){
+	public function isOnline() {
+		if (($this->DataType == self::daily) || (count($this->data) == 0)) {
 			return $this->isOnline;
-		}else{
-			trigger_error('Die Funktion '.__FUNCTION__.' wurde für nicht-Tagesdaten aufgerufen');
+		} else {
+			trigger_error('Die Funktion ' . __FUNCTION__ . ' wurde für nicht-Tagesdaten aufgerufen');
 			return null;
 		}
 	}
@@ -155,7 +154,7 @@ class classSExplorerData {
 	 * gibt Pmax des Tages zurück wenn es sich um Tagesdaten handelt
 	 * @return array
 	 */
-	public function getPmax(){
+	public function getPmax() {
 		return $this->pmax;
 	}
 

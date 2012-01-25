@@ -99,8 +99,8 @@ class classSLDataFile {
 	 * Gibt den Wert zum Datum zurück
 	 * @param string $forDate
 	 */
-	public function getValue($forDate){
-		return key_exists($forDate, $this->data)?$this->data[$forDate]:null;
+	public function getValue($forDate) {
+		return key_exists($forDate, $this->data) ? $this->data[$forDate] : null;
 	}
 
 	/**

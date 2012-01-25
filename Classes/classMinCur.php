@@ -81,9 +81,9 @@ class classMinCur {
 		if (is_integer($datum)) { //Timestamp
 			$datum = date('"d.m.y"', $datum);
 		} elseif (preg_match('/^\d{2}\.\d{2}\.\d{2}/', $datum)) { //Form DD.MM.YY
-			$datum = '"' . substr($datum,0,8) . '"';
+			$datum = '"' . substr($datum, 0, 8) . '"';
 		} elseif (preg_match('/^\d{4}-\d{2}-\d{2}/', $datum)) { //Form YYYY-MM-DD
-			$d = explode('-', substr($datum,0,10));
+			$d = explode('-', substr($datum, 0, 10));
 			$datum = '"' . $d[2] . '.' . $d[1] . substr($d[0], 2, 2) . '"';
 			unset($d);
 		} else { //ungültiges Format
@@ -152,7 +152,6 @@ class classMinCur {
 	public function setFehlerCode($wr, $code) {
 		$this->data['curFehlerCode[' . $wr . ']'] = $code;
 	}
-
 
 	/**
 	 * schreibt die Datei bei Veränderungen neu
