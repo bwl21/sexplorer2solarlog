@@ -18,6 +18,7 @@ class classMin_day extends classSLDataFile {
 	const kennung = 'm[mi++]';
 
 	function __construct() {
+		ini_set('date.timezone', TIMEZONE);
 		parent::__construct(realpath(SLFILE_DATA_PATH) . '/' . self::min_day, self::kennung);
 	}
 

@@ -24,6 +24,7 @@ class classMinCur {
 	 */
 
 	function __construct() {
+		ini_set('date.timezone', TIMEZONE);
 		$this->filename = realpath(SLFILE_DATA_PATH) . '/' . self::minCur;
 		if (@file_exists($this->filename)) {
 			ini_set('auto_detect_line_endings', true);

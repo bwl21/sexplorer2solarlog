@@ -11,6 +11,7 @@ include_once 'config.inc.php';
 //###########################################################################################################
 //######################## main # Hauptprogramm #############################################################
 //###########################################################################################################
+ini_set('date.timezone', TIMEZONE);
 set_error_handler('myErrorHandler');
 $min_day = new classMin_day();
 $min_day->check();
@@ -66,6 +67,7 @@ function __autoload($class_name) {
  * @param integer $fehlerzeile
  */
 function myErrorHandler($fehlercode, $fehlertext, $fehlerdatei, $fehlerzeile) {
+	ini_set('date.timezone', TIMEZONE);
 	if (is_array($fehlertext)) {
 		$fehlertext = implode(chr(13), $fehlertext);
 	}

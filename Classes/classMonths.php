@@ -12,6 +12,7 @@ class classMonths extends classSLDataFile {
 	const kennung='mo[mx++]';
 
 	function __construct() {
+		ini_set('date.timezone', TIMEZONE);
 		parent::__construct(realpath(SLFILE_DATA_PATH) . '/' . self::months , self::kennung);
 	}
 

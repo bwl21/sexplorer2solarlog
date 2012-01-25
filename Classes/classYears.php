@@ -12,6 +12,7 @@ class classYears extends classSLDataFile {
 	const kennung='ye[yx++]';
 
 	function __construct() {
+		ini_set('date.timezone', TIMEZONE);
 		parent::__construct(realpath(SLFILE_DATA_PATH) . '/' . self::years, self::kennung);
 	}
 

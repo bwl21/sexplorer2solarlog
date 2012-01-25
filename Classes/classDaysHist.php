@@ -19,6 +19,7 @@ class classDaysHist extends classSLDataFile{
 	 * @param array $pmax
 	 */
 	function __construct($pmax=array()) {
+		ini_set('date.timezone', TIMEZONE);
 		parent::__construct(realpath(SLFILE_DATA_PATH).'/'.self::days_hist,self::kennung);
 		$this->pMax=$pmax;
 	}

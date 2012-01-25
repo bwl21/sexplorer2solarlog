@@ -68,6 +68,11 @@ define('CSV_ANZWR', 1);
  */
 
 /*
+ * Zeitzone des Anlagenstandorts (siehe http://php.net/manual/en/datetime.configuration.php )
+ */
+define('TIMEZONE',"Europe/Berlin");
+
+/*
  * Trennzeichen zwischen den einzelnen Werten in den csv-dateien
  */
 define('CSV_DELIMITER', ';');
