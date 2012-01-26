@@ -71,12 +71,14 @@ function myErrorHandler($fehlercode, $fehlertext, $fehlerdatei, $fehlerzeile) {
 	if (is_array($fehlertext)) {
 		$fehlertext = implode(chr(13), $fehlertext);
 	}
-	$msg = date('Y-m-d', time()) . ' - ' . $fehlertext . ' Code: ' . $fehlercode . ' in Datei: ' . $fehlerdatei . ' Zeile: ' . $fehlerzeile;
+	$msg = date('Y-m-d H:i:s', time()) . ' - ' . $fehlertext . ' Code: ' . $fehlercode . ' in Datei: ' . $fehlerdatei . ' Zeile: ' . $fehlerzeile;
 	if (!isset($_SERVER['argc'])) {//script wird vom Browser ausgeführt
-		echo str_replace(chr(13), '<br>', $msg) . '<br>';
+		if(strtolower(trim(ini_get('display_errors')))!='off'){
+			echo str_replace(chr(13), '<br>', $msg) . '<br>';
+		}
 	}
 	if (!($fp = @fopen(ERROR_LOG_FILE, 'ab'))) {
-		echo('Fehler beim Öffnen der Datei ' . ERROR_LOG_FILE . '<br>');
+		echo('Fehler beim &Ouml;ffnen der Datei ' . ERROR_LOG_FILE . '<br>');
 		die(1);
 	}
 	if (!fwrite($fp, $msg . chr(13))) {

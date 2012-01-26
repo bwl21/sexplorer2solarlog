@@ -32,7 +32,7 @@ class classMinCur {
 				foreach ($arr as $line) {
 					$line = explode('=', $line);
 					if (count($line) == 2) {
-						$this->data[$line[0]] = $line[1];
+						$this->data[trim($line[0])] = trim($line[1]);
 					}
 				}
 			}

@@ -33,14 +33,14 @@ class classSLDataFile {
 			} else {//Daten aus Datei einlesen
 				foreach ($arr as $line) {
 					$line = str_replace('"', '', trim($line));
-					if (preg_match('/^(m\[mi|da\[dx|mo\[mx|yr\[yx)\+{2}\]=\d{2}\.\d{2}\.\d{2}(\s|\|)/', $line)) {
+					if (preg_match('/^((m\[mi)|(da\[dx)|(mo\[mx)|(ye\[yx))\+{2}\]=\d{2}\.\d{2}\.\d{2}(\s|\|)/', $line)) {
 						$matches = explode('=', $line);
 						$this->kennung = $matches[0];
 						if (count($matches) != 2) {
 							trigger_error('Ungültige Zeile "' . $line . '" in Datei ' . $this->filename);
 						} else {
 							$matches = explode('|', $matches[1]);
-							$datum = $matches[0];
+							$datum = trim($matches[0]);
 							unset($matches[0]);
 							$wrAnz = count($matches);
 							if (is_null($this->WrAnz)) {
@@ -52,7 +52,7 @@ class classSLDataFile {
 							}
 							$wr = 0;
 							foreach ($matches as $line1) {
-								$this->data[$datum][$wr] = explode(';', $line1);
+								$this->data[$datum][$wr] = explode(';', trim($line1));
 								$wr++;
 							}
 						}

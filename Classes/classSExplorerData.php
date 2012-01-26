@@ -124,11 +124,13 @@ class classSExplorerData {
 						}
 					}
 				}
-				//Fehlerprüfung Anzahl WR und Seriennummern
-				if (is_null($this->wrAnz) || ($this->wrAnz != CSV_ANZWR)) { //ermittelte WR-Anz unterscheidet sich von der in config.inc.php
-					trigger_error('Die Anzahl Wechselrichter=' . $this->wrAnz . ' in der csv Datei ' . $SExplorerFile . ' unterscheidet sich von der Anzahl Wechselrichter=' . CSV_ANZWR . ' in config.inc.php');
-				} elseif (count($this->SerNoWR) != $this->wrAnz) { //Seriennummern konnten nicht ermittelt werden
-					trigger_error('Die Anzahl angeschlossener Wechselrichter konnte aus der csv-Datei nicht ermittelt werden');
+				if (count($this->data) > 0) {
+					//Fehlerprüfung Anzahl WR und Seriennummern
+					if (is_null($this->wrAnz) || ($this->wrAnz != CSV_ANZWR)) { //ermittelte WR-Anz unterscheidet sich von der in config.inc.php
+						trigger_error('Die Anzahl Wechselrichter=' . $this->wrAnz . ' in der csv Datei ' . $SExplorerFile . ' unterscheidet sich von der Anzahl Wechselrichter=' . CSV_ANZWR . ' in config.inc.php');
+					} elseif (count($this->SerNoWR) != $this->wrAnz) { //Seriennummern konnten nicht ermittelt werden
+						trigger_error('Die Anzahl angeschlossener Wechselrichter konnte aus der csv-Datei nicht ermittelt werden');
+					}
 				}
 			}
 		}
