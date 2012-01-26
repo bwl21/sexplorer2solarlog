@@ -56,6 +56,24 @@ class classBaseVars {
 	}
 
 	/**
+	 * setzt die Variable var SLDatum in base_vars.js
+	 *
+	 * @param string $datum
+	 */
+	public function setSLDatum($datum) {
+		$this->data['var SLDatum'] = '"'.$datum.'"';
+	}
+
+	/**
+	 * setzt die Variable var SLUhrzeit in base_vars.js
+	 *
+	 * @param string $uhrzeit
+	 */
+	public function setSLUhrzeit($uhrzeit) {
+		$this->data['var SLUhrzeit'] = '"'.$uhrzeit.'"';
+	}
+
+	/**
 	 * prüft, ob Daten geändert wurden; sowohl Reihenfolge als auch InHalt der Daten im Array
 	 *
 	 * @return boolean

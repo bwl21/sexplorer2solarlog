@@ -72,6 +72,7 @@ class classMin_day extends classSLDataFile {
 			$startDate = $endDate;
 		}
 		$this->p = array_fill(0, self::getWrAnz(), 0);
+		$this->p['datum_zeit'] = date('d.m.y H:i:00', time()); //zugehöriges Datum Zeit merken
 		while ($startDate <= $endDate) {
 			//Dateinamen der csv-Datei für aktuelles Datum ermitteln und Datei öffnen
 			$SexplorerData = new classSExplorerData(realpath(SEXPLORER_DATA_PATH) . '/' . CSV_ANLAGEN_NAME . '-' . date('Ymd', $startDate) . '.csv');
@@ -146,10 +147,8 @@ class classMin_day extends classSLDataFile {
 					}
 					unset($werte);
 				}
-				$datum = date('d.m.y H:i:00', time());
 				for ($i = 0; $i < self::getWrAnz(); $i++) {
 					$this->p[$i] = 0; //Momentanleistungen 0 speichern
-					$this->p['datum_zeit'] = $datum; //zugehöriges Datum Zeit merken
 				}
 			}
 			unset($SexplorerData);

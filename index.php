@@ -21,6 +21,8 @@ $min_cur = new classMinCur();
 $p = $min_day->getP();
 $min_cur->setDatum(substr($p['datum_zeit'], 0, 8));
 $min_cur->setUhrzeit(substr($p['datum_zeit'], 9));
+$base_vars->setSLDatum(substr($p['datum_zeit'], 0, 8));
+$base_vars->setSLUhrzeit(substr($p['datum_zeit'], 9));
 $sumP = 0;
 for ($wr = 0; $wr < $min_day->getWrAnz(); $wr++) {
 	$sumP+=$p[$wr];
