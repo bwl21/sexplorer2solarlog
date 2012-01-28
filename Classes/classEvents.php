@@ -1,10 +1,22 @@
 <?php
 
 /**
+ * Beschreibung von $RCSfile: classEvents.php $
+ *
  * classEvents Klasse zum verwalten der Datei events.js des Solarlog
  *
  * @author PhotonenSammler <photonensammler@freenet.de>
+ *
+ * © PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
+ * 
+ *
+ * $Date: 2012/01/28 18:08:16 $
+ * $Id: classEvents.php fa10176932de 2012/01/28 18:08:16 Bernhard $
+ * $LocalRevision: 89 $
+ * $Revision: fa10176932de $
  */
+
+
 class classEvents extends classSLDataFile {
 	/* Datenformat von $this->data
 	 *

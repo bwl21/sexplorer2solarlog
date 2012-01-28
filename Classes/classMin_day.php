@@ -1,10 +1,22 @@
 <?php
 
 /**
+ * Beschreibung von $RCSfile: classMin_day.php $
+ *
  * Klasse zur Verwaltung/Erzeugung von min_day.js files des Solarlog
  *
  * @author PhotonenSammler <photonensammler@freenet.de>
+ *
+ * © PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
+ * 
+ *
+ * $Date: 2012/01/28 18:08:16 $
+ * $Id: classMin_day.php fa10176932de 2012/01/28 18:08:16 Bernhard $
+ * $LocalRevision: 89 $
+ * $Revision: fa10176932de $
  */
+
+
 include_once 'config.inc.php';
 
 class classMin_day extends classSLDataFile {

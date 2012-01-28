@@ -1,11 +1,25 @@
 <?php
 
+/**
+ * Beschreibung von $RCSfile: classDaysHist.php $
+ *
+ * verwaltet die Solarlog-Datei days_hist.js
+ *
+ * @author PhotonenSammler <photonensammler@freenet.de>
+ *
+ * © PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
+ * 
+ *
+ * $Date: 2012/01/28 18:08:16 $
+ * $Id: classDaysHist.php fa10176932de 2012/01/28 18:08:16 Bernhard $
+ * $LocalRevision: 89 $
+ * $Revision: fa10176932de $
+ */
+
+
 include_once 'config.inc.php';
 
-/**
- * verwaltet die Solarlog-Datei days_hist.js
- * @author PhotonenSammler <photonensammler@freenet.de>
- */
+
 class classDaysHist extends classSLDataFile{
 
 	private $pMax=array();

@@ -1,15 +1,24 @@
 <?php
 
-/*
- * © PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
- */
-include_once 'config.inc.php';
-
 /**
+ * Beschreibung von $RCSfile: classBaseVars.php $
+ *
  * Verwaltung der Solarlog-Datei base_vars.js
  *
  * @author PhotonenSammler <photonensammler@freenet.de>
+ *
+ * © PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
+ * 
+ *
+ * $Date: 2012/01/28 18:08:16 $
+ * $Id: classBaseVars.php fa10176932de 2012/01/28 18:08:16 Bernhard $
+ * $LocalRevision: 89 $
+ * $Revision: fa10176932de $
  */
+ 
+include_once 'config.inc.php';
+
+
 class classBaseVars {
 
 	const base_vars = 'base_vars.js'; //Dateiname der base_vars.js

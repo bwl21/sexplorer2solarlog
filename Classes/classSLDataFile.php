@@ -1,6 +1,24 @@
 <?php
 
 /**
+ * Beschreibung von $RCSfile: classSLDataFile.php $
+ *
+ * allgemeine Klasse für Solarlog-Datendateien
+ * min_day.js, minYYMMDD.js, days_hist.js, months.js, years.js
+ *
+ * @author PhotonenSammler <photonensammler@freenet.de>
+ *
+ * © PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
+ * 
+ *
+ * $Date: 2012/01/28 18:08:16 $
+ * $Id: classSLDataFile.php fa10176932de 2012/01/28 18:08:16 Bernhard $
+ * $LocalRevision: 89 $
+ * $Revision: fa10176932de $
+ */
+
+
+/**
  * allgemeine Klasse für Solarlog-Datendateien
  * min_day.js, minYYMMDD.js, days_hist.js, months.js, years.js
  *

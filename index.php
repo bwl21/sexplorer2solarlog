@@ -1,10 +1,21 @@
 <?php
 
-/*
- * Daten-URL zum Testen http://www.weichel21.de/SunnyExplorer
- * SL-Dateien unter http://www.weichel21.de/SolarLog
- * Link zur Anlage Sonnenertrag http://www.sonnenertrag.eu/de/stuttgart/anlage21/17964/17514.html
+/**
+ * Beschreibung von $RCSfile: index.php $
+ *
+ * Hauptproramm zur Konvertierung von SMA SunnyExplorer nach SolarLog
+ *
+ * @author PhotonenSammler <photonensammler@freenet.de>
+ *
+ * © PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
+ * 
+ *
+ * $Date: 2012/01/28 18:08:16 $
+ * $Id: index.php fa10176932de 2012/01/28 18:08:16 Bernhard $
+ * $LocalRevision: 89 $
+ * $Revision: fa10176932de $
  */
+
 include_once 'config.inc.php';
 
 

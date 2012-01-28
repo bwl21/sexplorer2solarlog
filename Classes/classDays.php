@@ -1,15 +1,26 @@
 <?php
 
-/*
- * © PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
- */
-include_once 'config.inc.php';
-
 /**
+ * Beschreibung von $RCSfile: classDays.php $
+ *
  * erzeugt die SL-Datei days.js - die Datei dient zur Anzeige des aktuellen Tages in der Monatsansicht der SL-Homepage
  *
  * @author PhotonenSammler <photonensammler@freenet.de>
+ *
+ * © PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
+ * 
+ *
+ * $Date: 2012/01/28 18:08:16 $
+ * $Id: classDays.php fa10176932de 2012/01/28 18:08:16 Bernhard $
+ * $LocalRevision: 89 $
+ * $Revision: fa10176932de $
  */
+
+
+
+include_once 'config.inc.php';
+
+
 class classDays {
 
 	const days = 'days.js'; //Dateiname der days.js

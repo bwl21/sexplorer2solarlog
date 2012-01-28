@@ -1,16 +1,25 @@
 <?php
 
-/*
- * © PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
- */
-
-include_once 'config.inc.php';
-
 /**
+ * Beschreibung von $RCSfile: classSExplorerData.php $
+ *
  * Klasse zum Einlesen von csv-Dateien des Sunny-Explorers
  *
  * @author PhotonenSammler <photonensammler@freenet.de>
+ *
+ * © PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
+ * 
+ *
+ * $Date: 2012/01/28 18:08:16 $
+ * $Id: classSExplorerData.php fa10176932de 2012/01/28 18:08:16 Bernhard $
+ * $LocalRevision: 89 $
+ * $Revision: fa10176932de $
  */
+
+
+include_once 'config.inc.php';
+
+
 class classSExplorerData {
 
 // Format von $this->data bei einer Tagesdatei und 2 WR
