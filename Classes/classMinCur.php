@@ -87,7 +87,7 @@ class classMinCur {
 			$datum = '"' . $d[2] . '.' . $d[1] . substr($d[0], 2, 2) . '"';
 			unset($d);
 		} else { //ungültiges Format
-			trigger_error('Ungültiges Datumsformat ' . $datum . ' wurde übergeben');
+			trigger_error('Ung&uuml;ltiges Datumsformat ' . $datum . ' wurde übergeben');
 		}
 		$this->data['var Datum'] = $datum;
 	}

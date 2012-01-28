@@ -12,7 +12,7 @@ class classMin_day extends classSLDataFile {
 	private $isNewDay = false; //True wenn ein neuer Tag
 	private $isOnline = false; //Online-Status des WR
 	private $pMax = array(); //Array mit allen PMax der erzeugten Dateien
-	private $p = array(); //Array mit den aktuellen Leistungen der Wr
+	private $p = null; //Array mit den aktuellen Leistungen der Wr, nur Werte bei Veränderung
 
 	const min_day = 'min_day.js'; //Dateiname der min_day.js
 	const kennung = 'm[mi++]';
@@ -51,6 +51,7 @@ class classMin_day extends classSLDataFile {
 
 	/**
 	 * gibt die aktuellen Momentanleistungen der WR auf einem Array zurück
+	 * wenn es keine Veränderung gibt (keine neuen Werte vorhanden) wird null zurückgegeben
 	 *
 	 * @return array
 	 */
@@ -71,8 +72,6 @@ class classMin_day extends classSLDataFile {
 		} else {
 			$startDate = $endDate;
 		}
-		$this->p = array_fill(0, self::getWrAnz(), 0);
-		$this->p['datum_zeit'] = date('d.m.y H:i:00', time()); //zugehöriges Datum Zeit merken
 		while ($startDate <= $endDate) {
 			//Dateinamen der csv-Datei für aktuelles Datum ermitteln und Datei öffnen
 			$SexplorerData = new classSExplorerData(realpath(SEXPLORER_DATA_PATH) . '/' . CSV_ANLAGEN_NAME . '-' . date('Ymd', $startDate) . '.csv');
@@ -95,6 +94,8 @@ class classMin_day extends classSLDataFile {
 					}
 				}
 				if ($NewestDatum != $SExplorerNewestDate) { //Neue Daten vorhanden
+					$this->p=array();
+					$this->p = array_fill(0, self::getWrAnz(), 0);
 					$etag = array();
 					$etag = array_fill(0, self::getWrAnz(), 0);
 					$SexplorerData->setPointerToDate($NewestDatum);
@@ -106,7 +107,7 @@ class classMin_day extends classSLDataFile {
 						for ($i = 0; $i < $wrAnz; $i++) {
 							$this->p[$i] = $werte[$datum][$i][classSExplorerData::p]; //Momentanleistungen speichern
 							$this->p['datum_zeit'] = $datum; //zugehöriges Datum Zeit merken
-							$w[$i][] = $werte[$datum][$i][classSExplorerData::p]; //PAC
+							$w[$i][] = intval(floor(0.99*$werte[$datum][$i][classSExplorerData::p])); //PAC
 							$w[$i][] = $werte[$datum][$i][classSExplorerData::p]; //PDC
 							$w1 = $werte[$datum][$i][classSExplorerData::etag]; //ETag
 							$w[$i][] = $w1;
@@ -147,6 +148,9 @@ class classMin_day extends classSLDataFile {
 					}
 					unset($werte);
 				}
+				$this->p=array();
+				$this->p = array_fill(0, self::getWrAnz(), 0);
+				$this->p['datum_zeit'] = date('d.m.y',time()); //zugehöriges Datum Zeit merken
 				for ($i = 0; $i < self::getWrAnz(); $i++) {
 					$this->p[$i] = 0; //Momentanleistungen 0 speichern
 				}
