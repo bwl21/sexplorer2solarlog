@@ -8,22 +8,34 @@
  *
  * @author PhotonenSammler <photonensammler@freenet.de>
  *
- * © PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
+ * Copyright 2012 PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
  * 
  *
- * $Date: 2012/01/28 18:08:16 $
- * $Id: classSLDataFile.php fa10176932de 2012/01/28 18:08:16 Bernhard $
- * $LocalRevision: 89 $
- * $Revision: fa10176932de $
+ * $Date: 2012/01/28 18:48:21 $
+ * $Id: classSLDataFile.php 6e4ce5cea10f 2012/01/28 18:48:21 Bernhard $
+ * $LocalRevision: 90 $
+ * $Revision: 6e4ce5cea10f $
  */
 
+/*
 
-/**
- * allgemeine Klasse für Solarlog-Datendateien
- * min_day.js, minYYMMDD.js, days_hist.js, months.js, years.js
- *
- * @author PhotonenSammler <photonensammler@freenet.de>
- */
+    Diese Datei ist Teil von SExplore2SlLog.
+
+    SExplore2SlLog ist Freie Software: Sie können es unter den Bedingungen
+    der GNU General Public License, wie von der Free Software Foundation,
+    Version 3 der Lizenz oder jeder späteren veröffentlichten Version, 
+    weiterverbreiten und/oder modifizieren.
+
+    FuSExplore2SlLog wird in der Hoffnung, dass es nützlich sein wird, aber
+    OHNE JEDE GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite
+    Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK.
+    Siehe die GNU General Public License für weitere Details.
+    
+    <http://www.gnu.org/licenses/>
+
+*/
+
+
 class classSLDataFile {
 
 	private $filename = null; //Dateiname der Solarlog-Daten-Datei
