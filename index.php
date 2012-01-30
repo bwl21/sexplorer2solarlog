@@ -1,10 +1,40 @@
 <?php
 
-/*
- * Daten-URL zum Testen http://www.weichel21.de/SunnyExplorer
- * SL-Dateien unter http://www.weichel21.de/SolarLog
- * Link zur Anlage Sonnenertrag http://www.sonnenertrag.eu/de/stuttgart/anlage21/17964/17514.html
+/**
+ * Beschreibung von $RCSfile: index.php $
+ *
+ * Hauptproramm zur Konvertierung von SMA SunnyExplorer nach SolarLog
+ *
+ * @author PhotonenSammler <photonensammler@freenet.de>
+ *
+ * Copyright 2012 PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
+ * 
+ *
+ * $Date: 2012/01/30 21:11:13 $
+ * $Id: index.php 5565f1eef5f3 2012/01/30 21:11:13 Bernhard $
+ * $LocalRevision: 92 $
+ * $Revision: 5565f1eef5f3 $
  */
+
+/*
+
+    Diese Datei ist Teil von SExplore2SlLog.
+
+    SExplore2SlLog ist Freie Software: Sie können es unter den Bedingungen
+    der GNU General Public License, wie von der Free Software Foundation,
+    Version 3 der Lizenz oder jeder späteren veröffentlichten Version, 
+    weiterverbreiten und/oder modifizieren.
+
+    FuSExplore2SlLog wird in der Hoffnung, dass es nützlich sein wird, aber
+    OHNE JEDE GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite
+    Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK.
+    Siehe die GNU General Public License für weitere Details.
+    
+    <http://www.gnu.org/licenses/>
+
+*/
+ 
+
 include_once 'config.inc.php';
 
 
