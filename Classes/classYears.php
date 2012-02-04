@@ -64,8 +64,8 @@ class classYears extends classSLDataFile {
 						$werte = $SExplData->getPrevValues();
 					}
 					self::addData($SExplNewestDate, $w);
-					unset($w);
 				}
+				unset($w);
 			}
 			unset($SexplorerData);
 			if ((date('Y', $startDate) + 1) == date('Y', $endDate)) {
