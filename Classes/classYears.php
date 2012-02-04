@@ -8,12 +8,12 @@
  * @author PhotonenSammler <photonensammler@freenet.de>
  *
  * Copyright 2012 PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
- * 
  *
- * $Date: 2012/02/04 20:13:07 $
- * $Id: classYears.php 296a55f69e1a 2012/02/04 20:13:07 WebAdmin $
- * $LocalRevision: 99 $
- * $Revision: 296a55f69e1a $
+ *
+ * $Date: 2012/02/04 20:16:07 $
+ * $Id: classYears.php 566e89946f7b 2012/02/04 20:16:07 WebAdmin $
+ * $LocalRevision: 100 $
+ * $Revision: 566e89946f7b $
  */
 
 /*
@@ -22,14 +22,14 @@
 
     SExplore2SlLog ist Freie Software: Sie können es unter den Bedingungen
     der GNU General Public License, wie von der Free Software Foundation,
-    Version 3 der Lizenz oder jeder späteren veröffentlichten Version, 
+    Version 3 der Lizenz oder jeder späteren veröffentlichten Version,
     weiterverbreiten und/oder modifizieren.
 
     FuSExplore2SlLog wird in der Hoffnung, dass es nützlich sein wird, aber
     OHNE JEDE GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite
     Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK.
     Siehe die GNU General Public License für weitere Details.
-    
+
     <http://www.gnu.org/licenses/>
 
 */
@@ -94,6 +94,7 @@ class classYears extends classSLDataFile {
 						$werte = $SExplData->getPrevValues();
 					}
 					self::addData($SExplNewestDate, $w);
+					$w = array_fill(0, self::getWrAnz(), 0);
 				}
 				unset($w);
 			}
