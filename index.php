@@ -8,12 +8,12 @@
  * @author PhotonenSammler <photonensammler@freenet.de>
  *
  * Copyright 2012 PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
- * 
  *
- * $Date: 2012/01/30 21:11:13 $
- * $Id: index.php 5565f1eef5f3 2012/01/30 21:11:13 Bernhard $
- * $LocalRevision: 92 $
- * $Revision: 5565f1eef5f3 $
+ *
+ * $Date: 2012/02/22 16:50:14 $
+ * $Id: index.php 6815b370ccd5 2012/02/22 16:50:14 WebAdmin $
+ * $LocalRevision: 101 $
+ * $Revision: 6815b370ccd5 $
  */
 
 /*
@@ -22,18 +22,18 @@
 
     SExplore2SlLog ist Freie Software: Sie können es unter den Bedingungen
     der GNU General Public License, wie von der Free Software Foundation,
-    Version 3 der Lizenz oder jeder späteren veröffentlichten Version, 
+    Version 3 der Lizenz oder jeder späteren veröffentlichten Version,
     weiterverbreiten und/oder modifizieren.
 
     FuSExplore2SlLog wird in der Hoffnung, dass es nützlich sein wird, aber
     OHNE JEDE GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite
     Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK.
     Siehe die GNU General Public License für weitere Details.
-    
+
     <http://www.gnu.org/licenses/>
 
 */
- 
+
 
 include_once 'config.inc.php';
 
@@ -48,7 +48,7 @@ $min_day->check();
 $base_vars = new classBaseVars();
 $base_vars->setOnline($min_day->isOnline());
 $p = $min_day->getP();
-if(isset($P)){ //es gibt Veränderungen
+if(isset($p)){ //es gibt Veränderungen
 	$min_cur = new classMinCur();
 	$min_cur->setDatum(substr($p['datum_zeit'], 0, 8));
 	$min_cur->setUhrzeit(substr($p['datum_zeit'], 9));

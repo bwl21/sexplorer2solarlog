@@ -5,6 +5,7 @@
  * 2012-07-01
  *
  * Konvertierung von SunnyExplorer-Dateien in das Solarlog-Datenformat
+ * Testdateien unter http://www.weichel21.de/SunnyExplorer
  */
 
 /* allgemeine Hinweise
@@ -29,52 +30,36 @@
 /*
  * Startdatum in der Form yyyy-mm-dd, zu dem die erste Tages-csv-Datei mit Erträgen vorliegt
  */
-define('START_DATUM', '2011-11-24');
+define('START_DATUM', '2012-02-16');
 
 /*
  * Name der Anlage zur Bildung des csv-Dateinamens
  */
-define('CSV_ANLAGEN_NAME', 'Test');
+define('CSV_ANLAGEN_NAME', 'AnlageLog');
 
 /*
  * Pfad zu den SunnyExplorer-Dateien:
- * lokales Verzeichnis oder URL ohne abschließenden Slash oder Backslash
- * z.B. C:/daten/SunnyExplorer oder http://www.weichel21.de/SunnyExplorer
+ * lokales Verzeichnis ohne abschließenden Slash oder Backslash
+ * z.B. C:/daten/SunnyExplorer
  */
-define("SEXPLORER_DATA_PATH", "Test/ZweiWR/SunnyExplorer");
+define('SEXPLORER_DATA_PATH', '../SExplorerData');
 
 /*
- * Pfad, in dem die Solarlog-Dateien abgelegt werden ohne abschließenden Slash oder Backslash
- * z.B. C:/SolarLog
+ * Pfad angeben, in dem die Solarlog-Dateien abgelegt werden ohne abschließenden Slash oder Backslash
+ * Auf dieses Verzeichnis muss das Script Schreibrechte haben z.B. C:/SolarLog
  */
-define('SLFILE_DATA_PATH', 'Test/ZweiWr/SolarLog');
+define('SLFILE_DATA_PATH', '..');
 
 /*
  * Pfad und name einer lokalen Datei, in der Fehlermeldungen geloggt werden
  * z.B. C:/Php-Fehlermeldungen/scriptfehler.txt
  */
-define("ERROR_LOG_FILE", "errors\errors.txt");
+define('ERROR_LOG_FILE', 'errors/errors.txt');
 
 /*
  * Anzahl von Wechselrichtern, deren Daten in den csv-Dateien gespeichert sind
  */
 define('CSV_ANZWR', 2);
-
-/*
- * Eintrag muss an die aktuelle csv-Datei - Abhängig von der Anzahl WR angepasst werden
- * Kopfzeile in der täglich angelegten csv-Datei ab der die Daten beginnen
- * diese Definition wird nur benötigt, weil ich nicht weiß, ob international
- * vielleicht z.B. yy/M/D H:mm verwendet wird
- */
-define('CSV_HEAD_LINE_DAILY', 'dd.MM.yyyy HH:mm:ss;kWh;kW;kWh;kW');
-
-/*
- * Eintrag muss an die aktuelle csv-Datei - Abhängig von der Anzahl WR angepasst werden
- * Kopfzeile in der monatlich angelegten csv-Datei ab der die Daten beginnen
- * diese Definition wird nur benötigt, weil ich nicht weiß, ob international
- * vielleicht z.B. yy/M/D verwendet wird
- */
-define('CSV_HEAD_LINE_MONTHLY', 'dd.MM.yyyy;kWh;kWh;kWh;kWh');
 
 /*
  * ###########################################################################
@@ -85,7 +70,7 @@ define('CSV_HEAD_LINE_MONTHLY', 'dd.MM.yyyy;kWh;kWh;kWh;kWh');
 /*
  * Zeitzone des Anlagenstandorts (siehe http://php.net/manual/en/datetime.configuration.php )
  */
-define('TIMEZONE', "Europe/Berlin");
+define('TIMEZONE',"Europe/Berlin");
 
 /*
  * Trennzeichen zwischen den einzelnen Werten in den csv-dateien
@@ -132,20 +117,6 @@ define('CSV_DAILY_POWER_COLUMN', '3,5,7,9');
  * define('CSV_MONTHLY_MONTHSUM_COLUMN','2,4');
  */
 define('CSV_MONTHLY_MONTHSUM_COLUMN', '2,4,6,8');
-
-/*
- * Formate von Tag,Monat,Jahr,Stunde und Minute in den Kopfzeilen
- * aus der Zeile z.B. dd.MM.yyyy HH:mm;kWh;kW
- * Achtung - Groß- und Kleinschreibung beachten !!
- * diese Definition wird nur benötigt, weil ich nicht weiß, ob international
- * vielleicht ein anderes Format verwendet wird
- */
-define('CSV_HEAD_DAY', 'dd'); //Bezeichnung für den Tag
-define('CSV_HEAD_MONTH', 'MM'); //Bezeichnung für den Monat
-define('CSV_HEAD_YEAR', 'yyyy'); //Bezeichnug füe Jahr
-define('CSV_HEAD_HOUR', 'HH'); //Bezeichnung für Stunde
-define('CSV_HEAD_MINUTE', 'mm'); //Bezeichnung für Minute
-
 ?>
 
 
