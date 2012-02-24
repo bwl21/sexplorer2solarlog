@@ -8,12 +8,12 @@
  * @author PhotonenSammler <photonensammler@freenet.de>
  *
  * Copyright 2012 PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
- * 
  *
- * $Date: 2012/01/30 21:11:13 $
- * $Id: classMin_day.php 5565f1eef5f3 2012/01/30 21:11:13 Bernhard $
- * $LocalRevision: 92 $
- * $Revision: 5565f1eef5f3 $
+ *
+ * $Date: 2012/02/24 17:22:22 $
+ * $Id: classMin_day.php ea7d989ce7e1 2012/02/24 17:22:22 WebAdmin $
+ * $LocalRevision: 102 $
+ * $Revision: ea7d989ce7e1 $
  */
 
 /*
@@ -22,14 +22,14 @@
 
     SExplore2SlLog ist Freie Software: Sie können es unter den Bedingungen
     der GNU General Public License, wie von der Free Software Foundation,
-    Version 3 der Lizenz oder jeder späteren veröffentlichten Version, 
+    Version 3 der Lizenz oder jeder späteren veröffentlichten Version,
     weiterverbreiten und/oder modifizieren.
 
     FuSExplore2SlLog wird in der Hoffnung, dass es nützlich sein wird, aber
     OHNE JEDE GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite
     Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK.
     Siehe die GNU General Public License für weitere Details.
-    
+
     <http://www.gnu.org/licenses/>
 
 */
@@ -100,7 +100,7 @@ class classMin_day extends classSLDataFile {
 			$this->isNewDay = true;
 			$startDate = strtotime(START_DATUM);
 		} else {
-			$startDate = $endDate;
+			$startDate = strtotime('20'.substr($NewestDatum,6,2).'-'.substr($NewestDatum,3,2).'-'.substr($NewestDatum,0,2).substr($NewestDatum,8));
 		}
 		while ($startDate <= $endDate) {
 			//Dateinamen der csv-Datei für aktuelles Datum ermitteln und Datei öffnen
