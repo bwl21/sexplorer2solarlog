@@ -10,29 +10,28 @@
  * Copyright 2012 PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
  *
  *
- * $Date: 2012/02/24 17:22:22 $
- * $Id: classMin_day.php ea7d989ce7e1 2012/02/24 17:22:22 WebAdmin $
- * $LocalRevision: 102 $
- * $Revision: ea7d989ce7e1 $
+ * $Date: 2012/02/26 10:53:20 $
+ * $Id: classMin_day.php 6220f6ce2f1b 2012/02/26 10:53:20 WebAdmin $
+ * $LocalRevision: 111 $
+ * $Revision: 6220f6ce2f1b $
  */
-
 /*
 
-    Diese Datei ist Teil von SExplore2SlLog.
+  Diese Datei ist Teil von SExplore2SlLog.
 
-    SExplore2SlLog ist Freie Software: Sie können es unter den Bedingungen
-    der GNU General Public License, wie von der Free Software Foundation,
-    Version 3 der Lizenz oder jeder späteren veröffentlichten Version,
-    weiterverbreiten und/oder modifizieren.
+  SExplore2SlLog ist Freie Software: Sie können es unter den Bedingungen
+  der GNU General Public License, wie von der Free Software Foundation,
+  Version 3 der Lizenz oder jeder späteren veröffentlichten Version,
+  weiterverbreiten und/oder modifizieren.
 
-    FuSExplore2SlLog wird in der Hoffnung, dass es nützlich sein wird, aber
-    OHNE JEDE GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite
-    Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK.
-    Siehe die GNU General Public License für weitere Details.
+  FuSExplore2SlLog wird in der Hoffnung, dass es nützlich sein wird, aber
+  OHNE JEDE GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite
+  Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK.
+  Siehe die GNU General Public License für weitere Details.
 
-    <http://www.gnu.org/licenses/>
+  <http://www.gnu.org/licenses/>
 
-*/
+ */
 
 
 include_once 'config.inc.php';
@@ -100,7 +99,7 @@ class classMin_day extends classSLDataFile {
 			$this->isNewDay = true;
 			$startDate = strtotime(START_DATUM);
 		} else {
-			$startDate = strtotime('20'.substr($NewestDatum,6,2).'-'.substr($NewestDatum,3,2).'-'.substr($NewestDatum,0,2).substr($NewestDatum,8));
+			$startDate = strtotime('20' . substr($NewestDatum, 6, 2) . '-' . substr($NewestDatum, 3, 2) . '-' . substr($NewestDatum, 0, 2) . substr($NewestDatum, 8));
 		}
 		while ($startDate <= $endDate) {
 			//Dateinamen der csv-Datei für aktuelles Datum ermitteln und Datei öffnen
@@ -124,7 +123,7 @@ class classMin_day extends classSLDataFile {
 					}
 				}
 				if ($NewestDatum != $SExplorerNewestDate) { //Neue Daten vorhanden
-					$this->p=array();
+					$this->p = array();
 					$this->p = array_fill(0, self::getWrAnz(), 0);
 					$etag = array();
 					$etag = array_fill(0, self::getWrAnz(), 0);
@@ -137,7 +136,7 @@ class classMin_day extends classSLDataFile {
 						for ($i = 0; $i < $wrAnz; $i++) {
 							$this->p[$i] = $werte[$datum][$i][classSExplorerData::p]; //Momentanleistungen speichern
 							$this->p['datum_zeit'] = $datum; //zugehöriges Datum Zeit merken
-							$w[$i][] = intval(floor(0.99*$werte[$datum][$i][classSExplorerData::p])); //PAC
+							$w[$i][] = intval(floor(0.99 * $werte[$datum][$i][classSExplorerData::p])); //PAC
 							$w[$i][] = $werte[$datum][$i][classSExplorerData::p]; //PDC
 							$w1 = $werte[$datum][$i][classSExplorerData::etag]; //ETag
 							$w[$i][] = $w1;
@@ -178,15 +177,15 @@ class classMin_day extends classSLDataFile {
 					}
 					unset($werte);
 				}
-				$this->p=array();
+				$this->p = array();
 				$this->p = array_fill(0, self::getWrAnz(), 0);
-				$this->p['datum_zeit'] = date('d.m.y',time()); //zugehöriges Datum Zeit merken
+				$this->p['datum_zeit'] = date('d.m.y', time()); //zugehöriges Datum Zeit merken
 				for ($i = 0; $i < self::getWrAnz(); $i++) {
 					$this->p[$i] = 0; //Momentanleistungen 0 speichern
 				}
 			}
 			unset($SexplorerData);
-			$startDate+=86400;
+			$startDate = strtotime(Date('Y-m-d 00:00:00', $startDate + 86400));
 		}
 	}
 
