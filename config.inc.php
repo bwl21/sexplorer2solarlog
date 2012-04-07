@@ -30,25 +30,25 @@
 /*
  * Startdatum in der Form yyyy-mm-dd, zu dem die erste Tages-csv-Datei mit Erträgen vorliegt
  */
-define('START_DATUM', '2012-02-16');
+define('START_DATUM', '2011-12-02');
 
 /*
  * Name der Anlage zur Bildung des csv-Dateinamens
  */
-define('CSV_ANLAGEN_NAME', 'AnlageLog');
+define('CSV_ANLAGEN_NAME', 'Anlage1');
 
 /*
  * Pfad zu den SunnyExplorer-Dateien:
  * lokales Verzeichnis ohne abschließenden Slash oder Backslash
  * z.B. C:/daten/SunnyExplorer
  */
-define('SEXPLORER_DATA_PATH', 'Y:/WebServer/BernhardPV_Test2/SExplorerData');
+define('SEXPLORER_DATA_PATH', 'Y:/WebServer/BernhardPV_Test/SExplorerData');
 
 /*
  * Pfad angeben, in dem die Solarlog-Dateien abgelegt werden ohne abschließenden Slash oder Backslash
  * Auf dieses Verzeichnis muss das Script Schreibrechte haben z.B. C:/SolarLog
  */
-define('SLFILE_DATA_PATH', 'Y:/WebServer/BernhardPV_Test2');
+define('SLFILE_DATA_PATH', 'Y:/WebServer/BernhardPV_Test');
 
 /*
  * Pfad und name einer lokalen Datei, in der Fehlermeldungen geloggt werden
@@ -59,7 +59,7 @@ define('ERROR_LOG_FILE', 'errors/errors.txt');
 /*
  * Anzahl von Wechselrichtern, deren Daten in den csv-Dateien gespeichert sind
  */
-define('CSV_ANZWR', 2);
+define('CSV_ANZWR', 1);
 
 /*
  * ###########################################################################

@@ -42,13 +42,13 @@ define('CSV_ANLAGEN_NAME', 'Anlage1');
  * lokales Verzeichnis ohne abschließenden Slash oder Backslash
  * z.B. C:/daten/SunnyExplorer
  */
-define('SEXPLORER_DATA_PATH', '../SExplorerData');
+define('SEXPLORER_DATA_PATH', 'Y:/WebServer/BernhardPV_Test/SExplorerData');
 
 /*
  * Pfad angeben, in dem die Solarlog-Dateien abgelegt werden ohne abschließenden Slash oder Backslash
  * Auf dieses Verzeichnis muss das Script Schreibrechte haben z.B. C:/SolarLog
  */
-define('SLFILE_DATA_PATH', '..');
+define('SLFILE_DATA_PATH', 'Y:/WebServer/BernhardPV_Test2');
 
 /*
  * Pfad und name einer lokalen Datei, in der Fehlermeldungen geloggt werden
