@@ -1,20 +1,20 @@
 <?php
 
 /**
- * Program to convert datafiles from Danfoss TLX Solar-inverters into the SolarLog dataformat
+ * Program to convert datafiles from SExplorer TLX Solar-inverters into the SolarLog dataformat
  * @author PhotonenSammler <photonensammler@freenet.de>
  * Copyright 2012 PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
  * written and tested with PHP 5.4
  */
 /*
-  Diese Datei ist ein Teil von Danfoss2SolarLog.
+  Diese Datei ist ein Teil von SExplorer2SolarLog.
 
-  Danfoss2SolarLog ist Freie Software: Sie können es unter den Bedingungen
+  SExplorer2SolarLog ist Freie Software: Sie können es unter den Bedingungen
   der GNU General Public License, wie von der Free Software Foundation,
   Version 3 der Lizenz oder jeder späteren veröffentlichten Version,
   weiterverbreiten und/oder modifizieren.
 
-  Danfoss2SolarLog wird in der Hoffnung, dass es nützlich sein wird, aber
+  SExplorer2SolarLog wird in der Hoffnung, dass es nützlich sein wird, aber
   OHNE JEDE GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite
   Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK.
   Siehe die GNU General Public License für weitere Details.
@@ -22,14 +22,14 @@
   <http://www.gnu.org/licenses/>
 
  * ********************************************
-  This file is a part of Danfoss2SolarLog.
+  This file is a part of SExplorer2SolarLog.
 
-  Danfoss2SolarLog is free software: you can use it under the terms of
+  SExplorer2SolarLog is free software: you can use it under the terms of
   the GNU General Public License as published by the Free Software Foundation;
   Version 3 of the License, or any later versions published,
   and distribute / or modify it.
 
-  Danfoss2SolarLog was programmed in the hope that it will be useful,
+  SExplorer2SolarLog was programmed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY provided, without even the implied
   Warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   See the GNU General Public License for more details.
@@ -134,9 +134,37 @@ define('SEXPLORER_PLANT_NAME', 'AnlageLog-');
 define('SEXPLORER_FILE_EXT', 'csv');
 
  /*
- * the decimalpoint used in numerical values in the SunnyExplorer data
+ * the decimalpoint used in numerical values in the SunnyExplorer data files
  */
 define('SEXPLORER_DECIMALPOINT', ',');
+
+/*
+ * Spalte, in der Datum und Uhrzeit in den Dateien steht
+ */
+define('SEXPLORER_DATE_COLUMN', 1);
+
+/*
+ * Datum Zeit Format String der Datumsspalte (Spaltenüberschrift der Spalte)
+ */
+define('SEXPLORER_DATE_FORMAT', 'dd.MM.yyyy HH:mm');
+
+/*
+ * Eintrag muss nur bei mehr als 10 WR oder Änderung des csv-Datenformats geändert/ergänzt werden
+ * Nummer der Spalte, in der in der Tagesdatei der Gesamtertrag steht
+ * Die Spaltenzählung beginnt bei 1 mit der Spalte Datum
+ * für 2 WR könnte der Eintrag folgendermaßen aussehen
+ * define('SEXPLORER_DAILY_YIELDSUM_COLUMN','2,4'));
+ */
+define('SEXPLORER_YIELDSUM_COLUMN', '2,4,6,8,10,12,14,16,18,20');
+
+/*
+ * Eintrag muss nur bei mehr als 4 WR oder Änderung des csv-Datenformats geändert/ergänzt werden
+ * Spalte, in der in der Tagesdatei die Leistung steht
+ * Die Spaltenzählung beginnt bei 1 mit der Spalte Datum
+ * für 2 WR könnte der Eintrag folgendermaßen aussehen
+ * define('SEXPLORER_DAILY_POWER_COLUMN','3,5');
+ */
+define('SEXPLORER_POWER_COLUMN', '3,5,7,9,11,13,15,17,19,21');
 
 /*
  * delimiter between data in Inverter data files - usually no need to change this value
