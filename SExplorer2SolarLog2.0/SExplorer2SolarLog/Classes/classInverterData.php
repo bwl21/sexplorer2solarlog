@@ -302,7 +302,7 @@ class classInverterData implements classInverterDataInterface {
 				}
 			}
 			//aus allen U_DC und I_DC der Strings P_DC erzeugen und I_DC löschen
-			unset($fileNames, $fileName1, $kWColumns, $kWhColumns, $startkWh);
+			unset($fileNames, $kWColumns, $kWhColumns, $startkWh);
 			self::sort();
 		} //keine neuen Dateien gefunden
 	}
