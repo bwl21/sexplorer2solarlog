@@ -70,9 +70,9 @@
  * if USE_FTP == false:  a local source directory is used for the files (see LOCAL_INVERTER_DATA_PATH)
  */
 define('USE_FTP', false);
-define('FTP_SERVER', 'ftp.myftpserver.com');
-define('FTP_USERNAME', 'myFTPUsername');
-define('FTP_PASSWORD', 'MyFTPPassword');
+define('FTP_SERVER', 'localhost');
+define('FTP_USERNAME', 'Test');
+define('FTP_PASSWORD', 'Test');
 define('FTP_PORT', 21);
 /*
  * FTP-Timeout in seconds for slow connections higher value( >90 s), for fast connections lower value (usually 90 s)
@@ -104,16 +104,6 @@ define('LOCAL_TEMP_DIR', '.');
  * the path is specified relative to the update-script
  */
 define('LOCAL_INVERTER_DATA_PATH', '../InverterData');
-
-/*
- * string definition for each inverter
- * for each inverter create an own definition
- * e.g. define('USED_STRINGS_1','1,2'); - on inverter 1 strings 1 and 2 are used
- * e.g. define('USED_STRINGS_2','1,2,3'); - on inverter 2 strings 1, 2 and 3 are used
- * e.g. define('USED_STRINGS_3','1,3'); - on inverter 3 strings 1 and 3 are used
- * the inverters are numbered from 1 to countOfInverters
- */
-define('USED_STRINGS_1', '1,2');
 
 /*
  * first part of data filenames (plant name) without the appended date

@@ -129,20 +129,11 @@ class classInverterData implements classInverterDataInterface {
 		if ($startDate == 0) { //Noch keine Daten, alle passenden Dateien suchen
 			$searchFileNames[] = SEXPLORER_PLANT_NAME . '????????.' . SEXPLORER_FILE_EXT;
 		} else {
-			$endDate = date('ymd');
-			$lastHour = date('H', $startDate);
+			$endDate = date('Ymd');
 			$i = 0;
 			do {
-				$stDate = date('ymd', $startDate + $i * 86400);
-				if ($stDate == $endDate) {
-					$endHour = date('H');
-				} else {
-					$endHour = 23;
-				}
-				for ($hour = $lastHour; $hour <= $endHour; $hour++) {
-					$searchFileNames[] = SExplorer_PLANT_NAME . '-' . $stDate . str_pad($hour, 2, '0', STR_PAD_LEFT) . '*';
-				}
-				$lastHour = 0;
+				$stDate = date('Ymd', $startDate + $i * 86400);
+				$searchFileNames[] = SEXPLORER_PLANT_NAME . $stDate . '.' . SEXPLORER_FILE_EXT;
 				$i++;
 			} while ($stDate < $endDate);
 		}
@@ -183,15 +174,20 @@ class classInverterData implements classInverterDataInterface {
 			$dataPath = (defined('LOCAL_TEMP_DIR')) ? ((is_null(LOCAL_TEMP_DIR)) ? sys_get_temp_dir() : LOCAL_TEMP_DIR) : sys_get_temp_dir();
 			$fileNames = array();
 			foreach ($searchFileNames as $fileName) {
-				$fileName = str_replace('*', '', $fileName);
-				$regex = preg_quote($fileName, '/');
+				if(strpos($fileName,'?')!==false){
+					$fileName = str_replace('?', '', $fileName);
+					$fileName = pathinfo($fileName, PATHINFO_FILENAME);
+					$regex = preg_quote($fileName, '/').'\d{8}\.'.SEXPLORER_FILE_EXT.'$';
+				}else{
+					$regex=  preg_quote($fileName,'/').'$';
+				}
 				foreach ($files as $remote_file_name) {
-					if (preg_match('/.*' . $regex . '\d{4,12}$/', $remote_file_name)) {
+					if (preg_match('/' . $regex .'/', $remote_file_name)) {
 						$remote_file_name = preg_replace('/^\W*/', '', $remote_file_name);
 						$tempFileName = $dataPath . '/' . $remote_file_name; // zukünftiger Dateiname auf dem system
 						//Datei runterladen
 						if (ftp_get($conn, $tempFileName, $remote_file_name, FTP_BINARY)) {
-							$fileNames[0][] = $tempFileName;
+							$fileNames[] = $tempFileName;
 						} else {
 							trigger_error('Fatal error when downloading FTP-file "' . $remote_file_name . '" from "' . FTP_SERVER . '" in ' . __METHOD__ . ' line ' . __LINE__);
 						}
@@ -206,13 +202,16 @@ class classInverterData implements classInverterDataInterface {
 			foreach ($searchFileNames as $fileName) {
 				$x = glob($dataPath . '/' . $fileName);
 				if (($x !== false) && (count($x) > 0)) {
-					$fileNames[] = $x;
+					foreach($x as $filename){
+						$fileNames[]=$filename;
+					}
 				}
 				unset($x);
 			}
 		}
 		unset($searchFileNames);
 		if (count($fileNames) > 0) {
+			sort($fileNames,SORT_STRING);
 			$kWhColumns = explode(',', SEXPLORER_YIELDSUM_COLUMN); //Spaltennummern, in denen die kWh stehen
 			$kWColumns = explode(',', SEXPLORER_POWER_COLUMN); //Spaltennummern, in denen die kW stehen
 			$yearPos = strpos(SEXPLORER_DATE_FORMAT, 'yyyy');
@@ -221,90 +220,89 @@ class classInverterData implements classInverterDataInterface {
 			$hourPos = strpos(SEXPLORER_DATE_FORMAT, 'HH');
 			$minutePos = strpos(SEXPLORER_DATE_FORMAT, 'mm');
 			$wrAnz = null;
-			foreach ($fileNames as $fileName1) {//Daten aller Dateien einlesen
-				foreach ($fileName1 as $fileName) {
-					if (preg_match('/.+\d{8}\.' . SEXPLORER_FILE_EXT . '$/', $fileName)) {//Gültigkeit des Dateinamens prüfen, 8 Zahlen am Ende
-						if (($handle = @fopen($fileName, 'rb', false)) === false) {
-							trigger_error('Fatal error when opening file "' . $fileName . '"');
-						} else {
-							//Datei einlesen
-							$dateFound = false;
-							$wrAnz = null;
-							$startkWh = array();
-							$first=null;
-							$last=null;
-							$index=0;
-							$temp=array();
-							//So lange suchen, bis die Zeile mit dem Datum gefunden wird
-							while (($arr = fgetcsv($handle, 0, DELIMITER)) !== false) {
-								if (!$dateFound) { //Datum Daten suchen
-									$dateFound = $arr[SEXPLORER_DATE_COLUMN - 1] == SEXPLORER_DATE_FORMAT;
-									if ($dateFound) {
-										if (is_null($wrAnz)) {
-											$wrAnz = floor(count($arr) / 2);
-										} else {
-											if ($wrAnz != floor(count($arr) / 2)) { //Fehler, die Anzahl wr hat sich geändert
-												trigger_error('The count of inverters (' . (floor(count($arr) / 2)) . ') found in "' . $fileName . '" is diffrent between the count of inverters (' . $wrAnz . ') found in other data files!');
-												$wrAnz != floor(count($arr) / 2); //Mit neuer WR-Anzahl weitermachen
-											}
+			foreach ($fileNames as $fileName) {//Daten aller Dateien einlesen
+				if (preg_match('/.+\d{8}\.' . SEXPLORER_FILE_EXT . '$/', $fileName)) {//Gültigkeit des Dateinamens prüfen, 8 Zahlen am Ende
+					if (($handle = @fopen($fileName, 'rb', false)) === false) {
+						trigger_error('Fatal error when opening file "' . $fileName . '"');
+					} else {
+						//Datei einlesen
+						$dateFound = false;
+						$wrAnz = null;
+						$startkWh = array();
+						$first = null;
+						$last = null;
+						$index = 0;
+						$temp = array();
+						//So lange suchen, bis die Zeile mit dem Datum gefunden wird
+						while (($arr = fgetcsv($handle, 0, DELIMITER)) !== false) {
+							if (!$dateFound) { //Datum Daten suchen
+								$dateFound = $arr[SEXPLORER_DATE_COLUMN - 1] == SEXPLORER_DATE_FORMAT;
+								if ($dateFound) {
+									if (is_null($wrAnz)) {
+										$wrAnz = floor(count($arr) / 2);
+									} else {
+										if ($wrAnz != floor(count($arr) / 2)) { //Fehler, die Anzahl wr hat sich geändert
+											trigger_error('The count of inverters (' . (floor(count($arr) / 2)) . ') found in "' . $fileName . '" is diffrent between the count of inverters (' . $wrAnz . ') found in other data files!');
+											$wrAnz != floor(count($arr) / 2); //Mit neuer WR-Anzahl weitermachen
 										}
 									}
-								} else { //Zeile mit Daten
-									$time = substr($arr[SEXPLORER_DATE_COLUMN - 1], $yearPos, 4) . '-' .
-													substr($arr[SEXPLORER_DATE_COLUMN - 1], $monthPos, 2) . '-' .
-													substr($arr[SEXPLORER_DATE_COLUMN - 1], $dayPos, 2) . ' ' .
-													substr($arr[SEXPLORER_DATE_COLUMN - 1], $hourPos, 2) . ':' .
-													substr($arr[SEXPLORER_DATE_COLUMN - 1], $minutePos, 2);
-									if (strtotime($time) > $startDate) {
-										for ($wr = 0; $wr < $wrAnz; $wr++) {
-											$kWh = str_replace(SEXPLORER_DECIMALPOINT, '.', $arr[$kWhColumns[$wr] - 1]);
-											if (!isset($startkWh[$wr])) {
-												$startkWh[$wr] = $kWh;
-											}
-											$kw = str_replace(SEXPLORER_DECIMALPOINT, '.', $arr[$kWColumns[$wr] - 1]);
-											$temp[$index][$time][$wr]['P_AC'] = round($kw * 1000);
-											$temp[$index][$time][$wr]['E_DAY'] = round(($kWh - $startkWh[$wr]) * 1000);
-											if(is_null($first) && ($kw>0)){
-												$first=$index;
-											}
-											if($kw>0){
-												$last=$index;
-											}
+								}
+							} else { //Zeile mit Daten
+								$time = date('Y-m-d H:i:s', strtotime($arr[SEXPLORER_DATE_COLUMN - 1]));
+								$time = substr($arr[SEXPLORER_DATE_COLUMN - 1], $yearPos, 4) . '-' .
+												substr($arr[SEXPLORER_DATE_COLUMN - 1], $monthPos, 2) . '-' .
+												substr($arr[SEXPLORER_DATE_COLUMN - 1], $dayPos, 2) . ' ' .
+												substr($arr[SEXPLORER_DATE_COLUMN - 1], $hourPos, 2) . ':' .
+												substr($arr[SEXPLORER_DATE_COLUMN - 1], $minutePos, 2);
+								if (strtotime($time) > $startDate) {
+									for ($wr = 0; $wr < $wrAnz; $wr++) {
+										$kWh = str_replace(SEXPLORER_DECIMALPOINT, '.', $arr[$kWhColumns[$wr] - 1]);
+										if (!isset($startkWh[$wr])) {
+											$startkWh[$wr] = $kWh;
 										}
-										$index++;
+										$kw = str_replace(SEXPLORER_DECIMALPOINT, '.', $arr[$kWColumns[$wr] - 1]);
+										$temp[$index][$time][$wr]['P_AC'] = round($kw * 1000);
+										$temp[$index][$time][$wr]['E_DAY'] = round(($kWh - $startkWh[$wr]) * 1000);
+										if (is_null($first) && ($kw > 0)) {
+											$first = $index;
+										}
+										if ($kw > 0) {
+											$last = $index;
+										}
 									}
+									$index++;
 								}
-							}
-							@fclose($handle);
-							if(!is_null($first)){ //Daten >0 vorhanden
-								if($first>0){
-									$first--;
-								}
-								if($last<count($temp)-1){
-									$last++;
-								}
-								for($index=$first;$index<=$last;$index++){//Daten übernehmen
-									$w=reset($temp[$index]);
-									$time=key($temp[$index]);
-									for($wr=0;$wr<$wrAnz;$wr++){
-										$this->data[$time.':00'][$wr]['P_AC']=$w[$wr]['P_AC'];
-										$this->data[$time.':00'][$wr]['E_DAY']=$w[$wr]['E_DAY'];
-										$this->data[$time.':00'][$wr][0]['U_DC']=0;
-										$this->data[$time.':00'][$wr][0]['P_DC']=$w[$wr]['P_AC'];
-									}
-									unset($w);
-								}
-								unset($temp);
 							}
 						}
+						@fclose($handle);
+						if (!is_null($first)) { //Daten >0 vorhanden
+							if ($first > 0) {
+								$first--;
+							}
+							if ($last < count($temp) - 1) {
+								$last++;
+							}
+							for ($index = $first; $index <= $last; $index++) {//Daten übernehmen
+								$w = reset($temp[$index]);
+								$time = key($temp[$index]);
+								for ($wr = 0; $wr < $wrAnz; $wr++) {
+									$this->data[$time . ':00'][$wr]['P_AC'] = $w[$wr]['P_AC'];
+									$this->data[$time . ':00'][$wr]['E_DAY'] = $w[$wr]['E_DAY'];
+									$this->data[$time . ':00'][$wr][0]['U_DC'] = 0;
+									$this->data[$time . ':00'][$wr][0]['P_DC'] = $w[$wr]['P_AC'];
+								}
+								unset($w);
+							}
+							unset($temp);
+						}
 					}
-					if (USE_FTP) { //Dateien in temp wieder löschen
-						unlink($fileName);
-					}
+				}
+				if (USE_FTP) { //Dateien in temp wieder löschen
+					unlink($fileName);
 				}
 			}
 			//aus allen U_DC und I_DC der Strings P_DC erzeugen und I_DC löschen
-			unset($fileNames, $fileName1,$kWColumns,$kWhColumns,$startkWh);
+			unset($fileNames, $fileName1, $kWColumns, $kWhColumns, $startkWh);
 			self::sort();
 		} //keine neuen Dateien gefunden
 	}
