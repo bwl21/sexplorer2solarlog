@@ -76,7 +76,6 @@ class classMin_day extends classSLDataFile {
 
 	function __construct() {
 		ini_set('date.timezone', TIMEZONE);
-		$x = SLFILE_DATA_PATH;
 		parent::__construct(realpath(SLFILE_DATA_PATH) . '/' . self::min_day, self::kennung);
 		self::update();
 	}

@@ -116,7 +116,7 @@ class classSLDataFile {
 				trigger_error('Die Datei ' . $this->filename . ' kann nicht gelesen werden', E_USER_ERROR);
 			} else {//Daten aus Datei einlesen
 				foreach ($arr as $line) {
-					$line = str_replace('"', '', trim($line));
+					$line = str_replace(chr(9),' ',str_replace('"', '', trim($line)));
 					if (preg_match('/^((m\[mi)|(da\[dx)|(mo\[mx)|(ye\[yx))\+{2}\]=\d{2}\.\d{2}\.\d{2}(\s|\|)/', $line)) {
 						$matches = explode('=', $line);
 						$this->kennung = $matches[0];
@@ -139,9 +139,11 @@ class classSLDataFile {
 								$this->data[$datum][$wr] = explode(';', trim($line1));
 								$wr++;
 							}
+							unset($matches);
 						}
 					}
 				}
+				unset($arr);
 			}
 		} else {
 			if (is_null($kennung)) {
@@ -164,7 +166,7 @@ class classSLDataFile {
 		if (count($this->data) > 0) {
 			reset($this->data);
 			$d = key($this->data);
-			return '20' . substr($d, 6, 2) . '-' . substr($d, 3, 2) . '-' . substr($d, 0, 2) . substr($d, 8);
+			return '20' . substr($d, 6, 2) . '-' . substr($d, 3, 2) . '-' . substr($d, 0, 2). substr($d, 8);
 		}
 		return false;
 	}
@@ -180,7 +182,7 @@ class classSLDataFile {
 		if (count($this->data) > 0) {
 			end($this->data);
 			$d = key($this->data);
-			return '20' . substr($d, 6, 2) . '-' . substr($d, 3, 2) . '-' . substr($d, 0, 2) . substr($d, 8);
+			return '20' . substr($d, 6, 2) . '-' . substr($d, 3, 2) . '-' . substr($d, 0, 2). substr($d, 8);
 		}
 		return false;
 	}

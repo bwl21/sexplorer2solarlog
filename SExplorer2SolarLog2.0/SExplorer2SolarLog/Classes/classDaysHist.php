@@ -107,15 +107,17 @@ class classDaysHist extends classSLDataFile {
 						}
 					}
 					self::addData($date, $data);
+					unset($data);
 					//alle Monat.Jahr merken, die bearbeitet wurden
 					$date = substr($date, 2);
 					if (!in_array($date, $months)) {
 						$months[] = $date;
 					}
+					unset($w);
 				}
 				$j++;
 			}
-			unset($pmax, $w, $data, $values, $etag);
+			unset($pmax, $values, $etag);
 			self::sort();
 			//Monatserträge der bearbeiteten Monate auf Array legen
 			foreach ($months as $datum) {
@@ -124,7 +126,6 @@ class classDaysHist extends classSLDataFile {
 				$wr = self::getWrAnz();
 				$summe[$datum] = array_fill(0, $wr, 0);
 				while ($startDate <= $endDate) {
-					$x = date('d.m.y', $startDate);
 					$w = self::getValue(date('d.m.y', $startDate));
 					if (!is_null($w)) {
 						$summe['maxDay'] = date('d.m.y', $startDate);

@@ -83,12 +83,14 @@ class classYears extends classSLDataFile {
 						break;
 					}
 				}
+				$w=array();
 				foreach ($value as $wr => $wert) {
 					$w[$wr][0] = $wert;
 				}
 				self::addData($date, $w);
+				unset($w);
 			}
-			unset($dates, $value, $eYear, $w);
+			unset($dates, $value, $eYear);
 			self::sort();
 		}
 	}

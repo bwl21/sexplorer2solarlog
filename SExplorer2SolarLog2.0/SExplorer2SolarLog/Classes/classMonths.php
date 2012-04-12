@@ -96,8 +96,9 @@ class classMonths extends classSLDataFile {
 					$w[$wr][0] = $wert;
 				}
 				self::addData($date, $w);
+				unset($w);
 			}
-			unset($dates, $value, $w, $eMonths);
+			unset($dates, $value, $eMonths);
 			self::sort();
 			//Jahreserträge auf Array legen
 			$dates = is_null(self::getData()) ? array() : array_keys(self::getData());
