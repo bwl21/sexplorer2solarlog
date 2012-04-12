@@ -286,7 +286,7 @@ class classInverterData implements classInverterDataInterface {
 								$w = reset($temp[$index]);
 								$time = key($temp[$index]);
 								for ($wr = 0; $wr < $wrAnz; $wr++) {
-									$this->data[$time . ':00'][$wr]['P_AC'] = $w[$wr]['P_AC'];
+									$this->data[$time . ':00'][$wr]['P_AC'] = intval(floor(0.97*$w[$wr]['P_AC']));//Wirkungsgrad 99% simulieren
 									$this->data[$time . ':00'][$wr]['E_DAY'] = $w[$wr]['E_DAY'];
 									$this->data[$time . ':00'][$wr][0]['U_DC'] = 0;
 									$this->data[$time . ':00'][$wr][0]['P_DC'] = $w[$wr]['P_AC'];
