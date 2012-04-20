@@ -174,15 +174,15 @@ class classInverterData implements classInverterDataInterface {
 			$dataPath = (defined('LOCAL_TEMP_DIR')) ? ((is_null(LOCAL_TEMP_DIR)) ? sys_get_temp_dir() : LOCAL_TEMP_DIR) : sys_get_temp_dir();
 			$fileNames = array();
 			foreach ($searchFileNames as $fileName) {
-				if(strpos($fileName,'?')!==false){
+				if (strpos($fileName, '?') !== false) {
 					$fileName = str_replace('?', '', $fileName);
 					$fileName = pathinfo($fileName, PATHINFO_FILENAME);
-					$regex = preg_quote($fileName, '/').'\d{8}\.'.SEXPLORER_FILE_EXT.'$';
-				}else{
-					$regex=  preg_quote($fileName,'/').'$';
+					$regex = preg_quote($fileName, '/') . '\d{8}\.' . SEXPLORER_FILE_EXT . '$';
+				} else {
+					$regex = preg_quote($fileName, '/') . '$';
 				}
 				foreach ($files as $remote_file_name) {
-					if (preg_match('/' . $regex .'/', $remote_file_name)) {
+					if (preg_match('/' . $regex . '/', $remote_file_name)) {
 						$remote_file_name = preg_replace('/^\W*/', '', $remote_file_name);
 						$tempFileName = $dataPath . '/' . $remote_file_name; // zukünftiger Dateiname auf dem system
 						//Datei runterladen
@@ -202,8 +202,8 @@ class classInverterData implements classInverterDataInterface {
 			foreach ($searchFileNames as $fileName) {
 				$x = glob($dataPath . '/' . $fileName);
 				if (($x !== false) && (count($x) > 0)) {
-					foreach($x as $filename){
-						$fileNames[]=$filename;
+					foreach ($x as $filename) {
+						$fileNames[] = $filename;
 					}
 				}
 				unset($x);
@@ -211,7 +211,7 @@ class classInverterData implements classInverterDataInterface {
 		}
 		unset($searchFileNames);
 		if (count($fileNames) > 0) {
-			sort($fileNames,SORT_STRING);
+			sort($fileNames, SORT_STRING);
 			$kWhColumns = explode(',', SEXPLORER_YIELDSUM_COLUMN); //Spaltennummern, in denen die kWh stehen
 			$kWColumns = explode(',', SEXPLORER_POWER_COLUMN); //Spaltennummern, in denen die kW stehen
 			$yearPos = strpos(SEXPLORER_DATE_FORMAT, 'yyyy');
@@ -233,6 +233,7 @@ class classInverterData implements classInverterDataInterface {
 						$last = null;
 						$index = 0;
 						$temp = array();
+						$startkWhSet = false;
 						//So lange suchen, bis die Zeile mit dem Datum gefunden wird
 						while (($arr = fgetcsv($handle, 0, DELIMITER)) !== false) {
 							if (!$dateFound) { //Datum Daten suchen
@@ -248,21 +249,22 @@ class classInverterData implements classInverterDataInterface {
 									}
 								}
 							} else { //Zeile mit Daten
-								$time = date('Y-m-d H:i:s', strtotime($arr[SEXPLORER_DATE_COLUMN - 1]));
 								$time = substr($arr[SEXPLORER_DATE_COLUMN - 1], $yearPos, 4) . '-' .
 												substr($arr[SEXPLORER_DATE_COLUMN - 1], $monthPos, 2) . '-' .
 												substr($arr[SEXPLORER_DATE_COLUMN - 1], $dayPos, 2) . ' ' .
 												substr($arr[SEXPLORER_DATE_COLUMN - 1], $hourPos, 2) . ':' .
 												substr($arr[SEXPLORER_DATE_COLUMN - 1], $minutePos, 2);
+								if (!$startkWhSet) {
+									for ($wr = 0; $wr < $wrAnz; $wr++) {
+										$startkWh[$wr] = str_replace(SEXPLORER_DECIMALPOINT, '.', $arr[$kWhColumns[$wr] - 1]);
+									}
+									$startkWhSet=true;
+								}
 								if (strtotime($time) > $startDate) {
 									for ($wr = 0; $wr < $wrAnz; $wr++) {
-										$kWh = str_replace(SEXPLORER_DECIMALPOINT, '.', $arr[$kWhColumns[$wr] - 1]);
-										if (!isset($startkWh[$wr])) {
-											$startkWh[$wr] = $kWh;
-										}
 										$kw = str_replace(SEXPLORER_DECIMALPOINT, '.', $arr[$kWColumns[$wr] - 1]);
 										$temp[$index][$time][$wr]['P_AC'] = round($kw * 1000);
-										$temp[$index][$time][$wr]['E_DAY'] = round(($kWh - $startkWh[$wr]) * 1000);
+										$temp[$index][$time][$wr]['E_DAY'] = round((str_replace(SEXPLORER_DECIMALPOINT, '.', $arr[$kWhColumns[$wr] - 1]) - $startkWh[$wr]) * 1000);
 										if (is_null($first) && ($kw > 0)) {
 											$first = $index;
 										}
@@ -286,7 +288,7 @@ class classInverterData implements classInverterDataInterface {
 								$w = reset($temp[$index]);
 								$time = key($temp[$index]);
 								for ($wr = 0; $wr < $wrAnz; $wr++) {
-									$this->data[$time . ':00'][$wr]['P_AC'] = intval(floor(0.97*$w[$wr]['P_AC']));//Wirkungsgrad 99% simulieren
+									$this->data[$time . ':00'][$wr]['P_AC'] = intval(floor(0.97 * $w[$wr]['P_AC'])); //Wirkungsgrad 99% simulieren
 									$this->data[$time . ':00'][$wr]['E_DAY'] = $w[$wr]['E_DAY'];
 									$this->data[$time . ':00'][$wr][0]['U_DC'] = 0;
 									$this->data[$time . ':00'][$wr][0]['P_DC'] = $w[$wr]['P_AC'];
