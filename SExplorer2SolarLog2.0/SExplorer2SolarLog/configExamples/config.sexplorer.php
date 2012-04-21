@@ -64,6 +64,8 @@
  * ###########################################################################
  */
 
+define('INVERTER_TYPE', 'SunnyExplorerxx');
+
 /*
  * true if using a FTP-server where the Inverter-files can be found
  * if USE_FTP == true:   the following values FTP_SERVER, FTP_USERNAME and FTP_PASSWORD shall be defined

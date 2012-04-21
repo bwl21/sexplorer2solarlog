@@ -41,6 +41,11 @@
  * you must execute the script update.php in a cronjob whenever new inverter data available
  * this script converts the inverter data into solarlog format
  * for more information visit http://photonensammler.homedns.org/Danfoss2SolarLog
- */
+ */ 
+    require_once 'configs.test/config.sexplorer.php';
+    require_once 'configs.test/config.general.php';
+    require_once 'configs.test/config.solarlog.php';
+    
 	require_once 'update.php';
+	
 ?>

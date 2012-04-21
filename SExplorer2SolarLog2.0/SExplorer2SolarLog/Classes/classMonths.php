@@ -37,8 +37,8 @@
   <http://www.gnu.org/licenses/>
  */
 
-include_once 'config.solarlog.php';
-include_once 'classSLDataFile.php';
+//include_once 'config.solarlog.php';
+//include_once 'classSLDataFile.php';
 
 class classMonths extends classSLDataFile {
 

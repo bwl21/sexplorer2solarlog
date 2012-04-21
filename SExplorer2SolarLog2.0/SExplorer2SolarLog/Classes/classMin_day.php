@@ -38,11 +38,12 @@
  */
 
 
-include_once 'config.solarlog.php';
-include_once 'classSLDataFile.php';
-include_once 'classInverterData.php';
-include_once 'classMinYYMMDD.php';
-include_once 'classDays.php';
+//include_once 'config.solarlog.php';
+//include_once 'classSLDataFile.php';
+//include_once 'classInverterData.php';
+//include_once 'classMinYYMMDD.php';
+//include_once 'classDays.php';
+//include_once 'InverterDataFactory.php';
 
 class classMin_day extends classSLDataFile {
 
@@ -76,6 +77,7 @@ class classMin_day extends classSLDataFile {
 
 	function __construct() {
 		ini_set('date.timezone', TIMEZONE);
+		$x = SLFILE_DATA_PATH;
 		parent::__construct(realpath(SLFILE_DATA_PATH) . '/' . self::min_day, self::kennung);
 		self::update();
 	}
@@ -168,7 +170,8 @@ class classMin_day extends classSLDataFile {
 		} else {
 			$st_inverter_aktDate = $st_createMinForDate;
 		}
-		$inverterData = new classInverterData($st_inverter_aktDate);
+		$inverterData = InverterDataFactory::getInverter(INVERTER_TYPE); // new classInverterData($st_inverter_aktDate);
+		$inverterData -> loadData($st_inverter_aktDate);
 		$st_inverter_aktDate = substr($inverterData->getOldestDate(), 0, 10);
 		if ($st_inverter_aktDate !== false) {//ansosntern keine neuen Daten
 			$st_inverter_endDate = $inverterData->getNewestDate();

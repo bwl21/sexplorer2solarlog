@@ -38,8 +38,8 @@
  */
 
 
-include_once 'config.solarlog.php';
-include_once 'classSLDataFile.php';
+//include_once 'config.solarlog.php';
+//include_once 'classSLDataFile.php';
 
 class classDaysHist extends classSLDataFile {
 

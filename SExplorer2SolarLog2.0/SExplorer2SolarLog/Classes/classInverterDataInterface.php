@@ -62,6 +62,8 @@
 
 
 interface classInverterDataInterface {
+	
+	public function __construct();
 
 	/**
 	 * This is the construcotr. It loads all data which is <e>newer</e> than $startdate. <br>
@@ -72,7 +74,7 @@ interface classInverterDataInterface {
 	 * @param timestamp||string||0 $startDate YYYY-MM-DD HH:II:SS date('Y-m-d H:i:s',...) or timestamp or 0
 	 * @todo: what is "string" here?
 	 */
-	public function __construct($startDate = 0);
+	public function loadData($startDate = 0);
 
 	/**
 	 * This method returns the count of inverters determined from inverter data. <br>

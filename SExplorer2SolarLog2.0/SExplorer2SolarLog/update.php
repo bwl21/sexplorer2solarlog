@@ -43,14 +43,16 @@
  * for more information visit http://photonensammler.homedns.org/SExplorer2SolarLog
  */
 
-
-include_once 'config.general.php';
+include_once 'Classes/classDays.php';
+include_once 'Classes/classSLDataFile.php'; 
+include_once 'Classes/classMinYYMMDD.php';
 include_once 'Classes/classMin_day.php';
 include_once 'Classes/classBaseVars.php';
 include_once 'Classes/classMinCur.php';
 include_once 'Classes/classYears.php';
 include_once 'Classes/classMonths.php';
 include_once 'Classes/classDaysHist.php';
+include_once 'Classes/classInverterDataFactory.php';
 
 //###########################################################################################################
 //######################## main # Hauptprogramm #############################################################

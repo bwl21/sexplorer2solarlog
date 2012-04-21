@@ -36,7 +36,7 @@
   <http://www.gnu.org/licenses/>
  */
 
-include_once 'config.solarlog.php';
+//include_once 'config.solarlog.php';
 
 
 class classBaseVars {

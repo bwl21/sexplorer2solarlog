@@ -38,8 +38,9 @@
 
 
 
-include_once 'config.solarlog.php';
-include_once 'config.general.php';
+//include_once 'config.solarlog.php';
+//include_once 'config.general.php';
+
 
 class classMinCur {
 
