@@ -35,7 +35,7 @@
 
   <http://www.gnu.org/licenses/>
  */
-
+    trigger_error("\nScripts in this folder are not intended to be excuted directly\nCreate your own configuration as specified in the manual\n", E_USER_ERROR);
 	chdir('..');
 	require_once 'update.php';
 ?>
