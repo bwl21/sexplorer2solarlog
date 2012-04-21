@@ -15,9 +15,9 @@
   weiterverbreiten und/oder modifizieren.
 
   Danfoss2SolarLog wird in der Hoffnung, dass es nützlich sein wird, aber
-  OHNE JEDE GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite
-  Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK.
-  Siehe die GNU General Public License für weitere Details.
+  OHNE JEDE GEWAEHRLEISTUNG, bereitgestellt; sogar ohne die implizite
+  Gewaehrleistung der MARKTFAEHIGKEIT oder EIGNUNG FUER EINEN BESTIMMTEN ZWECK.
+  Siehe die GNU General Public License fuer weitere Details.
 
   <http://www.gnu.org/licenses/>
 
