@@ -46,6 +46,6 @@
     require_once 'configs.test/config.general.php';
     require_once 'configs.test/config.solarlog.php';
     
-	require_once 'update.php';
+	require_once 'Classes/update.php';
 	
 ?>
