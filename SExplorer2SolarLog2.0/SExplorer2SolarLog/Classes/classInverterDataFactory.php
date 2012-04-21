@@ -8,7 +8,6 @@ class InverterDataFactory {
 
 	static function getInverter($inverterType){
 		
-        print $inverterType;
 
 	    $inverter = null;
 
@@ -17,19 +16,19 @@ class InverterDataFactory {
 			case "SunnyExplorer":
 				include_once 'classInverterDataSunnyExplorer.php';
 				$inverter = new classSunnyExplorerData();
-				print "loading sunny Explorer\n";
 				break;
 					
 			case "Danfoss":
 				include_once 'classInverterDataDannfoss.php';
 				$inverter = new classDannfossData();
-				print "loading sunny Explorer\n";
 				break;
 				 
 			default:
-				print('Fatal error: unsupported inverter "' . $inverterType . '" in ' . __METHOD__ . ' line ' . __LINE__) ;
+				trigger_error('Fatal error: unsupported inverter "' . $inverterType . '" in ' . __METHOD__ . ' line ' . __LINE__, E_ERROR) ;
 		}
 
+		trigger_error("loading ".$inverterType , E_USER_NOTICE);
+		
 		return $inverter;
 
 	}

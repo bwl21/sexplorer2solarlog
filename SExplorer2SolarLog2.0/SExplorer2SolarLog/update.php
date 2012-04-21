@@ -63,6 +63,8 @@ if (function_exists('xdebug_disable')) {
 ini_set('date.timezone', TIMEZONE);
 ini_set('max_execution_time', 0);
 set_error_handler('myErrorHandler');
+
+
 $min_day = new classMin_day();
 $pdc = $min_day->getaPdc();
 if (!is_null($pdc)) { //es gibt veränderungen
@@ -126,6 +128,30 @@ function myErrorHandler($errorCode, $errorText, $errorScript, $errorLine) {
 		die(2);
 	}
 	fclose($fp);
+	
+switch ($errorCode) {
+    case E_USER_ERROR:
+        echo "[$errorCode] $errorText<br />\n";
+        echo "  Fatal error on line $errorLine in file $errorScript";
+        echo ", PHP " . PHP_VERSION . " (" . PHP_OS . ")<br />\n";
+        echo "Aborting...<br />\n";
+        exit(1);
+        break;
+
+    case E_USER_WARNING:
+        echo "WARNING [$errorCode] $errorText<br />\n";
+        break;
+
+    case E_USER_NOTICE:
+        echo "NOTICE [$errorCode] $errorText<br />\n";
+        break;
+
+    default:
+        echo "Unknown error type: [$errorCode] $errorText<br />\n";
+        break;
+    }
+
+	
 	return TRUE; //True php-interne Fehlerbehandlung wird nicht mehr ausgeführt
 }
 
