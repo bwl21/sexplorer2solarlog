@@ -45,16 +45,22 @@ class classBaseVars {
 
 	private $data = array();
 	private $filename = null;
+	private $blueprint = null;
 	private $Hash = null;
 
-	function __construct() {
+	function __construct() { 
+
+
+		$this->blueprint = realpath(BASE_VARS_BLUEPRINT);
 		$this->filename = realpath(SLFILE_DATA_PATH) . '/' . self::base_vars;
-		if (file_exists($this->filename)) {
+		
+		if (file_exists($this->blueprint)) {
 			ini_set('auto_detect_line_endings', true);
-			$arr = @file($this->filename, FILE_SKIP_EMPTY_LINES && FILE_IGNORE_NEW_LINES);
+			$arr = @file($this->blueprint, FILE_SKIP_EMPTY_LINES && FILE_IGNORE_NEW_LINES);
 			if ($arr === false) {
-				trigger_error('Die Datei ' . $this->filename . ' kann nicht gelesen werden', E_USER_ERROR);
+				trigger_error('Die Datei ' . $this->blueprint . ' kann nicht gelesen werden', E_USER_ERROR);
 			} else {//Daten aus Datei einlesen
+				trigger_error('Reading base_vars from '.$this->blueprint, E_USER_NOTICE);
 				foreach ($arr as $value) {
 					$w = explode('=', $value);
 					if (count($w) == 2) {
@@ -62,6 +68,10 @@ class classBaseVars {
 					}
 				}
 			}
+		}
+		else
+		{
+			trigger_error('File not found: ' . BASE_VARS_BLUEPRINT , E_USER_WARNING);
 		}
 		$this->Hash = md5(serialize($this->data));
 		$this->data['var SLTyp'] = '" - Emulator by www.photonensammler.eu"';

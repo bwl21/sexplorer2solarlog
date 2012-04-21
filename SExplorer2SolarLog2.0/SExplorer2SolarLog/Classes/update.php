@@ -131,23 +131,25 @@ function myErrorHandler($errorCode, $errorText, $errorScript, $errorLine) {
 	
 switch ($errorCode) {
     case E_USER_ERROR:
-        echo "[$errorCode] $errorText<br />\n";
+        echo "\nEERROR [$errorCode] $errorText<br />\n";
         echo "  Fatal error on line $errorLine in file $errorScript";
         echo ", PHP " . PHP_VERSION . " (" . PHP_OS . ")<br />\n";
-        echo "Aborting...<br />\n";
+        echo "Aborting...\n";
         exit(1);
         break;
 
     case E_USER_WARNING:
-        echo "WARNING [$errorCode] $errorText<br />\n";
+        echo "\nWARNING [$errorCode] $errorText\n";
         break;
 
     case E_USER_NOTICE:
-        echo "NOTICE [$errorCode] $errorText<br />\n";
+        echo "\nNOTICE [$errorCode] $errorText\n";
         break;
 
     default:
-        echo "Unknown error type: [$errorCode] $errorText<br />\n";
+        echo "\nUNKNOWN [$errorCode] $errorText<br />\n";
+        echo "  error on line $errorLine in file $errorScript";
+        echo ", PHP " . PHP_VERSION . " (" . PHP_OS . ")\n";
         break;
     }
 
