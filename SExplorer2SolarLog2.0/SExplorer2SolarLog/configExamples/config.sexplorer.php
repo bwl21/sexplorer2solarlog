@@ -64,7 +64,14 @@
  * ###########################################################################
  */
 
-define('INVERTER_TYPE', 'SunnyExplorerxx');
+
+
+
+/*
+ * specify the inverter for the selection of the frontend
+ * applicable values are. "SunnyExplorer", "Danfoss"
+ */
+define('INVERTER_TYPE', 'SunnyExplorer');
 
 /*
  * true if using a FTP-server where the Inverter-files can be found
@@ -112,6 +119,16 @@ define('LOCAL_INVERTER_DATA_PATH', '../InverterData');
  * e.g. if the filenames are such as 'AnlageLog-20120218.csv' SEXPLORER_PLANT_NAME shall be 'AnlageLog-'
  */
 define('SEXPLORER_PLANT_NAME', 'AnlageLog-');
+
+
+/*
+ * path to a blueprint of base_vars.js, the file which describes
+ * the plant in the SolarLog world. In this case, the blueprint
+ * is held in the same directory as the the config file.
+ * 
+ */
+
+define('BASE_VARS_BLUEPRINT', dirname( __FILE__) . '/base_vars_blueprint.js');
 
 /*
  * ###########################################################################
