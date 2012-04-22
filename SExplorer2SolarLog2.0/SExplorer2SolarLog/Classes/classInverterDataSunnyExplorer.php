@@ -238,6 +238,7 @@ class classSunnyExplorerData implements classInverterDataInterface {
                         $last = null;
                         $index = 0;
                         $temp = array();
+                        $startKWhSet == false;
                         //So lange suchen, bis die Zeile mit dem Datum gefunden wird
                         while (($arr = fgetcsv($handle, 0, DELIMITER)) !== false) {
                             if (!$dateFound) { //Datum Daten suchen
