@@ -58,7 +58,7 @@
 
 
 //include_once 'config.sexplorer.php';
-//include_once 'classInverterDataInterface.php';
+include_once 'classInverterDataInterface.php';
 
 class classInverterDataSunnyExplorer implements classInverterDataInterface {
 
