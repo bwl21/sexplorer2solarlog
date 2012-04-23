@@ -15,7 +15,7 @@ class InverterDataFactory {
 
 			case "SunnyExplorer":
 				include_once 'classInverterDataSunnyExplorer.php';
-				$inverter = new classSunnyExplorerData();
+				$inverter = new classInverterDataSunnyExplorer();
 				break;
 					
 			case "Danfoss":
