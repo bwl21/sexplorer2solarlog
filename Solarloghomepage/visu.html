@@ -1,0 +1,4760 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <script type="text/JavaScript">
+      visu_internal=false;
+      visu_version="V3.01";
+    </script>
+    <script type="text/JavaScript">document.write("<script type='text/JavaScript' src='" + parent.configScript + "'><\/script>")</script>
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"/>
+		<title>
+			SolarLog-Client
+		</title>
+		<meta name="keywords" content="SolarLog, SolarLog500, SolarLog800e, SolarLog1000, SolarLog400e, Solare Datensysteme, SDS, Datenlogger, Solar, Solaranlage, Photovoltaik, �berwachung, Statistik, Auswertung, Online, Internet, Banner, Email, SMS, St�rungen"/>
+		<link href="diagram.css" rel="stylesheet" type="text/css"/>
+		<style type="text/css">
+			h1{font-family:Verdana,Helvetica,Arial,sans-serif;font-size:12pt;margin-bottom:4pt;font-weight:bold;}
+			td{font-family:Verdana,Helvetica,Arial,sans-serif;font-size:12px;font-weight:normal;}
+		</style>
+	</head>
+	<body>
+		<script type="text/JavaScript">
+			if((document.layers) && (history.length==1))location.href=location.href+"#";
+		</script>
+		<script type="text/JavaScript">
+			var isTemp=false;
+			var Lang="DE";
+			var SLBV=0;
+			var SLHW=0;
+			var ShowCredit=1;
+			var Langx="DE";
+			var DateFormat="dd.mm.yy"
+			var TimeFormat="HH:MM:ss"
+			var TimeFormatNoSec="HH:MM"
+			var Currency="\u20ac"
+			var CurrencySub="Cent"
+			var CurrencyFirst="0"
+			var ISOCode="DE"
+			var DSTMode="1"
+			var Dezimalseparator=","
+			var sollProdField;
+			var sollProdNSens=0;
+			var sollProdNum=new Array(0,0,0,0,0,0,0,0,0,0);
+			var sollProdAnteil;
+			var istErtragAC=new Array();
+			var istErtragACYield=new Array();
+			var istErtragDC=new Array();
+			var istErtragDCMonitored=new Array();
+			var istErtragACStrings=new Array();
+			var istErtragDCStrings=new Array();
+			var istErtragACSum;
+			var istErtragACSumNoS0;
+			var istErtragDCSum;
+			var istErtragDCSumMonitored;
+			var istVerbrauchGesamt;
+			var istVerbrauchGedeckt;
+			var sollErtragDC=new Array();
+			var sollErtragDCSum;
+			var debug=0;
+			var eeg_debug=0;
+		</script>
+		<script type="text/JavaScript" src="config.js"></scxript>
+		<script type="text/JavaScript">
+			var testURL="";
+			var _url=this.document.URL.split('?');
+			if(_url.length>1)
+			{
+				var cgi_parts=_url[1].split('&');
+			}
+		</script>
+		<script type="text/JavaScript">
+			document.write("<script type='text/JavaScript' src='js/functions.js?nocache'><\/script>");
+		</script>
+		<script type="text/JavaScript">
+			document.write("<script type='text/JavaScript' src='"+slDaten+"base_vars.js?nocache'><\/script>");
+		</script>
+		<script type="text/JavaScript">
+			if(SLBV==0)
+			{
+				var AnzahlGrp=0;
+				for(i=0;i<AnzahlWR;i++)
+				{
+					WRInfo[i][10]=1;
+					WRInfo[i][11]=0;
+					isTemp?WRInfo[i][12]=1:WRInfo[i][12]=0;
+					WRInfo[i][13]=1000;
+					WRInfo[i][14]=null;
+				}
+			}
+		</script>
+		<script type="text/JavaScript">
+			var WRCol=new Array("Red","Green","brown","LimeGreen","olive","pink","fuchsia","lightblue","aqua","#d3d3d3","gray","#009900","#009933","#009966","#009999","#0099CC","#0099FF","#00CCFF","#00FFFF","#33FFFF")
+			var LineCol=new Array("White","Khaki","Black","FireBrick","LimeGreen");
+			var StringCol=new Array("Brown","Green","Blue");
+			var aFlagColU=new Array("IndianRed","Chartreuse","Aqua");
+			var aFlagColI=new Array("Crimson","LimeGreen","MediumTurquoise");
+			var aFlagColE=new Array("fuchsia");
+			var sds_rot="Red";
+			var sds_ogruen="#32CD32";
+			var sds_gelb="#FFFF00";
+			var sds_blau="#4169E1";
+			var sds_ublau="#00008B";
+			var sds_orange="#FFA500";
+			var sds_black="#000000";
+			var sds_white="#FFFFFF";
+			var sds_aqua="#00FFFF";
+			var sds_khaki="#786E17";
+			var sds_grau="#A9A9A9";
+			var sds_eeg="#3CB371";
+			var sds_dia_bg="#3366FF";
+			var fsoll=sds_rot
+			var fist=sds_ogruen
+			var m=new Array();
+			var mi=0;
+			var da=new Array();
+			var dx=0;
+			var mo=new Array();
+			var mx=0;
+			var ye=new Array();
+			var yx=0;
+			var days;
+			var dayss;
+			var Schaltjahr;
+			var T_M=new Array(31,28,31,30,31,30,31,31,30,31,30,31);
+			var wrList,wrListCurIndex,grpMode,invMode,ydim;
+			var AnzahlEchteWR=0,wrSensor=-1,ErtragsZaehler=0,AnzahlWRPro=0;
+			var aSensor=new Array(0,0,0,0,0,0,0,0,0);
+			for(i=1;i<=AnzahlWR;i++)
+			{
+				if(WRInfo[i-1][11]==0||(WRInfo[i-1][11]==2&&WRInfo[i-1][14]==0))AnzahlWRPro++;
+				if(WRInfo[i-1][11]!=1)
+					AnzahlEchteWR++;
+				else
+				{
+					if(WRInfo[i-1][3]!=0)
+						aSensor[WRInfo[i-1][3]-1]=i;
+					else
+						aSensor[0]=i;
+					wrSensor=i;
+				}
+				if(WRInfo[i-1][11]==2&&WRInfo[i-1][14]==1)
+					ErtragsZaehler=i;
+			}
+			if(AnzahlGrp>0)
+			{
+				var wr2grp=new Array()
+				var i2
+				for(i=0;i<AnzahlGrp;i++)
+				{
+					for(i2=0;i2<AnlagenGrp[i][1].length;i2++)
+					{
+						wr2grp[AnlagenGrp[i][1][i2]]=new Array(i+1,i2+1)
+					}
+				}
+			}
+			document.write("<script type='text/JavaScript' src='js/lang_"+Lang+".js'><\/script>")
+		</script>
+		<script type="text/JavaScript">
+			var Uhrzeit="";
+			var curStatusCode=new Array(AnzahlWR);
+			var curFehlerCode=new Array(AnzahlWR);
+			document.write("<script type='text/JavaScript' src='"+slDaten+"min_cur.js?nocache'><\/script>");
+		</script>
+		<script type='text/JavaScript'>
+			document.write("<script type='text/JavaScript' src='"+slDaten+"min_day.js?nocache'><\/script>");
+		</script>
+		<script type="text/JavaScript">
+			document.write("<script type='text/JavaScript' src='"+slDaten+"days.js?nocache'><\/script>");
+		</script>
+		<script type="text/JavaScript">
+			document.write("<script type='text/JavaScript' src='"+slDaten+"days_hist.js?nocache'><\/script>");
+		</script>
+		<script type="text/JavaScript">
+			document.write("<script type='text/JavaScript' src='"+slDaten+"months.js?nocache'><\/script>");
+		</script>
+		<script type="text/JavaScript">
+			document.write("<script type='text/JavaScript' src='"+slDaten+"years.js?nocache'><\/script>");
+		</script>
+		<script type="text/JavaScript" src="js/diagram.js"></script>
+		<script type='text/JavaScript' src="js/dateformat.js"></script>
+		<script type="text/JavaScript">
+			var indate_parts=(HPInbetrieb.substr(0,10)).split(".");
+			var indate=new Date(indate_parts[2],(indate_parts[1]-1),indate_parts[0]);
+			if(indate=='NaN'||indate=='Invalid Date'||indate.getFullYear()<1990)
+			{
+				if(dx>0)
+					indate=new Date(20+da[dx-1].substr(6,2),da[dx-1].substr(3,2)-1,da[dx-1].substr(0,2));
+				else
+				{
+					indate=new Date();
+				}
+			}
+		</script>
+		<script type="text/JavaScript">
+			var maxtag=0;
+			var wdays=new Array(31);
+			var wmonth=new Array(12);
+			var wmsoll=new Array(12);
+			var wyears=new Array(ye.length);
+		</script>
+		<script type="text/JavaScript">
+			if(da.length!=0)
+			{
+				yy_start=da[dx-1].substr(6,2);
+				yy_stop=da[0].substr(6,2);
+			}
+			else
+			{
+				yy_start="08";
+				yy_stop="08";
+			}
+			yy_diff=parseInt(yy_stop,10)-parseInt(yy_start,10);
+			days=new Array(yy_diff+1);
+			dayss=new Array(yy_diff+1);
+		</script>
+		<div style="position: absolute; top: 10px; font-weight: bold;">
+			<img onclick="GoBackward()" style="border: 0px solid ; cursor: pointer; width: 40px; height: 40px;"alt="" src="Pictures/backward.gif"></img>
+			<script type="text/JavaScript">
+				if(AnzahlEchteWR>0)document.write("<img onclick='GoLocation()' style='border: 0px solid ; cursor: pointer; width: 40px; height: 40px;' alt='' src='Pictures/view.gif'>")
+			</script>
+			<img onclick="GoForward()"style="cursor: pointer; width: 41px; height: 41px;" alt="" src="Pictures/forward.gif"></img>
+		</div>
+		<script type="text/JavaScript">
+			var MultistringWR=0;
+			var AnzahlString=0;
+			var Verbrauchszaehler=null;
+			for(wrI=0;wrI<AnzahlWR;wrI++)
+			{
+				if(WRInfo[wrI][5]>1&&WRInfo[wrI][11]!=1)
+				{
+					MultistringWR=1
+					if(AnzahlString<WRInfo[wrI][5])
+					{
+						AnzahlString=WRInfo[wrI][5];
+					}
+				}
+				if(WRInfo[wrI][14]==2)
+				{
+					Verbrauchszaehler=wrI+1;
+				}
+			}
+			if(AnzahlWR>1)MultistringWR=1;
+			x=610;
+			document.write("<div id='FlagNavi' style='visibility:hidden; position: absolute; top: 10px; left: "+x+"px; font-weight: bold;'>")
+			document.write("<table style='border-color:black; border-style:solid; border-right-width:0px;border-left-width:1px ;border-top-width:0px; border-bottom-width:0px;' cellspacing='0' cellpadding='0'>")
+			document.write("<tr>")
+			var aFlagBez=new Array();
+			var aFlagTip=new Array();
+			var aFlagCol=new Array();
+			var flagErtrag=Math.pow(2,aFlagBez.length);
+			aFlagBez.push(getText(LBL_ERTRAG));
+			aFlagTip.push(getText(LBL_ERTRAGSLINIE));
+			aFlagCol.push(sds_ogruen);
+			var flagUdc=Math.pow(2,aFlagBez.length);
+			aFlagBez.push(getText(LBL_UDC));
+			aFlagTip.push(getText(LBL_EINGANGSSPANNUNG));
+			aFlagCol.push(aFlagColU[0]);
+			var flagKwp=Math.pow(2,aFlagBez.length);
+			aFlagBez.push(getText(LBL_KWP));
+			aFlagTip.push(getText(LBL_SPEZLSTG));
+			aFlagCol.push(sds_gelb);
+			if(isTemp)
+			{
+				var flagTemp=Math.pow(2,aFlagBez.length);
+				aFlagBez.push(getText(LBL_GRADC));
+				aFlagTip.push(getText(LBL_ITEMP));
+				aFlagCol.push(sds_khaki);
+			}
+			var flagMultiStringWR=Math.pow(2,aFlagBez.length);
+			if(MultistringWR)
+			{
+				aFlagBez.push(getText(LBL_VISU_WERTE));
+				aFlagTip.push(getText(LBL_VISU_WERTE_ANZEIGEN));
+				aFlagCol.push(sds_gelb);
+			}
+			if(eeg_debug==1)
+			{
+				if(Verbrauchszaehler!=null)
+				{
+					var flagEEG=Math.pow(2,aFlagBez.length);
+					aFlagBez.push(getText(LBL_FLAG_EEG));
+					aFlagTip.push(getText(LBL_FLAG_EEG_BEZ));
+					aFlagCol.push(sds_eeg);
+				}
+			}
+			if(wrSensor!=-1||Verbrauchszaehler!=null)
+			{
+				var flag24h=Math.pow(2,aFlagBez.length);
+				aFlagBez.push("24h");
+				aFlagTip.push(getText(LBL_24H_SCALE));
+				aFlagCol.push(sds_grau);
+			}
+			var flag_werte=Math.pow(2,aFlagBez.length);
+			aFlagBez.push(getText(LBL_VISU_WERTE));
+			aFlagTip.push(getText(LBL_VISU_WERTE_ANZEIGEN));
+			aFlagCol.push(sds_gelb);
+			var anz_flags=(aFlagBez.length-1)
+			var oFlagsC=new Array(anz_flags)
+			var oFlagsE=new Array(anz_flags)
+			AnzahlWRPro>1?AnzahlFlag=aFlagBez.length-1:AnzahlFlag=aFlagBez.length-1
+			for(i=0;i<AnzahlFlag;i++)
+			{
+				oFlagsC[i]=new Image()
+				oFlagsE[i]=new Image()
+				oFlagsC[i].src="Pictures/choose.gif"
+				oFlagsE[i].src="Pictures/empty.gif"
+				document.write("<td align='center' valign='top' style='border-bottom-style:solid;border-bottom-width:1px;border-top-style:solid;border-top-width:1px;border-right-style:solid;border-right-width:1px; cursor: pointer; width: 43px; background-color:transparent;' alt=''>"+aFlagBez[i]+"<img onclick='CheckFlag("+i+")'onmouseover=\"this.T_WIDTH=200;this.T_OPACITY=80;this.T_TEXTALIGN='center';return escape('<b>"+aFlagTip[i]+"<\/b>')\" name='Flag"+i+"' style='background-color:"+aFlagCol[i]+";' alt=''><\/td>")
+			}
+			document.write("<\/tr><\/table><\/div>")
+		</script>
+		<div id="FlagValue"style="visibility:hidden; position: absolute; top: 10px; left: 700px; font-weight: bold;">
+			<table style='border-color:black; border-style:solid; border-right-width:0px;border-left-width:1px ;border-top-width:0px; border-bottom-width:0px;'cellspacing='0'cellpadding='0'>
+				<script type="text/JavaScript">
+					for(i=AnzahlFlag;i<aFlagBez.length;i++)
+					{
+						oFlagsC[i]=new Image();
+						oFlagsE[i]=new Image();
+						oFlagsC[i].src="Pictures/choose.gif";
+						oFlagsE[i].src="Pictures/empty.gif";
+						document.write("<td align='center' valign='top' style='border-bottom-style:solid;border-bottom-width:1px;border-top-style:solid;border-top-width:1px;border-right-style:solid;border-right-width:1px; cursor: pointer; width: 43px; background-color:transparent;' alt=''>"+aFlagBez[i]+"<img onclick='awCheckFlag("+i+")'onmouseover=\"this.T_WIDTH=200;this.T_OPACITY=80;this.T_TEXTALIGN='center';return escape('<b>"+aFlagTip[i]+"<\/b>')\" name='Flag"+i+"' style='background-color:"+aFlagCol[i]+";' alt=''><\/td>")
+					}
+				</script>
+			</table>
+		</div>
+		<script type="text/JavaScript">
+			x=610;
+			document.write("<div id='SensorNavi' style='visibility:hidden; position: absolute; top: 57px; left: "+x+"px; font-weight: bold;'>")
+			document.write("<table style='border-color:black; border-style:solid; border-right-width:0px;border-left-width:1px ;border-top-width:0px; border-bottom-width:0px;'cellspacing='0'cellpadding='0'>")
+			document.write("<tr>")
+			var aSensorTyp=new Array(0,1);
+			var aSensorBez=new Array(getText(LBL_IRR),getText(LBL_MODULTEMP));
+			var aSensorTip=new Array(getText(LBL_IRR2),getText(LBL_MODULTEMP2));
+			var aSensorCol=new Array("#008000","#FF0000");
+			for(i=0;i<9;i++)
+			{
+				if(aSensor[i]!=0&&WRInfo[aSensor[i]-1][14][0])
+				{
+					aSensorBez[aSensorBez.length]=getText(LBL_AMBTEMP);
+					aSensorTip[aSensorTip.length]=getText(LBL_AMBTEMP2);
+					aSensorCol[aSensorCol.length]="#FF8040";
+					aSensorTyp[aSensorTyp.length]=2;
+					break;
+				}
+			}
+			for(i=0;i<9;i++)
+			{
+				if(aSensor[i]!=0&&WRInfo[aSensor[i]-1][14][1])
+				{
+					aSensorBez[aSensorBez.length]=getText(LBL_WIND);
+					aSensorTip[aSensorTip.length]=getText(LBL_WIND2);
+					aSensorCol[aSensorCol.length]="#C0C0C0";
+					if(aSensorCol.length==3)
+						aSensorCol[aSensorCol.length]="#C0C0C0";
+					aSensorTyp[aSensorTyp.length]=3;
+					break;
+				}
+			}
+			var oSensorC=new Array(2);
+			var oSensorE=new Array(2);
+			for(i=0;i<aSensorBez.length;i++)
+			{
+				oSensorC[i]=new Image();
+				oSensorE[i]=new Image();
+				oSensorC[i].src="Pictures/choose.gif";
+				oSensorE[i].src="Pictures/empty.gif";
+				document.write("<td align='center' valign='top' style='border-bottom-style:solid;border-bottom-width:1px;border-top-style:solid;border-top-width:1px;border-right-style:solid;border-right-width:1px; cursor: pointer; width: 43px; background-color:transparent;' alt=''>"+aSensorBez[i]+"<img onclick='CheckSensor("+i+")'onmouseover=\"this.T_WIDTH=200;this.T_OPACITY=80;this.T_TEXTALIGN='center';return escape('<b>"+aSensorTip[i]+"<\/b>')\" name='Sensor"+i+"' style='background-color:"+aSensorCol[i]+";' alt=''><\/td>");
+			}
+		</script>
+		<script type="text/JavaScript">
+			if(AnzahlEchteWR==1)
+				document.write("<td><img onclick='GoLocation()' style='border: 0px solid ; cursor: pointer; width: 40px; height: 40px;' alt='' src='Pictures/view.gif'><\/td>");
+			document.write("<\/tr><\/table><\/div>");
+		</script>
+		<div ID='NAV' style="position: absolute; top: 57px; font-weight: bold;">
+			<script type="text/JavaScript">
+				var oChoose=new Array(32);
+				var oEmpty=new Array(32);
+				var oGrpChoose=new Array(20);
+				var oGrpEmpty=new Array(20);
+				var oChooseAllGrp=new Array(20);
+				var oEmptyAllGrp=new Array(20);
+				if(AnzahlEchteWR>1)
+				{
+					document.write("<table cellspacing='0' cellpadding='0'>");
+					i2=(AnzahlGrp==0?32:101);
+					for(i=0;i<i2;i++)
+					{
+						oChoose[i]=new Image();
+						oEmpty[i]=new Image();
+					}
+					for(i=0;i<20;i++)
+					{
+						oGrpChoose[i]=new Image();
+						oGrpEmpty[i]=new Image();
+						oChooseAllGrp[i]=new Image();
+						oEmptyAllGrp[i]=new Image();
+					}
+					oChoose[i2-1].src="Pictures/choose.gif";
+					oEmpty[i2-1].src="Pictures/empty.gif";
+					oGrpChoose[19].src="Pictures/choose.gif";
+					oGrpEmpty[19].src="Pictures/empty.gif";
+					j=1;
+					k=1;
+					if(AnzahlGrp==0)
+					{
+						document.write("<td>");
+						document.write("<table style='border-color:black; border-style:solid; border-right-width:1px; border-left-width:1px ;border-top-width:1px; border-bottom-width:1px;' cellspacing='0' cellpadding='0'>")
+						document.write("<tr><td>&nbsp;"+getText(LBL_ALLEWR)+"&nbsp;<\/td><\/tr>");
+						document.write("<tr><td align='center' style='cursor: pointer; border-color:black; border-style:solid; border-right-width:0px; border-left-width:0px ;border-top-width:1px; border-bottom-width:0px;'>")
+						document.write("<img onclick='CheckInv(31,0)'onmouseover=\"this.T_WIDTH=200;this.T_OPACITY=80;this.T_TEXTALIGN='center';this.T_TITLE='<b>"+getText(LBL_ALLEWR2)+"<\/b>';return escape('"+runden(AnlagenKWP/1000,2)+" kWp "+getText(LBL_GESLSTG)+"')\" name='InvAll' alt=''>")
+						document.write("<\/td><\/tr>");
+						document.write("<\/table>");
+						document.write("<\/td>");
+						for(i=1;i<=AnzahlWR;i++)
+						{
+							if(WRInfo[i-1][11]!=1)
+							{
+								oChoose[i].src="Pictures/choose.gif";
+								oEmpty[i].src="Pictures/empty.gif";
+								document.write("<td>");
+								document.write("<table style='border-color:black; border-style:solid; border-right-width:1px; border-left-width:0px ;border-top-width:1px; border-bottom-width:1px;' cellspacing='0' cellpadding='0'>")
+								if(WRInfo[i-1][11]==2)
+								{
+									document.write("<tr><td style='background-color:red;'>&nbsp;"+getText(LBL_S0)+k+"&nbsp;<\/td><\/tr>")
+									k++;
+								}
+								else
+								{
+									document.write("<tr><td style='background-color:red;'>&nbsp;"+getText(LBL_WR)+j+"&nbsp;<\/td><\/tr>")
+									j++;
+								}
+								document.write("<tr><td align='center' style='cursor: pointer; background-color:"+WRCol[i-1]+"; border-color:black; border-style:solid; border-right-width:0px; border-left-width:0px ;border-top-width:1px; border-bottom-width:0px;'>")
+								if(WRInfo[i-1][11]==2)
+								{
+									document.write("<img onclick='CheckInv("+i+",0)'onmouseover=\"this.T_WIDTH=200;this.T_OPACITY=80;this.T_TEXTALIGN='center';this.T_TITLE='<b>"+WRInfo[i-1][4]+" ("+WRInfo[i-1][0]+")<\/b>';return escape('"+runden(WRInfo[i-1][2]/1000,2)+" kWp "+getText(LBL_GENLSTG)+"<br/>="+runden(WRInfo[i-1][2]/AnlagenKWP*100,1)+"% "+getText(LBL_PRZT_GESLSTG)+"')\" name='Inv"+i+"' style='background-color:"+WRCol[i-1]+";' alt=''>")
+								}
+								else
+								{
+									document.write("<img onclick='CheckInv("+i+",0)'onmouseover=\"this.T_WIDTH=200;this.T_OPACITY=80;this.T_TEXTALIGN='center';this.T_TITLE='<b>"+WRInfo[i-1][4]+" ("+WRInfo[i-1][0]+")<\/b>';return escape('"+runden(WRInfo[i-1][2]/1000,2)+" kWp "+getText(LBL_GENLSTG)+"<br/>="+runden(WRInfo[i-1][2]/AnlagenKWP*100,1)+"% "+getText(LBL_PRZT_GESLSTG)+"')\" name='Inv"+i+"' style='background-color:"+WRCol[i-1]+";' alt=''>")
+								}
+								document.write("<\/td><\/tr>");
+								document.write("<\/table>");
+								document.write("<\/td>");
+							}
+						}
+					}
+					else
+					{
+						document.write("<td>");
+						document.write("<table style='border-color:black; border-style:solid; border-right-width:1px; border-left-width:1px ;border-top-width:1px; border-bottom-width:1px;' cellspacing='0' cellpadding='0'>")
+						document.write("<tr><td>&nbsp;"+getText(LBL_ALLEWR)+"&nbsp;<\/td><\/tr>")
+						document.write("<tr><td align='center' style='cursor: pointer; border-color:black; border-style:solid; border-right-width:0px; border-left-width:0px ;border-top-width:1px; border-bottom-width:0px;'>")
+						document.write("<img onclick='CheckGrp(19)'onmouseover=\"this.T_WIDTH=200;this.T_OPACITY=80;this.T_TEXTALIGN='center';this.T_TITLE='<b>"+getText(LBL_ALLEWR2)+"<\/b>';return escape('"+runden(AnlagenKWP/1000,2)+" kWp "+getText(LBL_GESLSTG)+"')\" name='GrpAll' alt=''>")
+						document.write("<\/td><\/tr>");
+						document.write("<\/table>");
+						document.write("<\/td>");
+						for(i=1;i<=AnzahlGrp;i++)
+						{
+							oGrpChoose[i].src="Pictures/choose.gif";
+							oGrpEmpty[i].src="Pictures/empty.gif";
+							oChooseAllGrp[i].src="Pictures/choose.gif";
+							oEmptyAllGrp[i].src="Pictures/empty.gif";
+							gen=0;
+							for(i2=0;i2<AnlagenGrp[i-1][1].length;i2++)
+							{
+								gen+=WRInfo[AnlagenGrp[i-1][1][i2]-1][2];
+							}
+							document.write("<td>")
+							document.write("<table style='border-color:black; border-style:solid; border-right-width:1px; border-left-width:0px ;border-top-width:1px; border-bottom-width:1px;' cellspacing='0' cellpadding='0'>")
+							document.write("<tr><td style='background-color:red;'>&nbsp;"+AnlagenGrp[i-1][0]+"&nbsp;<\/td><\/tr>");
+							document.write("<tr><td align='center' style='cursor: pointer; background-color:"+WRCol[i-1]+"; border-color:black; border-style:solid; border-right-width:0px; border-left-width:0px ;border-top-width:1px; border-bottom-width:0px;'>")
+							document.write("<img onclick='CheckGrp("+i+")'onmouseover=\"this.T_WIDTH=200;this.T_OPACITY=80;this.T_TEXTALIGN='center';this.T_TITLE='<b>"+AnlagenGrp[i-1][0]+"<\/b>';return escape('"+runden(gen/1000,2)+" kWp "+getText(LBL_GENLSTG)+"<br/>="+runden(gen/AnlagenKWP*100,1)+"% "+getText(LBL_PRZT_GESLSTG)+"')\" name='Grp"+i+"' style='background-color:"+WRCol[i-1]+";' alt=''>")
+							document.write("<\/td><\/tr>");
+							document.write("<\/table>");
+							document.write("<\/td>");
+						}
+					}
+					document.write("<\/table>");
+				}
+			</script>
+		</div>
+		<script type="text/JavaScript">
+			var iGrp;
+			if(AnzahlGrp!=0)
+			{
+				for(iGrp=1;iGrp<=AnzahlGrp;iGrp++)
+				{
+					document.write("<div id='GRPID"+iGrp+"' style='display: none; position: absolute; top: 57px; font-weight: bold;'>");
+					document.write("<table cellspacing='0' cellpadding='0'>");
+					gen=0;
+					for(i2=1;i2<=AnlagenGrp[iGrp-1][1].length;i2++)
+					{
+						gen+=WRInfo[AnlagenGrp[iGrp-1][1][i2-1]-1][2];
+					}
+					document.write("<td>")
+					document.write("<table style='border-color:black; border-style:solid; border-right-width:1px; border-left-width:1px ;border-top-width:1px; border-bottom-width:1px;' cellspacing='0' cellpadding='0'>")
+					document.write("<tr><td style='background-color:red;'>&nbsp;"+AnlagenGrp[iGrp-1][0]+"&nbsp;<\/td><\/tr>");
+					document.write("<tr><td align='center' style='cursor: pointer; background-color:"+WRCol[iGrp-1]+"; border-color:black; border-style:solid; border-right-width:0px; border-left-width:0px ;border-top-width:1px; border-bottom-width:0px;'>")
+					document.write("<img src='Pictures/back.gif' onclick='CheckSubGrp("+iGrp+")'onmouseover=\"this.T_WIDTH=200;this.T_OPACITY=80;this.T_TEXTALIGN='center';this.T_TITLE='<b>"+AnlagenGrp[iGrp-1][0]+"<\/b>';return escape('"+runden(gen/1000,2)+" kWp "+getText(LBL_GENLSTG)+"<br/>="+runden(gen/AnlagenKWP*100,1)+"% "+getText(LBL_PRZT_GESLSTG)+"')\" name='SubGrp"+iGrp+"' style='background-color:"+WRCol[iGrp-1]+";' alt=''>")
+					document.write("<\/td><\/tr>");
+					document.write("<\/table>");
+					document.write("<\/td>");
+					document.write("<td>");
+					document.write("<table style='border-color:black; border-style:solid; border-right-width:1px; border-left-width:1px ;border-top-width:1px; border-bottom-width:1px;' cellspacing='0' cellpadding='0'>")
+					document.write("<tr><td>&nbsp;"+getText(LBL_ALLEWR)+"&nbsp;<\/td><\/tr>");
+					document.write("<tr><td align='center' style='cursor: pointer; border-color:black; border-style:solid; border-right-width:0px; border-left-width:0px ;border-top-width:1px; border-bottom-width:0px;'>")
+					document.write("<img onclick='CheckInvAllGrp("+iGrp+")'onmouseover=\"this.T_WIDTH=200;this.T_OPACITY=80;this.T_TEXTALIGN='center';this.T_TITLE='<b>"+getText(LBL_ALLEWR2)+" - "+AnlagenGrp[iGrp-1][0]+"<\/b>';return escape('"+runden(gen/1000,2)+" kWp "+getText(LBL_GESLSTG)+"')\" name='InvAllGrp"+iGrp+"' alt=''>")
+					document.write("<\/td><\/tr>");
+					document.write("<\/table>");
+					document.write("<\/td>");
+					for(i=1;i<=AnlagenGrp[iGrp-1][1].length;i++)
+					{
+						wrI=AnlagenGrp[iGrp-1][1][i-1];
+						oChoose[wrI].src="Pictures/choose.gif";
+						oEmpty[wrI].src="Pictures/empty.gif";
+						document.write("<td>");
+						document.write("<table style='border-color:black; border-style:solid; border-right-width:1px; border-left-width:0px ;border-top-width:1px; border-bottom-width:1px;' cellspacing='0' cellpadding='0'>")
+						document.write("<tr><td style='background-color:red;'>&nbsp;"+getText(LBL_WR)+wrI+"&nbsp;<\/td><\/tr>")
+						document.write("<tr><td align='center' style='cursor: pointer; background-color:"+WRCol[i-1]+"; border-color:black; border-style:solid; border-right-width:0px; border-left-width:0px ;border-top-width:1px; border-bottom-width:0px;'>")
+						document.write("<img onclick='CheckInv("+wrI+","+iGrp+")'onmouseover=\"this.T_WIDTH=200;this.T_OPACITY=80;this.T_TEXTALIGN='center';this.T_TITLE='<b>"+WRInfo[wrI-1][4]+" ("+WRInfo[wrI-1][0]+")<\/b>';return escape('"+runden(WRInfo[wrI-1][2]/1000,2)+" kWp "+getText(LBL_GENLSTG)+"<br/>="+runden(WRInfo[wrI-1][2]/gen*100,1)+"% "+getText(LBL_PRZT_GESLSTG)+"')\" name='Inv"+wrI+"' style='background-color:"+WRCol[i-1]+";' alt=''>")
+						document.write("<\/td><\/tr>");
+						document.write("<\/table>");
+						document.write("<\/td>");
+					}
+					document.write("<\/table>");
+					document.write("<\/div>");
+				}
+			}
+		</script>
+		<script type="text/JavaScript">
+			if(ye.length==1)var Alle_Jahre_Verlauf=getText(LBL_VERLAUFHEADER)
+			else
+			{
+				var Alle_Jahre_Verlauf=getText(LBL_VERGLEICHHEADER)+" "+ye.length+" "+getText(LBL_VERGLEICHHEADER_JAHRE)
+			}
+			var titel=new Array(getText(LBL_TAGHEADER),getText(LBL_MONATHEADER),getText(LBL_JAHRHEADER),getText(LBL_GESAMTHEADER),Alle_Jahre_Verlauf)
+			var desc=new Array(getText(LBL_TAG),getText(LBL_MONAT),getText(LBL_JAHR),getText(LBL_GESAMT),getText(LBL_GESAMT))
+		</script>
+		<script type="text/JavaScript">
+			var modus=0;
+			var offset=0;
+			var skala=10;
+			var inv=Math.pow(2,31);
+			var grp=(AnzahlGrp==0?0:Math.pow(2,19));
+			var flag=0;
+			var sensor=0;
+			cgiIdx=this.document.URL.indexOf('?');
+			if(cgiIdx!=-1)
+			{
+				cgiString=this.document.URL.substring(cgiIdx+1,this.document.URL.length);
+				pnt=cgiString.indexOf('offset=');
+				if(pnt!=-1)
+				{
+					offsetURL=cgiString.substring(pnt+7)
+					offset=parseInt(offsetURL,10);
+					if(offset>0)
+						offset=0;
+				}
+				pnt=cgiString.indexOf('mode=');
+				if(pnt!=-1)
+				{
+					modeURL=cgiString.substring(pnt+5);
+					modus=parseInt(modeURL,10);
+				}
+				if(AnzahlGrp>0)
+				{
+					pnt=cgiString.indexOf('grp=')
+					if(pnt!=-1)
+					{
+						grpURL=cgiString.substring(pnt+4);
+						grp=parseInt(grpURL,10);
+						if(grp==0)grp=Math.pow(2,19)
+					}
+					showAllGrp()
+				}
+				pnt=cgiString.indexOf('inv=');
+				if(pnt!=-1)
+				{
+					invURL=cgiString.substring(pnt+4);
+					inv=parseInt(invURL,10);
+					if(inv==0)
+					{
+						inv=Math.pow(2,31);
+					}
+				}
+				pnt=cgiString.indexOf('flag=');
+				if(pnt!=-1)
+				{
+					flagURL=cgiString.substring(pnt+5);
+					flag=parseInt(flagURL,10);
+				}
+				pnt=cgiString.indexOf('sensor=');
+				if(pnt!=-1)
+				{
+					sensorURL=cgiString.substring(pnt+7);
+					sensor=parseInt(sensorURL,10);
+				}
+				showNavGrp(0);
+				if(AnzahlGrp>0)
+				{
+					showAllGrp();
+				}
+				if(AnzahlGrp==0)
+				{
+					showAllInv();
+				}
+			}
+			x=771;
+			if(aSensorBez.length==4)x=816;
+			document.write("<div id='SkalaNavi' style='visibility:hidden; position: absolute; top: 57px; left: "+x+"px; font-weight: bold;'>")
+			document.write("<table style='border-color:black; border-style:solid; border-right-width:0px;border-left-width:1px ;border-top-width:0px; border-bottom-width:0px;'cellspacing='0'cellpadding='0'>")
+			document.write("<tr>");
+			var aSkalaCol=sds_white;
+			document.write("<td align='center' valign='top' style='border-bottom-style:solid;border-bottom-width:1px;border-top-style:solid;border-top-width:1px;border-right-style:solid;border-right-width:1px; cursor: pointer; width: 43px; background-color:transparent;' alt=''>Skala<\/td>")
+			document.write("<\/tr><\/table><\/div>");
+			document.write("<div id='SkalaWert' style='visibility:hidden; position: absolute; top: 76px; left: "+x+"px; font-weight: bold;'>")
+			document.write("<select size='1' name='D1' style='background-color: #FFE4E1'>");
+			for(i=1;i<21;i++)
+			{
+				if(skala==i)
+				{
+					document.write("<option selected value='"+i+"'>"+i*10+"%</option>");
+				}
+				else
+				{
+					document.write("<option value='"+i+"'>"+i*10+"%</option>");
+				}
+			}
+			document.write("document.Skala_eingeben.D1.option[skala].selected = true");
+			document.write("</select>");
+			document.write("</FORM>");
+			document.write("<\/div>");
+			setMode();
+			showAllFlags();
+			showAllSensor();
+			var cntWR=0,wrI,wrTreffer
+			if(getStartIndex()==null)
+			{
+				inv=inv|Math.pow(2,31);
+			}
+			for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+			{
+				cntWR++;
+				wrTreffer=wrI;
+			}
+			var heute=new Date();
+			var today;
+			switch(modus)
+			{
+				case 0:
+					document.getElementById("FlagNavi").style.visibility="visible";
+					if(wrSensor!=-1)
+						document.getElementById("SensorNavi").style.visibility="visible";
+					today=heute.getTime()+offset*86400000;
+					today=new Date(today);
+					if(offset!=0)
+					{
+						sDate=fmt00(today.getDate())+"."+fmt00(today.getMonth()+1)+"."+fmt00(today.getFullYear()-2000);
+						if(offset==-1&&m.length!=0&&m[0].substring(0,8)==Datum&&Datum==sDate)
+						{
+						}
+						else
+						{
+							sDate=fmt00(today.getFullYear()-2000)+fmt00(today.getMonth()+1)+fmt00(today.getDate());
+							mi=0;
+							if(visu_internal==false)
+								document.write("<script type='text/JavaScript' src='"+slDaten+"min"+sDate+".js?nocache'><\/script>");
+							else
+							{
+								document.write("<script type='text/JavaScript' src='"+slDaten+"min.js?"+sDate+"'><\/script>");
+							}
+						}
+					}
+					dispdate=today;
+					break;
+				case 1:
+					document.getElementById("FlagValue").style.visibility="visible";
+					var monat,jahr,i;
+					today=heute;
+					monat=today.getMonth();
+					jahr=today.getFullYear();
+					i=offset;
+					while(i<0)
+					{
+						monat-=1;
+						if(monat<0)
+						{
+							monat=11;
+							jahr--;
+						}
+						i++;
+					}
+					today=new Date(jahr,monat,1);
+					break
+				case 2:
+					document.getElementById("FlagValue").style.visibility="visible";
+					today=new Date(new Date().getFullYear()+offset,0,1)
+					dispdate=today;
+					break;
+				case 4:
+					document.getElementById("FlagValue").style.visibility="visible";
+					today=heute;
+					dispdate=today;
+					break;
+				default:
+					document.getElementById("FlagValue").style.visibility="visible";
+					today=heute;
+					dispdate=today;
+				}
+				if(offset!=0||modus!=0)
+					Uhrzeit=""
+				var sToday,sTodayKlar
+				setSToday(today)
+				function istSchaltjahr(Jahr)
+				{
+					Schaltjahr=0;
+					if(Jahr%4==0)Schaltjahr=1;
+					if(Jahr%100==0)Schaltjahr=0;
+					if(Jahr%400==0)Schaltjahr=1;
+					return Schaltjahr;
+				}
+				function setSToday(today)
+				{
+					var Month=new Array(getText(LBL_MON01),getText(LBL_MON02),getText(LBL_MON03),getText(LBL_MON04),getText(LBL_MON05),getText(LBL_MON06),getText(LBL_MON07),getText(LBL_MON08),getText(LBL_MON09),getText(LBL_MON10),getText(LBL_MON11),getText(LBL_MON12));
+					switch(modus)
+					{
+						case 0:
+							TagInWoche=today.getDay();
+							hdate1=new Date();
+							hyear=fmt00(today.getFullYear());
+							hmonth=today.getMonth();
+							hoffset=-((hdate1.getFullYear()*12+hdate1.getMonth())-(hyear*12+hmonth));
+							sTodayKlar="<a href=\"visu.html?mode=1\&offset="+hoffset+"\&flag="+flag+"\&grp="+grp+"\&inv="+inv+"\&url="+slDaten+"\&sensor="+sensor+"\&skala="+skala+"\"> "+today.format(DateFormat)+"<\/a>"
+							break;
+						case 1:
+							hdate1=new Date();
+							hyear=today.getFullYear();
+							hoffset=-(hdate1.getFullYear()-hyear);
+							sTodayKlar="<a href=\"visu.html?mode=2\&offset="+hoffset+"\&flag="+flag+"\&grp="+grp+"\&inv="+inv+"\&url="+slDaten+"\&sensor="+sensor+"\&skala="+skala+"\">"+Month[today.getMonth()]+" "+today.getFullYear()+"<\/a>"
+							break;
+						case 2:
+							sTodayKlar="<a href=\"visu.html?mode=3\&flag="+flag+"\&grp="+grp+"\&inv="+inv+"\&url="+slDaten+"\&sensor="+sensor+"\&skala="+skala+"\">"+today.getFullYear()+"<\/a>"
+							break;
+						default:
+							sTodayKlar="";
+					}
+					sToday=fmt00(today.getDate())+"."+fmt00(today.getMonth()+1)+"."+fmt00(today.getFullYear()-2000);
+				}
+				function fmt00(v)
+				{
+					if(v<10)
+						return"0"+v;
+					else
+					{
+						return""+v;
+					}
+				}
+				function CheckInv(wrI,iGrp)
+				{
+					var i;
+					if(iGrp>0)
+					{
+						for(i=0;i<AnlagenGrp[iGrp-1][1].length;i++)
+						{
+							if(wrI==AnlagenGrp[iGrp-1][1][i])
+							{
+								inv=inv^Math.pow(2,i+1);
+								showOneInv(wrI,i+1,iGrp);
+							}
+						}
+					}
+					else
+					{
+						i=wrI;
+						inv=inv^Math.pow(2,i);
+						showOneInv(wrI,i,iGrp);
+					}
+				}
+				function showOneInv(wrI,i,iGrp)
+				{
+					if(AnzahlEchteWR>1)
+					{
+						var name;
+						if(i==31)
+							name="InvAll";
+						else
+						{
+							name="Inv"+wrI;
+						}
+						if(i==31||WRInfo[wrI-1][11]!=1)
+						{
+							document.images[name].src=(inv&Math.pow(2,i))?oChoose[wrI].src:oEmpty[wrI].src;
+						}
+					}
+				}
+				function showAllInv()
+				{
+					showOneInv(31,31,0);
+					for(i=1;i<=AnzahlWR;i++)
+					{
+						if(WRInfo[i-1][11]!=1)
+						{
+							showOneInv(i,i,0);
+						}
+					}
+				}
+				function showAllInvGrp(iGrp)
+				{
+					for(i=1;i<=AnlagenGrp[iGrp-1][1].length;i++)
+					{
+						wrI=AnlagenGrp[iGrp-1][1][i-1];
+						showOneInv(wrI,i,iGrp);
+					}
+				}
+				function CheckInvAllGrp(iGrp)
+				{
+					inv=inv^Math.pow(2,31);
+					document.images["InvAllGrp"+iGrp].src=(inv&Math.pow(2,31))?oChooseAllGrp[iGrp].src:oEmptyAllGrp[iGrp].src;
+				}
+				function showNavGrp(mode)
+				{
+					cnt=0;
+					hit=0;
+					for(i2=1;i2<=19;i2++)
+					{
+						if(grp&Math.pow(2,i2))
+						{
+							cnt++;
+							hit=i2;
+						}
+					}
+					if(cnt==1&&hit!=19)
+					{
+						if(mode==0)
+						{
+							inv=inv^Math.pow(2,31);
+						}
+						else
+						{
+							inv=0;
+						}
+						CheckInvAllGrp(hit)
+						showAllInvGrp(hit)
+						document.getElementById("NAV").style.display="none"
+						document.getElementById("GRPID"+hit).style.display=""
+					}
+				}
+				function CheckGrp(i)
+				{
+					grp=grp^Math.pow(2,i);
+					showOneGrp(i)
+					showNavGrp(1)
+				}
+				function CheckSubGrp(i)
+				{
+					document.getElementById("GRPID"+i).style.display="none"
+					document.getElementById("NAV").style.display=""
+				}
+				function showOneGrp(i)
+				{
+					if(AnzahlGrp>1)
+					{
+						var name;
+						if(i==19)
+							name="GrpAll";
+						else
+						{
+							name="Grp"+i;
+						}
+						document.images[name].src=(grp&Math.pow(2,i))?oGrpChoose[i].src:oGrpEmpty[i].src;
+					}
+				}
+				function showAllGrp()
+				{
+					showOneGrp(19)
+					for(i=1;i<=AnzahlGrp;i++)
+						showOneGrp(i);
+				}
+				function CheckFlag(i)
+				{
+					flag=flag^Math.pow(2,i);
+					showAllFlags(i)
+				}
+				function showAllFlags()
+				{
+					for(i=0;i<aFlagBez.length;i++)
+					{
+						document.images["Flag"+i].src=(flag&Math.pow(2,i))?oFlagsC[i].src:oFlagsE[i].src;
+					}
+				}
+				function CheckSensor(i)
+				{
+					sensor=sensor^Math.pow(2,i);
+					showAllSensor(i)
+				}
+				function showAllSensor()
+				{
+					for(i=0;i<aSensorBez.length;i++)
+					{
+						document.images["Sensor"+i].src=(sensor&Math.pow(2,i))?oSensorC[i].src:oSensorE[i].src;
+					}
+				}
+				function GoLocation()
+				{
+					window.location.href="visu.html?mode="+modus+"&offset="+offset+"&grp="+grp+"&inv="+inv+"&flag="+flag+"&sensor="+sensor;
+				}
+				function GoDay(jahr,monat,tag)
+				{
+					datum1=new Date();
+					datum2=new Date(jahr,monat,tag);
+					offset=-Math.floor((datum1-datum2)/86400000);
+					modus=0;
+					GoLocation();
+				}
+				function GoMonth(jahr,monat)
+				{
+					datum1=new Date();
+					offset=-((datum1.getFullYear()*12+datum1.getMonth())-(jahr*12+monat));
+					modus=1;
+					GoLocation();
+				}
+				function GoYear(jahr)
+				{
+					datum1=new Date();
+					offset=-(datum1.getFullYear()-jahr);
+					modus=2;
+					GoLocation();
+				}
+				function setMode()
+				{
+					var cnt,i2;
+					if(AnzahlGrp==0)
+					{
+						grpMode=0;
+						invMode=1;
+						return;
+					}
+					cnt=0;
+					for(i2=1;i2<=18;i2++)
+					{
+						if(grp&Math.pow(2,i2))
+						{
+							cnt++;
+						}
+					}
+					if(grp&Math.pow(2,19)||cnt>1)
+					{
+						grpMode=1;
+						invMode=0;
+						return;
+					}
+					grpMode=0;
+					invMode=1;
+				}
+				function getStartIndex()
+				{
+					var wrI,i,i2,hit,cnt,grpI;
+					wrList=new Array();
+					if((AnzahlGrp==0&&(inv&Math.pow(2,31)))||(AnzahlGrp>0&&(grp&Math.pow(2,19))))
+					{
+						for(wrI=1;wrI<=AnzahlWR;wrI++)
+						{
+							if(WRInfo[wrI-1][11]!=1)
+								wrList[wrList.length]=wrI;
+						}
+					}
+					else if(AnzahlGrp>0)
+					{
+						cnt=0;
+						hit=new Array();
+						for(i2=1;i2<=19;i2++)
+						{
+							if(grp&Math.pow(2,i2))
+							{
+								cnt++;
+								hit[hit.length]=i2;
+							}
+						}
+						if(cnt>=2||(cnt==1&&(inv&Math.pow(2,31))))
+						{
+							for(i=0;i<hit.length;i++)
+							{
+								grpI=hit[i];
+								for(i2=0;i2<AnlagenGrp[grpI-1][1].length;i2++)
+								{
+									wrList[wrList.length]=AnlagenGrp[grpI-1][1][i2];
+								}
+							}
+						}
+						else
+						{
+							for(i=0;i<hit.length;i++)
+							{
+								grpI=hit[i];
+								for(i2=0;i2<AnlagenGrp[grpI-1][1].length;i2++)
+								{
+									wrI=AnlagenGrp[grpI-1][1][i2];
+									if(inv&Math.pow(2,i2+1))
+										wrList[wrList.length]=wrI;
+								}
+							}
+						}
+					}
+					else if(AnzahlGrp==0)
+					{
+						for(wrI=1;wrI<=AnzahlWR;wrI++)
+						{
+							if(WRInfo[wrI-1][11]!=1&&inv&Math.pow(2,wrI))
+								wrList[wrList.length]=wrI;
+						}
+					}
+					wrListCurIndex=0;
+					return wrList[0];
+				}
+				function getEndIndex(){
+					return wrList[wrList.length-1];
+				}
+				function isEndIndex()
+				{
+					return(wrListCurIndex>=wrList.length?true:false)
+				}
+				function getNextIndex()
+				{
+					wrListCurIndex++;
+					return wrList[wrListCurIndex]
+				}
+		</script>
+		<div style="position: absolute; top: 0px; font-weight: bold;"></div>
+		<table style="text-align: left; font-weight: bold; width: 800px;"border="0" cellpadding="0" cellspacing="0">
+			<tbody>
+				<tr>
+					<td style="font-size:18pt;line-height:18pt;font-weight:bold;"align="center">
+						<script type="text/JavaScript">
+								document.write(titel[modus])
+						</script>
+					</td>
+				</tr>
+				<tr>
+					<td align="center">
+						<table style="text-align: left; width: 100%;"border="0"cellpadding="2"cellspacing="2">
+							<tbody>
+								<tr>
+									<script type="text/JavaScript">
+											document.write("<td style='width: 37%;'></td>")
+									</script>
+									<td style="width: 26%; font-weight: bold;"align="center">
+										<big>
+											<script type="text/JavaScript">
+													if(modus==3)
+													{
+														document.write("<a href=visu.html?mode=4\&offset=0\&flag="+flag+"\&grp="+grp+"\&inv="+inv+"\&url="+slDaten+"\&sensor="+sensor+">"+getText(LBL_VISU_GESAMT_LINIE)+"<\/a>")
+														document.write(sTodayKlar)
+													}
+													else if(modus==4)
+													{
+														document.write("<a href=visu.html?mode=3\&offset=0\&flag="+flag+"\&grp="+grp+"\&inv="+inv+"\&url="+slDaten+"\&sensor="+sensor+">"+getText(LBL_VISU_GESAMT_BALKEN)+"<\/a>")
+														document.write(sTodayKlar)
+													}
+													else
+													{
+														document.write(sTodayKlar)
+													}
+											</script>
+										</big>
+									</td>
+									<td style="width: 37%;"align="left">
+										<script type="text/JavaScript">
+												if(Uhrzeit!="")
+												{
+													var Zeit=new Date();
+													Zeit.setHours(Uhrzeit.substr(0,2));
+													Zeit.setMinutes(Uhrzeit.substr(3,2));
+													Zeit.setSeconds(Uhrzeit.substr(6,2));
+													document.write(Zeit.format(TimeFormat));
+												}
+												else
+													document.write(Uhrzeit)
+										</script>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<script type="text/JavaScript">
+				document.open();
+				var D=new Diagram();
+				var deltax=640;
+				var tzo=(new Date().getTimezoneOffset()/60)*(-1);
+				var tzo_korr=(today.getTimezoneOffset()/60)*(-1);
+				tzo=tzo+(tzo<tzo_korr?1:(tzo>tzo_korr?-1:0));
+				if(modus==2)
+				{
+					var nod=32-new Date(heute.getFullYear(),heute.getMonth(),32).getDate()
+				}
+				else
+				{
+					var nod=32-new Date(today.getFullYear(),today.getMonth(),32).getDate()
+				}
+				var max,sum,eurSum,soll,ist,prognose="",sumAllWR;
+				D.SetFrame(100,125,100+deltax,405);
+				D.SetGridColor("#000099");
+				D.SetText("kW","h","");
+				D.XScale=2;
+				var curAnlagenKWP=getCurAnlagenKWP();
+				var grpSollYearKWP=grpSollYearKWP();
+				switch(modus)
+				{
+					case 0:
+						tag();break;
+					case 1:
+						monat();break;
+					case 2:
+						jahr();break;
+					case 3:
+						alleJahre();break;
+					case 4:
+						vergleichJahre();break;
+				}
+				document.close();
+				function kWYScale(y)
+				{
+					if(ydim==0)
+					{
+						return""+runden(y/1000)+" kWh";
+					}
+					else if(ydim==1)
+					{
+						return""+runden(y/1000/1000)+" MWh";
+					}
+					return""+runden(y/1000/1000)+" MWh";
+				}
+				function getToken(d,wrI,token)
+				{
+					var pnt1,pnt2;
+					pnt1=0;
+					pnt2=d.indexOf(token);
+					while(wrI>0)
+					{
+						pnt1=pnt2+1;
+						pnt2=d.indexOf(token,pnt1);
+						wrI--;
+						if(pnt2<=0)
+							break;
+					}
+					if(wrI>0)
+						return"";
+					if(pnt2<=0)
+						return d.substr(pnt1);
+					return d.substr(pnt1,pnt2-pnt1);
+				}
+				function getWRToken(d,wrI)
+				{
+					return getToken(d,wrI,"|")
+				}
+				function enumData(d,wrI)
+				{
+					var data=new Array()
+					var pnt1,pnt2,s=0
+					data[0]=getWRToken(d,0);
+					d=getWRToken(d,wrI);
+					pnt1=0;
+					while(true)
+					{
+						pnt2=d.indexOf(";",pnt1);
+						if(pnt2<=0)
+						{
+							data[1+s]=parseFloat(d.substr(pnt1),10);;
+							break;
+						}
+						data[1+s]=parseInt(d.substr(pnt1,pnt2-pnt1),10);
+						pnt1=pnt2+1;
+						s++;
+					}
+					return data;
+				}
+				function getMaxWRP(modusNeu)
+				{
+					var maxWRP=0,wrI,modusLokal=modus,max,i;
+					if(typeof modusNeu!="undefined")
+						modusLokal=modusNeu;
+					if((grpMode&&grp&Math.pow(2,19))||(invMode&&inv&Math.pow(2,31))||modusLokal>=1)
+					{
+						for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+						{
+							if(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0)
+							{
+								if(modusLokal>=1)
+								{
+									if(cntWR>1)
+										continue;
+								}
+								else
+								{
+									if(grp&&(invMode&&inv&Math.pow(2,31)))
+									{
+									}
+									else
+									{
+										continue;
+									}
+								}
+							}
+							maxWRP+=MaxWRP[wrI-1][modusLokal]
+						}
+					}
+					else if(grpMode)
+					{
+						for(grpI=1;grpI<=18;grpI++)
+						{
+							if(grp&Math.pow(2,grpI))
+							{
+								max=0;
+								for(i=1;i<=AnlagenGrp[grpI-1][1].length;i++)
+								{
+									wrI=AnlagenGrp[grpI-1][1][i-1];
+									max+=MaxWRP[wrI-1][modusLokal];
+								}
+								if(maxWRP<max)
+									maxWRP=max;
+							}
+						}
+					}
+					else
+					{
+						for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+						{
+							if(maxWRP<MaxWRP[wrI-1][modusLokal])
+								maxWRP=MaxWRP[wrI-1][modusLokal];
+						}
+					}
+					if(maxWRP/1000<10000)
+						ydim=0;
+					else if(maxWRP/1000<100000)
+					{
+						ydim=1;
+					}
+					else
+					{
+						ydim=2;
+					}
+					return maxWRP;
+				}
+				function setSollYear(n,yy)
+				{
+					value=0;
+					var inverter=Array();
+					for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+					{
+						if(WRInfo[wrI-1][11]==0||(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]==0))
+							inverter.push(wrI);
+					}
+					solldays=new Array(365)
+					sum=0;
+					for(i=1;i<366;i++)
+					{
+						temp_date=new Date(2001,0,i);
+						temp=temp_date.getMonth();
+						if(inv<0||inv==Math.pow(2,31))
+						{
+							value=curAnlagenKWP*grpSollYearKWP*sollMonth[temp]/T_M[temp]/100
+						}
+						else
+						{
+							value=0;
+							for(j=0;j<inverter.length;j++)
+							{
+								value+=WRInfo[inverter[j]-1][2]*grpSollYearKWP*sollMonth[temp]/T_M[temp]/100
+							}
+						}
+						sum+=value;
+						solldays[i]=sum;
+					}
+				}
+				function getCurAnlagenKWPperModulfield(modulfield)
+				{
+					var wrI,sum=0,j;
+					for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+					{
+						if(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0&&cntWR>1)
+							continue;
+						if(WRInfo[wrI-1][5]==1)
+						{
+							if(WRInfo[wrI-1][3]==modulfield)
+								sum+=WRInfo[wrI-1][2];
+						}
+						else
+						{
+							for(j=0;j<WRInfo[wrI-1][5];j++)
+							{
+								if(WRInfo[wrI-1][7][j]==modulfield)
+								{
+									sum+=WRInfo[wrI-1][9][j];
+								}
+							}
+						}
+					}
+					return sum
+				}
+				function getCurAnlagenKWPperModulfieldNoS0(modulfield)
+				{
+					var wrI,sum=0,j;
+					for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+					{
+						if(WRInfo[wrI-1][11]==2||(WRInfo[wrI-1][10]==21))
+							continue;
+						if(WRInfo[wrI-1][5]==1)
+						{
+							if(WRInfo[wrI-1][3]==modulfield)
+								sum+=WRInfo[wrI-1][2];
+						}
+						else
+						{
+							for(j=0;j<WRInfo[wrI-1][5];j++)
+							{
+								if(WRInfo[wrI-1][7][j]==modulfield)
+								{
+									sum+=WRInfo[wrI-1][9][j];
+								}
+							}
+						}
+					}
+					return sum
+				}
+				function getAbsAnlagenKWPperModulfield(modulfield)
+				{
+					var wrI,sum=0,j;
+					for(wrI=1;wrI<=WRInfo.length;wrI++)
+					{
+						if((WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0&&cntWR>1)||WRInfo[wrI-1][10]==21)
+							continue;
+						if(WRInfo[wrI-1][5]==1)
+						{
+							if(WRInfo[wrI-1][3]==modulfield)
+								sum+=WRInfo[wrI-1][2];
+						}
+						else
+						{
+							for(j=0;j<WRInfo[wrI-1][5];j++)
+							{
+								if(WRInfo[wrI-1][7][j]==modulfield)
+								{
+									sum+=WRInfo[wrI-1][9][j];
+								}
+							}
+						}
+					}
+					return sum
+				}
+				function getAbsAnlagenKWPperModulfieldNoS0(modulfield)
+				{
+					var wrI,sum=0,j;
+					for(wrI=1;wrI<=WRInfo.length;wrI++)
+					{
+						if((WRInfo[wrI-1][11]==2)||(WRInfo[wrI-1][10]==21))
+							continue;
+						if(WRInfo[wrI-1][5]==1)
+						{
+							if(WRInfo[wrI-1][3]==modulfield)
+								sum+=WRInfo[wrI-1][2];
+						}
+						else
+						{
+							for(j=0;j<WRInfo[wrI-1][5];j++)
+							{
+								if(WRInfo[wrI-1][7][j]==modulfield)
+								{
+									sum+=WRInfo[wrI-1][9][j];
+								}
+							}
+						}
+					}
+					return sum
+				}
+				function ModuleFieldHasSensor(modfield)
+				{
+					if(modfield==0)return false;
+					else if(modfield>9)
+					{
+						alert("ModuleFieldHasSensor: Fehlerhafter Modulfeldwert ("+modfield+") gefunden");return false;
+					}
+					if(aSensor[modfield-1]!=0)return true;
+					return false;
+				}
+				function testSensorOnModule(module)
+				{
+					var i,found=0;
+					if(module==0)return found;
+					for(i=0;i<9;i++)
+					{
+						if(aSensor[i]!=0&&i+1==module)
+						{
+							found=1;
+							break;
+						}
+					}
+					return found;
+				}
+				function testConsistencyOfSensorInverter()
+				{
+					var i,j,found,wrI,consistency=1;
+					for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+					{
+						if(consistency==0)break;
+						if(WRInfo[wrI-1][5]==1)
+						{
+							if(testSensorOnModule(WRInfo[wrI-1][3])==0)
+							{
+								consistency=0;
+							}
+						}
+						else
+						{
+							for(j=0;j<WRInfo[wrI-1][5];j++)
+							{
+								if(testSensorOnModule(WRInfo[wrI-1][7][j])==0)
+								{
+									consistency=0;
+									break;
+								}
+							}
+						}
+					}
+					return consistency;
+				}
+				function getCurAnlagenKWP()
+				{
+					var wrI,sum=0;
+					for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+					{
+						if(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0&&cntWR>1)
+							continue;
+						sum+=WRInfo[wrI-1][2];
+					}
+					return sum
+				}
+				function formatDT(dt)
+				{
+					return dt.substring(9,14)+" "+getText(LBL_HOUR);
+				}
+				function checkInvSel(wrI)
+				{
+					if(AnzahlGrp==0)
+					{
+						return inv&Math.pow(2,wrI);
+					}
+					return inv&Math.pow(2,wr2grp[wrI][1])
+				}
+				function getRelIndex(wrI)
+				{
+					if(AnzahlGrp==0)
+						return wrI;
+					else
+					{
+						return wr2grp[wrI][1];
+					}
+				}
+				function grpData(wrI)
+				{
+					var grpValue=new Array(2);
+					grpValue[0]=SollYearKWP;
+					grpValue[1]=Verguetung;
+					if(AnzahlGrp!=0)
+					{
+						for(var i=0;i<AnzahlGrp;i++)
+						{
+							for(var j=0;j<AnzahlWR;j++)
+							{
+								if(AnlagenGrp[i][1][j]==wrI)
+								{
+									if(AnlagenGrp[i][2]>0)grpValue[0]=AnlagenGrp[i][2];
+									if(AnlagenGrp[i][3]>0)grpValue[1]=AnlagenGrp[i][3];
+									break;
+								}
+							}
+						}
+					}
+					if(WRInfo[wrI-1][11]!=0&&(WRInfo[wrI-1][11]==1||(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]!=0)))grpValue=new Array(0,0);
+					return grpValue;
+				}
+				function grpSollYearKWP()
+				{
+					var grpSollYearKWP=0;
+					var grpAnlagenKWP=0;
+					for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+					{
+						if(WRInfo[wrI-1][11]==0||WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]==0)
+						{
+							grpValue=grpData(wrI);
+							grpAnlagenKWP+=WRInfo[wrI-1][2];
+							grpSollYearKWP+=WRInfo[wrI-1][2]*grpValue[0];
+						}
+					}
+					grpSollYearKWP=grpSollYearKWP/grpAnlagenKWP;
+					return grpSollYearKWP;
+				}
+				function parseDateString(datestring)
+				{
+					var yy_datestring=datestring;
+					var yy_daystring=yy_datestring.substring(0,yy_datestring.indexOf("."));
+					var yy_monthstring=yy_datestring.substring(yy_datestring.indexOf(".")+1,yy_datestring.lastIndexOf("."));
+					var yy_yearstring=yy_datestring.substring(yy_datestring.lastIndexOf(".")+1,yy_datestring.indexOf(" "));
+					var yy_hourstring=yy_datestring.substring(yy_datestring.indexOf(" ")+1,yy_datestring.indexOf(":"));
+					var yy_minstring=yy_datestring.substring(yy_datestring.indexOf(":")+1,yy_datestring.lastIndexOf(":"));
+					var ts=new Date(2000+parseInt(yy_yearstring,10),parseInt(yy_monthstring,10),parseInt(yy_daystring,10),parseInt(yy_hourstring,10),parseInt(yy_minstring,10),0,0);
+					return ts;
+				}
+				function tag()
+				{
+					var debugdone1=false;
+					var debugdone2=false;
+					var debugdone3=false;
+					istErtragAC.length=AnzahlWR;
+					istErtragACYield.length=AnzahlWR;
+					istErtragDC.length=AnzahlWR;
+					istErtragDCMonitored.length=AnzahlWR;
+					istErtragACStrings.length=AnzahlWR;
+					istErtragDCStrings.length=AnzahlWR;
+					istErtragACSum=0;
+					istErtragACSumNoS0=0;
+					istErtragDCSum=0;
+					istErtragDCSumMonitored=0;
+					istVerbrauchGesamt=0;
+					istVerbrauchGedeckt=0;
+					sollErtragDC.length=AnzahlWR;
+					sollErtragDCSum=0;
+					sollProdField=new Array(0,0,0,0,0,0,0,0,0,0);
+					for(var cur_WR=0;cur_WR!=AnzahlWR;cur_WR++)
+					{
+						istErtragAC[cur_WR]=0;
+						istErtragACYield[cur_WR]=0;
+						istErtragDC[cur_WR]=0;
+						istErtragDCMonitored[cur_WR]=0;
+						istErtragACStrings[cur_WR]=new Array(0,0,0);
+						istErtragDCStrings[cur_WR]=new Array(0,0,0);
+						sollErtragDC[cur_WR]=0;
+					}
+					for(var cur_MI=0;cur_MI!=mi;cur_MI++)
+					{
+						var prev_MI=cur_MI+1;
+						if(prev_MI<mi)
+						{
+							var teilErtrag=0;
+							var teilVerbrauch=0;
+							for(var cur_WR=0;cur_WR!=AnzahlWR;cur_WR++)
+							{
+								var cur_dat=enumData(m[cur_MI],cur_WR+1);
+								var prev_dat=enumData(m[prev_MI],cur_WR+1);
+								var cur_date=parseDateString(cur_dat[0]);
+								var prev_date=parseDateString(prev_dat[0]);
+								var date_diff=(cur_date-prev_date)/1000;
+								var hour_diff=date_diff/(60.0*60.0);
+								{
+									istErtragACYield[cur_WR]+=cur_dat[2+WRInfo[cur_WR][5]]-prev_dat[2+WRInfo[cur_WR][5]];
+								}
+								{
+									istErtragAC[cur_WR]+=(cur_dat[1]*hour_diff)*(WRInfo[cur_WR][13]/1000);
+								}
+								istErtragDC[cur_WR]+=cur_dat[2]*hour_diff;
+								istErtragDCStrings[cur_WR][0]+=cur_dat[2]*hour_diff;
+								if(WRInfo[cur_WR][5]>=2)
+								{
+									istErtragDC[cur_WR]+=cur_dat[3]*hour_diff;
+									istErtragDCStrings[cur_WR][1]+=cur_dat[3]*hour_diff;
+								}
+								if(WRInfo[cur_WR][5]==3)
+								{
+									istErtragDC[cur_WR]+=cur_dat[4]*hour_diff;
+									istErtragDCStrings[cur_WR][2]+=cur_dat[4]*hour_diff;
+								}
+								if((WRInfo[cur_WR][11]==0)||((WRInfo[cur_WR][11]==2)&&(WRInfo[cur_WR][14]==0)))
+								{
+									teilErtrag+=cur_dat[1]*hour_diff;
+								}
+								else if((WRInfo[cur_WR][11]==2)&&(WRInfo[cur_WR][14]==2))
+								{
+									if(cur_dat[3]>prev_dat[3])
+									{
+										teilVerbrauch+=cur_dat[3]-prev_dat[3];
+									}
+								}
+							}
+							if(teilVerbrauch>0)
+							{
+								istVerbrauchGedeckt+=(teilErtrag>teilVerbrauch)?teilVerbrauch:teilErtrag;
+							}
+						}
+					}
+					for(var cur_WR=0;cur_WR!=AnzahlWR;cur_WR++)
+					{
+						if((WRInfo[cur_WR][11]==0)||((WRInfo[cur_WR][11]==2)&&(WRInfo[cur_WR][14]==0)))
+						{
+							istErtragACSum+=istErtragAC[cur_WR];
+							istErtragDCSum+=istErtragDC[cur_WR];
+							if(WRInfo[cur_WR][11]==0)istErtragACSumNoS0+=istErtragAC[cur_WR];
+						}
+						if(WRInfo[cur_WR][11]==0&&WRInfo[cur_WR][5]>1)
+						{
+							var fact=new Array(0,0,0);
+							if(WRInfo[cur_WR][9]==null)
+							{
+							}
+							else
+							{
+								istErtragACStrings[cur_WR][0]=istErtragDCStrings[cur_WR][0]*(istErtragAC[cur_WR]/istErtragDC[cur_WR]);
+								istErtragACStrings[cur_WR][1]=istErtragDCStrings[cur_WR][1]*(istErtragAC[cur_WR]/istErtragDC[cur_WR]);
+								istErtragACStrings[cur_WR][2]=istErtragDCStrings[cur_WR][2]*(istErtragAC[cur_WR]/istErtragDC[cur_WR]);
+							}
+						}
+						if(WRInfo[cur_WR][11]==1)
+						{
+							var cur_modulfeld=WRInfo[cur_WR][3];
+							sollProdNum[cur_modulfeld]+=1;
+							sollProdField[cur_modulfeld]+=istErtragAC[cur_WR];
+						}
+						if((WRInfo[cur_WR][11]==2)&&(WRInfo[cur_WR][14]==2))
+						{
+							istVerbrauchGesamt+=istErtragAC[cur_WR];
+						}
+					}
+					for(var cur_field=0;cur_field!=10;cur_field++)
+					{
+						if(sollProdNum[cur_field]!=0)
+						{
+							sollProdField[cur_field]/=(sollProdNum[cur_field]);
+						}
+					}
+					for(var cur_WR=0;cur_WR!=AnzahlWR;cur_WR++)
+					{
+						if((WRInfo[cur_WR][11]==0))
+						{
+							var cur_modulfeld=WRInfo[cur_WR][3];
+							if(WRInfo[cur_WR][5]>1)
+							{
+								cur_modulfeld=WRInfo[cur_WR][7][0];
+								if(cur_modulfeld!=0&&sollProdNum[cur_modulfeld]!=0)sollErtragDC[cur_WR]=sollProdField[cur_modulfeld]*WRInfo[cur_WR][9][0]/1000;
+								cur_modulfeld=WRInfo[cur_WR][7][1];
+								if(cur_modulfeld!=0&&sollProdNum[cur_modulfeld]!=0)sollErtragDC[cur_WR]+=sollProdField[cur_modulfeld]*WRInfo[cur_WR][9][1]/1000;
+								if(WRInfo[cur_WR][5]>2)
+								{
+									cur_modulfeld=WRInfo[cur_WR][7][2];
+									if(cur_modulfeld!=0&&sollProdNum[cur_modulfeld]!=0)sollErtragDC[cur_WR]+=sollProdField[cur_modulfeld]*WRInfo[cur_WR][9][2]/1000;
+								}
+							}
+							else
+							{
+								sollErtragDC[cur_WR]+=sollProdField[cur_modulfeld]*WRInfo[cur_WR][2]/1000;
+							}
+							if(WRInfo[cur_WR][5]>1)
+							{
+								if(WRInfo[cur_WR][7][0]!=0&&sollProdNum[WRInfo[cur_WR][7][0]]!=0)istErtragDCMonitored[cur_WR]+=istErtragDCStrings[cur_WR][0];
+								if(WRInfo[cur_WR][7][1]!=0&&sollProdNum[WRInfo[cur_WR][7][1]]!=0)istErtragDCMonitored[cur_WR]+=istErtragDCStrings[cur_WR][1];
+								if(WRInfo[cur_WR][5]>2)
+								{
+									if(WRInfo[cur_WR][7][2]!=0&&sollProdNum[WRInfo[cur_WR][7][2]]!=0)istErtragDCMonitored[cur_WR]+=istErtragDCStrings[cur_WR][2];
+								}
+							}
+							else
+							{
+								if(WRInfo[cur_WR][3]!=0&&sollProdNum[WRInfo[cur_WR][3]]!=0)istErtragDCMonitored[cur_WR]+=istErtragDC[cur_WR];
+							}
+							istErtragDCSumMonitored+=istErtragDCMonitored[cur_WR];
+						}
+						sollErtragDCSum+=sollErtragDC[cur_WR];
+					}
+					var TagMax=getMaxWRP(),Pspez2=1,yTxt=" W",sensorText=getText(LBL_SENSOR_FOR_MODULFIELD);
+					Pspez=1;
+					var curAnlagenKWP=getCurAnlagenKWP()
+					if(flag&flagKwp)
+					{
+						yTxt=" kW/kWp";
+						TagMax=1;
+						Pspez=curAnlagenKWP;
+					}
+					else
+					{
+						Pspez=1;
+					}
+					if(flag&flag24h)
+					{
+						D.SetBorder(Date.UTC(today.getFullYear(),today.getMonth(),today.getDate(),0,0,0),Date.UTC(today.getFullYear(),today.getMonth(),today.getDate(),24,0,0),0,TagMax);
+					}
+					else
+					{
+						D.SetBorder(Date.UTC(today.getFullYear(),today.getMonth(),today.getDate(),time_start[today.getMonth()],0,0),Date.UTC(today.getFullYear(),today.getMonth(),today.getDate(),time_end[today.getMonth()],0,0),0,TagMax);
+					}
+					D.YScale=yTxt;
+					D.Draw(sds_dia_bg,sds_black,false);
+					D.GetYGrid();
+					var lDate;
+					var i,i2,i3,x,xOld=0,x1,x2,y,yGesamt,yGesamtOld=0,yOld=0,yErtrag,dt,wrI;
+					var SensxOld=0;
+					var SensYold=0;
+					i=0;
+					var aWRX=new Array(AnzahlWR);
+					var aWRY=new Array(AnzahlWR);
+					var aStringX=new Array(3);
+					var aStringY=new Array(3);
+					var aXErtrag=new Array(),aYErtrag=new Array(),ErtragMax=getMaxWRP(modus+1);
+					var aDErtrag=new Array();
+					var aXU=new Array(),aYU=new Array(),aYU,UMax=0,mU,cU;
+					var aDU=new Array();
+					var aXC=new Array(),aYC=new Array(),aYC,CMax=0,mC,cC;
+					var aDC=new Array();
+					var yIrr=0,yIrrOld=0,xIrrOld=0;
+					var aXM=new Array(),aYM=new Array(),aYM,MMax=0,MMin=100,MLast=0;
+					var aDM=new Array();
+					var aXA=new Array(),aYA=new Array(),aYA,AMax=0,AMin=100,ALast=0;
+					var aDA=new Array();
+					var aXW=new Array(),aYW=new Array(),aYW,WMax=0;
+					var aDW=new Array();
+					var aModulCurKWP=new Array(0,0,0,0,0,0,0,0,0)
+					var sensorfound,temperatur,wind;
+					var sTempUnit="°C";
+					minVerbrauch=0;
+					minVerbrauchOld=0;
+					gesVerbrauch=0;
+					dVerbrauch=0;
+					sollProd=0;
+					sollProdAnteil=new Array(0,0,0,0,0,0,0,0,0,0);
+					if(ISOCode=="US")sTempUnit="°F";
+					for(var sensorslct=0,sensorfound=0,i3=0;i3<9;i3++)
+					{
+						if(aSensor[i3]!=0)
+						{
+							sensorfound++;
+							aModulCurKWP[i3]=getCurAnlagenKWPperModulfield(i3+1);
+							if(aModulCurKWP[i3]>0)
+							{
+								sensorslct++;
+								if(sensorslct==1)
+									sensorText+=(i3+1);
+								else
+									sensorText+=", "+(i3+1);
+							}
+						}
+					}
+					for(var si=1;si!=10;si++)
+					{
+						sollProdAnteil[si]=getAbsAnlagenKWPperModulfield(si);
+					}
+					if(sensor!=0&&sensorfound!=0&&!(grpMode&&(grp&Math.pow(2,19))==0))
+					{
+						i=0;
+						while(i<m.length)
+						{
+							dt=getWRToken(m[i],0);
+							var yComp=0;
+							var KWPcomp=0;
+							if(dt.substring(0,8)==sToday)
+							{
+								lDate=new Date(parseInt(dt.substring(6,8),10)+2000,dt.substring(3,5)-1,dt.substring(0,2),dt.substring(9,11)-(-tzo),Math.floor(parseInt(dt.substring(12,14),10)/5)*5,0).getTime();
+								datum=new Date(lDate-Intervall/2*1000);
+								x=D.ScreenX(datum);
+								mM=0;
+								cM=0;
+								if(sensor&1&&(grp&Math.pow(2,19)||inv&Math.pow(2,31)||cntWR==1))
+								{
+									yIrr=0;
+									yComp=0;
+									for(i3=0;i3<9;i3++)
+									{
+										if(aSensor[i3]==0)continue;
+										data=enumData(m[i],aSensor[i3]);
+										if(WRInfo[aSensor[i3]-1][10]==21)
+										{
+											if(data[2]>-30&&data[2]<100)
+												data[1]=data[1]*(data[1]/(data[1]*(1+0.0035*(data[2]-25))))
+										}
+										if(Pspez==1)
+										{
+											yIrr+=data[1]*aModulCurKWP[i3]/1000;
+										}
+										else
+										{
+											yIrr+=data[1]/1000;
+										}
+										var wrIcomp;
+										var datacomp;
+										for(wrIcomp=getStartIndex();isEndIndex()==false;wrIcomp=getNextIndex())
+										{
+											if(WRInfo[wrIcomp-1][11]==2&&WRInfo[wrIcomp-1][14]!=0)continue;
+											var y_nstrings=WRInfo[wrIcomp-1][5];
+											var y_smodfield;
+											if(y_nstrings==1)y_smodfield=WRInfo[wrIcomp-1][3];
+											datacomp=enumData(m[i],wrIcomp);
+											if(WRInfo[wrIcomp-1][11]==2&&WRInfo[wrIcomp-1][14]==0&&y_smodfield!=0)
+											{
+												if(y_smodfield==i3+1)
+												{
+													yComp+=1.05*datacomp[1]*WRInfo[wrIcomp-1][13]/1000;
+												}
+											}
+											else
+											{
+												for(var s=0;s<y_nstrings;s++)
+												{
+													if(y_nstrings>1)y_smodfield=WRInfo[wrIcomp-1][7][s];
+													if(y_smodfield==0)continue;
+													if(y_smodfield==i3+1)
+													{
+														yComp+=datacomp[2+s]*WRInfo[wrIcomp-1][13]/1000;
+														if(y_nstrings>1)KWPcomp+=WRInfo[wrIcomp-1][9][s];
+														else KWPcomp+=WRInfo[wrIcomp-1][2];
+													}
+												}
+											}
+										}
+										sollProd+=(isNaN(data[1])?0:data[1]*Intervall/3600);
+										sollProdField[WRInfo[aSensor[i3]-1][3]]+=(isNaN(data[1])?0:data[1]*Intervall/3600);
+									}
+									if(Pspez>1)
+									{
+										yIrr=yIrr/sensorfound;
+										yComp=yComp/KWPcomp;
+									}
+									aktSensorCol=aSensorCol[0];
+									if(yIrr>0&&yIrrOld>0&&xIrrOld>=D.left&&x<=D.right)
+									{
+										if(WRInfo[wrSensor-1][10]==21)
+										{
+											new Line(xIrrOld,D.ScreenY(yIrrOld),x,D.ScreenY(yIrr),aktSensorCol,10,sensorText);
+										}
+										else
+										{
+											new Line(xIrrOld,D.ScreenY(yIrrOld),x,D.ScreenY(yIrr),aktSensorCol,16,sensorText);
+										}
+									}
+									yIrrOld=yIrr;
+									xIrrOld=x;
+								}
+								if((sensor&2))
+								{
+									temperatur=0;
+									for(i3=0;i3<9;i3++)
+									{
+										if(aSensor[i3]==0)continue;
+										data=enumData(m[i],aSensor[i3]);
+										temperatur+=data[2];
+									}
+									temperatur=temperatur/sensorfound;
+									aXM[aXM.length]=x;
+									if(temperatur>90||temperatur<-30)
+										temperatur=MLast;
+									else if(ISOCode=="US")
+										temperatur=temperatur*9/5+32;
+									aYM[aYM.length]=temperatur;
+									aDM[aDM.length]=dt;
+									MLast=temperatur;
+									if(aYM[aYM.length-1]>MMax)
+										MMax=aYM[aYM.length-1];
+									if(aYM[aYM.length-1]<MMin)
+										MMin=aYM[aYM.length-1];
+								}
+								if((sensor&4)&&aSensorTyp[2]==2)
+								{
+									temperatur=0
+									var ambtmpfound;
+									for(ambtmpfound=0,i3=0;i3<9;i3++)
+									{
+										if(aSensor[i3]==0||!WRInfo[aSensor[i3]-1][14][0])continue;
+										ambtmpfound++;
+										data=enumData(m[i],aSensor[i3]);
+										temperatur+=data[3];
+									}
+									temperatur=temperatur/ambtmpfound;
+									aXA[aXA.length]=x;
+									if(temperatur>90||temperatur<-30)
+										temperatur=ALast;
+									else if(ISOCode=="US")
+										temperatur=temperatur*9/5+32;
+									aYA[aYA.length]=temperatur;
+									aDA[aDA.length]=dt;
+									ALast=temperatur;
+									if(aYA[aYA.length-1]>AMax)
+										AMax=aYA[aYA.length-1];
+									if(aYA[aYA.length-1]<AMin)
+										AMin=aYA[aYA.length-1];
+								}
+								if(((sensor&4)&&aSensorTyp[2]==3)||(sensor&8))
+								{
+									wind=0;
+									var windfound;
+									for(windfound=0,i3=0;i3<9;i3++)
+									{
+										if(aSensor[i3]==0||!WRInfo[aSensor[i3]-1][14][1])continue;
+										windfound++;
+										data=enumData(m[i],aSensor[i3]);
+										wind+=data[4]*3.6;
+									}
+									wind=wind/windfound;
+									aXW[aXW.length]=x;
+									aYW[aYW.length]=wind;
+									aDW[aDW.length]=dt;
+									if(aYW[aYW.length-1]>WMax)
+										WMax=aYW[aYW.length-1];
+								}
+							}
+							i++;
+						}
+					}
+					i=0;
+					lDateOld=0;
+					dataNeu=0;
+					var Draw0Active=(grpMode&&grp&Math.pow(2,19))||(invMode&&inv&Math.pow(2,31));
+					while(i<m.length)
+					{
+						dt=getWRToken(m[i],0);
+						if((dt.substring(0,8)==sToday))
+						{
+							lDate=new Date(parseInt(dt.substring(6,8),10)+2000,dt.substring(3,5)-1,dt.substring(0,2),dt.substring(9,11)-(-tzo),Math.floor(parseInt(dt.substring(12,14),10)/5)*5,0).getTime()
+							if((lDate+Intervall*1000)<lDateOld&&lDateOld!=0)
+							{
+								i--;
+								lDate=lDateOld-Intervall*1000;
+							}
+							datum=new Date(lDate-Intervall*1000)
+							x1=D.ScreenX(datum);
+							datum=new Date(lDate)
+							x2=D.ScreenX(datum);
+							datum=new Date(lDate-Intervall/2*1000)
+							x=D.ScreenX(datum);
+							data=enumData(m[i],Verbrauchszaehler);
+							if(i+1<m.length)
+							{
+								dataNeu=enumData(m[i+1],Verbrauchszaehler);
+							}
+							else dataNeu=enumData(m[i],Verbrauchszaehler);
+							var ts=parseDateString(data[0]);
+							var tsn=parseDateString(dataNeu[0]);
+							var tdiff=(ts-tsn)/1000;
+							var tfact=60/((tdiff)/60);
+							if(data[3]<dataNeu[3])
+							{
+								minVerbrauch=0;
+							}
+							else if(dataNeu[3]==0)
+							{
+								var DataUeberSpring;
+								if(i+2<m.length)
+								{
+									DataUeberSpring=enumData(m[i+2],Verbrauchszaehler);
+									if(DataUeberSpring[3]!=0)
+									{
+										if(data[3]>DataUeberSpring[3])
+										{
+											minVerbrauch=data[3]-DataUeberSpring[3];
+										}
+										else
+										{
+											minVerbrauch=0;
+										}
+										tsn=parseDateString(DataUeberSpring[0]);
+										tdiff=(ts-tsn)/1000;
+										tfact=60/((tdiff)/60);
+									}
+									else
+									{
+										minVerbrauch=0;
+									}
+								}
+								else if(i+1<m.length)
+								{
+									minVerbrauch=data[3]-dataNeu[3];
+								}
+							}
+							else
+							{
+								minVerbrauch=data[3]-dataNeu[3];
+							}
+							if(tdiff!=0)minVerbrauch*=tfact;
+							else minVerbrauch=0;
+							gesVerbrauch+=minVerbrauch;
+							if((grpMode&&grp&Math.pow(2,19))||(invMode&&inv&Math.pow(2,31)))
+							{
+								y=0;
+								yErtrag=0;
+								mU=0;
+								cU=0;
+								mC=0;
+								cC=0;
+								Pspez=1;
+								for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+								{
+									if((WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0))
+										continue;
+									data=enumData(m[i],wrI);
+									if((sensor&1)&&wrSensor!=-1)
+									{
+										if((WRInfo[wrI-1][11]==2)&&(WRInfo[wrI-1][14]==0))
+										{
+											y+=data[1]*WRInfo[wrI-1][13]/1000;
+										}
+										else
+										{
+											for(var s=0;s<WRInfo[wrI-1][5];s++)
+											{
+												if(WRInfo[wrI-1][5]>1&&WRInfo[wrI-1][7][s]!=0)
+												{
+													y+=data[2+s]*WRInfo[wrI-1][13]/1000;
+												}
+												else
+												{
+													y+=data[2+s]*WRInfo[wrI-1][13]/1000;
+												}
+											}
+										}
+									}
+									else
+									{
+										y+=data[1];
+									}
+									if(flag&flagErtrag)
+									{
+										if(data[1+WRInfo[wrI-1][5]+1]!=null)
+										{
+											if(wrI!=ErtragsZaehler)
+											{
+												yErtrag+=data[1+WRInfo[wrI-1][5]+1];
+											}
+										}
+									}
+									if(flag&flagUdc&&AnzahlEchteWR>1)
+									{
+										if(data[1+WRInfo[wrI-1][5]+1+0+1]!=null)
+										{
+											if(WRInfo[wrI-1][5]>1)
+											{
+												for(var s=0;s<WRInfo[wrI-1][5];s++)
+												{
+													if(WRInfo[wrI-1][7][s]!=0)
+													{
+														mU+=data[1+WRInfo[wrI-1][5]+1+s+1];
+														cU++;
+													}
+												}
+											}
+											else
+											{
+												mU+=data[1+WRInfo[wrI-1][5]+1+0+1];
+												cU++;
+											}
+										}
+									}
+									if(flag&flagKwp)
+									{
+										Pspez+=WRInfo[wrI-1][2];
+									}
+									if(isTemp&&flag&flagTemp&&WRInfo[wrI-1][12])
+									{
+										if(data[1+WRInfo[wrI-1][5]*2+1+1]!=null)
+										{
+											mC+=data[1+WRInfo[wrI-1][5]*2+1+1];
+											cC++;
+										}
+									}
+								}
+								if(flag&flagEEG)
+								{
+									if(xOld>0&&xOld>=D.left&&x<=D.right)
+									{
+										if(y==0)
+										{
+											new Bar(x1,D.ScreenY(minVerbrauch/Pspez),x2,D.ScreenY(0),sds_rot,"",sds_white,"Verbrauch: "+runden(minVerbrauch/Pspez,0)+yTxt+" - "+formatDT(dt));
+										}
+										else if(y>minVerbrauch)
+										{
+											new Bar(x1,D.ScreenY(minVerbrauch/Pspez),x2,D.ScreenY(0),sds_eeg,"",sds_white,"Verbrauch: "+runden(minVerbrauch/Pspez,0)+yTxt+" - "+formatDT(dt));
+											new Bar(x1,D.ScreenY(y/Pspez),x2,D.ScreenY(minVerbrauch/Pspez),sds_gelb,"",sds_white,"Ertrag: "+runden(y/Pspez,0)+yTxt+" - "+formatDT(dt));
+											dVerbrauch+=minVerbrauch;
+										}
+										else
+										{
+											new Bar(x1,D.ScreenY(y/Pspez),x2,D.ScreenY(0),sds_eeg,"",sds_white,"Ertrag: "+runden(y/Pspez,0)+yTxt+" - "+formatDT(dt));
+											new Bar(x1,D.ScreenY(minVerbrauch/Pspez),x2,D.ScreenY(y/Pspez),sds_rot,"",sds_white,"Verbrauch: "+runden(minVerbrauch/Pspez,0)+yTxt+" - "+formatDT(dt));
+											dVerbrauch+=y;
+										}
+									}
+									xOld=x;
+								}
+								else
+								{
+									if(y>0)
+									{
+										if((sensor&1)&&wrSensor!=-1)
+										{
+											if(SensxOld>0&&SensxOld>=D.left&&x<=D.right)
+											{
+												new Line(SensxOld,D.ScreenY(SensyOld),x,D.ScreenY(y/Pspez),sds_gelb,2,runden(y,0)+yTxt+" - "+formatDT(dt));
+											}
+											SensxOld=x;
+											SensyOld=y/Pspez;
+										}
+										else
+										{
+											new Bar(x1,D.ScreenY(y/Pspez),x2,D.ScreenY(0),sds_gelb,"",sds_white,(Math.floor(y/Pspez*100)/100)+yTxt+" - "+formatDT(dt));
+										}
+									}
+								}
+								if((flag&flagErtrag)&&yErtrag>0)
+								{
+									aXErtrag[aXErtrag.length]=x;
+									aYErtrag[aYErtrag.length]=yErtrag;
+									aDErtrag[aDErtrag.length]=dt;
+								}
+								if(cU>0)
+								{
+									aXU[aXU.length]=x;
+									aYU[aYU.length]=new Array(1);
+									aDU[aDU.length]=dt;
+									aYU[aYU.length-1][0]=mU/cU;
+									if(aYU[aYU.length-1][0]>UMax)
+										UMax=aYU[aYU.length-1][0];
+								}
+								if(isTemp&&cC>0)
+								{
+									aXC[aXC.length]=x;
+									if(ISOCode=="US")
+										mC=mC*9/5+32;
+									aYC[aYC.length]=mC/cC;
+									aDC[aDC.length]=dt;
+									if(aYC[aYC.length-1]>CMax)
+										CMax=aYC[aYC.length-1];
+								}
+							}
+							if(cntWR!=1)
+							{
+								if(debugdone2==false)
+								{
+									debugdone2=true;
+								}
+								yErtrag=0;
+								mU=0;
+								cU=0;
+								mC=0;
+								cC=0;
+								if(invMode)
+								{
+									for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+									{
+										if(checkInvSel(wrI))
+										{
+											data=enumData(m[i],wrI);;
+											if((WRInfo[wrI-1][11]==2)&&(WRInfo[wrI-1][14]==2))
+											{
+												y=minVerbrauch;
+											}
+											else
+											{
+												y=data[1];
+											}
+											if(flag&flagErtrag)
+											{
+												if(data[1+WRInfo[wrI-1][5]+1]!=null)
+												{
+													if((wrI!=ErtragsZaehler)&&(wrI!=Verbrauchszaehler))
+													{
+														yErtrag+=data[1+WRInfo[wrI-1][5]+1];
+													}
+												}
+											}
+											if(flag&flagUdc&&!(inv&Math.pow(2,31)))
+											{
+												if(data[1+WRInfo[wrI-1][5]+1+0+1]!=null)
+												{
+													if(WRInfo[wrI-1][5]>1)
+													{
+														for(var s=0;s<WRInfo[wrI-1][5];s++)
+														{
+															if(WRInfo[wrI-1][7][s]!=0)
+															{
+																mU+=data[1+WRInfo[wrI-1][5]+1+s+1];
+																cU++;
+															}
+														}
+													}
+													else
+													{
+														mU+=data[1+WRInfo[wrI-1][5]+1+0+1];
+														cU++;
+													}
+												}
+											}
+											if(isTemp&&flag&flagTemp&&WRInfo[wrI-1][12]&&!(inv&Math.pow(2,31)))
+											{
+												if(data[1+WRInfo[wrI-1][5]*2+1+1]!=null)
+												{
+													mC+=data[1+WRInfo[wrI-1][5]*2+1+1];
+													cC++;
+												}
+											}
+											if(aWRY[wrI-1]!=null)
+											{
+												Pspez2=1;
+												if(flag&flagKwp)
+												{
+													Pspez2=WRInfo[wrI-1][2];
+												}
+												if(aWRY[wrI-1]>0&&aWRX[wrI-1]>=D.left&&x<=D.right)
+												{
+													if(flag&flagKwp)
+													{
+														new Line(aWRX[wrI-1],D.ScreenY(aWRY[wrI-1]/Pspez2),x,D.ScreenY(y/Pspez2),WRCol[getRelIndex(wrI)-1],2,WRInfo[wrI-1][4]+" - "+runden(y/Pspez2*1000,0)+" W/Wp - "+formatDT(dt))
+													}
+													else
+													{
+														new Line(aWRX[wrI-1],D.ScreenY(aWRY[wrI-1]/Pspez2),x,D.ScreenY(y/Pspez2),WRCol[getRelIndex(wrI)-1],2,WRInfo[wrI-1][4]+" - "+y+" W - "+formatDT(dt))
+													}
+												}
+											}
+											aWRX[wrI-1]=x;
+											aWRY[wrI-1]=y;
+										}
+									}
+								}
+								else
+								{
+									for(i2=1;i2<=18;i2++)
+									{
+										if(grp&Math.pow(2,i2))
+										{
+											y=0;
+											var cur_group_name;
+											Pspez2=(flag&flagKwp?0:1);
+											cur_group_name=AnlagenGrp[i2-1][0];
+											for(i3=1;i3<=AnlagenGrp[i2-1][1].length;i3++)
+											{
+												wrI=AnlagenGrp[i2-1][1][i3-1];
+												data=enumData(m[i],wrI);
+												if((WRInfo[wrI-1][11]==2)&&(WRInfo[wrI-1][14]==2))
+												{
+													y+=minVerbrauch;
+												}
+												else
+												{
+													y+=data[1];
+												}
+												if(flag&flagErtrag)
+												{
+													if(data[1+WRInfo[wrI-1][5]+1]!=null)
+													{
+														if((wrI!=ErtragsZaehler)&&(wrI!=Verbrauchszaehler))
+														{
+															yErtrag+=data[1+WRInfo[wrI-1][5]+1];
+														}
+													}
+												}
+												if(flag&flagUdc)
+												{
+													if(data[1+WRInfo[wrI-1][5]+1+0+1]!=null)
+													{
+														if(WRInfo[wrI-1][5]>1)
+														{
+															for(var s=0;s<WRInfo[wrI-1][5];s++)
+															{
+																if(WRInfo[wrI-1][7][s]!=0)
+																{
+																	mU+=data[1+WRInfo[wrI-1][5]+1+s+1];
+																	cU++;
+																}
+															}
+														}
+														else
+														{
+															mU+=data[1+WRInfo[wrI-1][5]+1+0+1];
+															cU++;
+														}
+													}
+												}
+												if(isTemp&&flag&flagTemp&&WRInfo[wrI-1][12]&&!(inv&Math.pow(2,31)))
+												{
+													if(data[1+WRInfo[wrI-1][5]*2+1+1]!=null)
+													{
+														mC+=data[1+WRInfo[wrI-1][5]*2+1+1];
+														cC++;
+													}
+												}
+												if(flag&flagKwp)
+													Pspez2+=WRInfo[wrI-1][2];
+											}
+											if(aWRY[i2-1]>0&&(aWRX[i2-1]>=D.left&&x<=D.right))
+											{
+												if(flag&flagKwp)
+												{
+													new Line(aWRX[i2-1],D.ScreenY(aWRY[i2-1]/Pspez2),x,D.ScreenY(y/Pspez2),WRCol[i2-1],2,cur_group_name+" - "+runden(y/Pspez2*1000,0)+" W/Wp - "+formatDT(dt))
+												}
+												else
+												{
+													new Line(aWRX[i2-1],D.ScreenY(aWRY[i2-1]/Pspez2),x,D.ScreenY(y/Pspez2),WRCol[i2-1],2,cur_group_name+" - "+y+" W - "+formatDT(dt))
+												}
+											}
+											aWRX[i2-1]=x
+											aWRY[i2-1]=y
+										}
+									}
+								}
+								if((flag&flagErtrag)&&!(inv&Math.pow(2,31))&&yErtrag>0)
+								{
+									aXErtrag[aXErtrag.length]=x;
+									aYErtrag[aYErtrag.length]=yErtrag;
+									aDErtrag[aDErtrag.length]=dt;
+								}
+								if(cU>0)
+								{
+									aXU[aXU.length]=x;
+									aYU[aYU.length]=new Array(1);
+									aDU[aDU.length]=dt;
+									aYU[aYU.length-1][0]=mU/cU;
+									if(aYU[aYU.length-1][0]>UMax)
+										UMax=aYU[aYU.length-1][0];
+								}
+								if(isTemp&&cC>0)
+								{
+									aXC[aXC.length]=x;
+									if(ISOCode=="US")
+										mC=mC*9/5+32;
+									aYC[aYC.length]=mC/cC;
+									aDC[aDC.length]=dt;
+									if(aYC[aYC.length-1]>CMax)
+										CMax=aYC[aYC.length-1];
+								}
+							}
+							else if(cntWR==1)
+							{
+								if(debugdone2==false)
+								{
+									debugdone2=true;
+								}
+								data=enumData(m[i],wrTreffer);
+								if((sensor&1)&&wrSensor!=-1)
+								{
+									var y_nstrings=WRInfo[wrTreffer-1][5];
+									var y_smodfield;
+									if(y_nstrings==1)y_smodfield=WRInfo[wrTreffer-1][3];
+									y=0;
+									yGesamt=0;
+									if(WRInfo[wrTreffer-1][11]==2&&WRInfo[wrTreffer-1][14]==0&&y_smodfield!=0)
+									{
+										yGesamt=1.05*data[1]*WRInfo[wrTreffer-1][13]/1000;
+										if(aSensor[y_smodfield-1]!=0)
+										{
+											y=yGesamt;
+										}
+									}
+									else
+									{
+										for(var s=0;s<y_nstrings;s++)
+										{
+											if(y_nstrings>1)y_smodfield=WRInfo[wrTreffer-1][7][s];
+											if(y_smodfield==0)continue;
+											yGesamt+=data[2+s]*WRInfo[wrTreffer-1][13]/1000;
+											if(aSensor[y_smodfield-1]!=0)
+											{
+												y+=data[2+s]*WRInfo[wrTreffer-1][13]/1000;
+											}
+										}
+									}
+									if(xOld>0)
+									{
+										new Line(xOld,D.ScreenY(yOld),x,D.ScreenY(y/Pspez),sds_gelb,2,runden(y,0)+" W"+" - "+formatDT(dt));
+										if(yGesamt!=y)
+										{
+											new Line(xOld,D.ScreenY(yGesamtOld),x,D.ScreenY(yGesamt/Pspez),sds_gelb,2,getText(LBL_GESAMT)+":"+runden(y,0)+" W"+" - "+formatDT(dt));
+										}
+									}
+									xOld=x;
+									yOld=y/Pspez;
+									yGesamtOld=yGesamt/Pspez;
+								}
+								else
+								{
+									y=data[1];
+									if(flag&flagKwp)y=y/(Pspez2);
+									if(x1>=D.left&&x2<=D.right)
+									{
+										if(flag&flagEEG)
+										{
+											if(y==0)
+											{
+												new Bar(x1,D.ScreenY(minVerbrauch/Pspez),x2,D.ScreenY(0),sds_rot,"",sds_white,"Verbrauch: "+runden(minVerbrauch/Pspez,0)+yTxt+" - "+formatDT(dt));
+											}
+											else if(y>minVerbrauch)
+											{
+												new Bar(x1,D.ScreenY(minVerbrauch/Pspez),x2,D.ScreenY(0),sds_eeg,"",sds_white,"Verbrauch: "+runden(minVerbrauch/Pspez,0)+yTxt+" - "+formatDT(dt));
+												new Bar(x1,D.ScreenY(y/Pspez),x2,D.ScreenY(minVerbrauch/Pspez),sds_gelb,"",sds_white,"Ertrag: "+runden(y/Pspez,0)+yTxt+" - "+formatDT(dt));
+												if(!((grpMode&&grp&Math.pow(2,19))||(invMode&&inv&Math.pow(2,31))))dVerbrauch+=minVerbrauch;
+											}
+											else
+											{
+												new Bar(x1,D.ScreenY(y/Pspez),x2,D.ScreenY(0),sds_eeg,"",sds_white,"Ertrag: "+runden(y/Pspez,0)+yTxt+" - "+formatDT(dt));
+												new Bar(x1,D.ScreenY(minVerbrauch/Pspez),x2,D.ScreenY(y/Pspez),sds_rot,"",sds_white,"Verbrauch: "+runden(minVerbrauch/Pspez,0)+yTxt+" - "+formatDT(dt));
+												if(!((grpMode&&grp&Math.pow(2,19))||(invMode&&inv&Math.pow(2,31))))dVerbrauch+=y;
+											}
+										}
+										else
+										{
+											if(flag&flagKwp)
+											{
+												new Bar(x1,D.ScreenY(y/Pspez),x2,D.ScreenY(0),sds_gelb,"",sds_white,runden(y/Pspez,2)+yTxt+" - "+formatDT(dt));
+											}
+											else
+											{
+												new Bar(x1,D.ScreenY(y/Pspez),x2,D.ScreenY(0),sds_gelb,"",sds_white,runden(y/Pspez,0)+yTxt+" - "+formatDT(dt));
+											}
+										}
+									}
+								}
+								if((flag&flagErtrag))
+								{
+									yErtrag=data[1+WRInfo[wrTreffer-1][5]+1]
+									if(yErtrag!=null&&yErtrag>0)
+									{
+										aXErtrag[aXErtrag.length]=x
+										aYErtrag[aYErtrag.length]=yErtrag
+										aDErtrag[aDErtrag.length]=dt
+									}
+								}
+								if((flag&flagUdc)&&data[1+WRInfo[wrTreffer-1][5]+1+0+1]!=null)
+								{
+									aXU[aXU.length]=x
+									aYU[aYU.length]=new Array(WRInfo[wrTreffer-1][5])
+									aDU[aDU.length]=dt
+									aYU[aYU.length-1][0]=data[1+WRInfo[wrTreffer-1][5]+1+0+1]
+									if(aYU[aYU.length-1][0]>UMax)
+										UMax=aYU[aYU.length-1][0]
+								}
+								if(isTemp&&flag&flagTemp&&WRInfo[wrTreffer-1][12]&&data[1+WRInfo[wrTreffer-1][5]*2+1+1]!=null)
+								{
+									aXC[aXC.length]=x
+									var ttemp;
+									ttemp=data[1+WRInfo[wrTreffer-1][5]*2+1+1]
+									if(ISOCode=="US")
+										ttemp=ttemp*9/5+32
+									aYC[aYC.length]=ttemp
+									aDC[aDC.length]=dt
+									if(aYC[aYC.length-1]>CMax)
+										CMax=aYC[aYC.length-1]
+								}
+								if(!(sensor&1)&&WRInfo[wrTreffer-1][5]>1)
+								{
+									for(var s=0;s<WRInfo[wrTreffer-1][5];s++)
+									{
+										if(WRInfo[wrTreffer-1][7][s]!=0)
+										{
+											y=data[2+s]
+											if(aStringY[s]!=null)
+											{
+												if(flag&flagKwp)
+												{
+													Pspez2=WRInfo[wrTreffer-1][9][s]
+												}
+												if(aStringX[s]>=D.left&&x<=D.right)
+												{
+													if(flag&flagKwp)
+													{
+														new Line(aStringX[s],D.ScreenY(aStringY[s]/Pspez2),x,D.ScreenY(y/Pspez2),StringCol[s],2,"String "+(s+1)+": Pdc "+runden(aStringY[s]/Pspez2*1000)+" W - "+formatDT(dt))
+													}
+													else
+													{
+														new Line(aStringX[s],D.ScreenY(aStringY[s]/Pspez2),x,D.ScreenY(y/Pspez2),StringCol[s],2,"String "+(s+1)+": Pdc "+runden(aStringY[s]/Pspez2,0)+" W - "+formatDT(dt))
+													}
+												}
+											}
+											aStringX[s]=x
+											aStringY[s]=y
+											if(flag&flagUdc&&aYU.length>0)
+											{
+												aYU[aYU.length-1][s]=data[1+WRInfo[wrTreffer-1][5]+1+s+1]
+												if(aYU[aYU.length-1][s]>UMax)
+													UMax=aYU[aYU.length-1][s]
+											}
+										}
+									}
+								}
+							}
+						}
+						lDateOld=lDate;
+						i++;
+					}
+					sum=0;
+					eurSum=0;
+					max=0;
+					if(dx>0)
+					{
+						for(i=0;i<da.length;i++)
+						{
+							dt=getWRToken(da[i],0)
+							if(sToday==dt)
+							{
+								for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+								{
+									grpValue=grpData(wrI);
+									data=enumData(da[i],wrI);
+									eurSum+=data[1]*grpValue[1]/10000;
+								}
+							}
+						}
+					}
+					sumWR=new Array(AnzahlWR)
+					for(i=0;i<da.length;i++)
+					{
+						dt=getWRToken(da[i],0)
+						if(sToday==dt)
+						{
+							sumAllWR=0;
+							for(wrI=1;wrI<=AnzahlWR;wrI++)
+							{
+								data=enumData(da[i],wrI);
+								if(WRInfo[wrI-1][11]==0||(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]==0))
+								{
+									sumAllWR+=data[1];
+									sumWR[wrI]=data[1];
+								}
+								else
+								{
+									sumWR[wrI]=0;
+									sumWR[wrI]=data[1];
+								}
+							}
+							if((grpMode&&grp&Math.pow(2,19))||(invMode&&inv&Math.pow(2,31)))
+							{
+								for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+								{
+									if(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0&&cntWR>1)
+										continue
+									data=enumData(da[i],wrI);
+									sum+=data[1];
+									max+=data[2];
+								}
+							}
+							else if(grpMode)
+							{
+								for(grpI=1;grpI<=18;grpI++)
+								{
+									if(grp&Math.pow(2,grpI))
+									{
+										curMax=0
+										for(i2=1;i2<=AnlagenGrp[grpI-1][1].length;i2++)
+										{
+											wrI=AnlagenGrp[grpI-1][1][i2-1]
+											if(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0)
+												continue
+											data=enumData(da[i],wrI);
+											sum+=data[1];
+											curMax+=data[2]
+										}
+										if(curMax>max)
+											max=curMax
+									}
+								}
+							}
+							else
+							{
+								for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+								{
+									if(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0&&cntWR>1)
+										continue
+									data=enumData(da[i],wrI);
+									sum+=data[1];
+									if(data[2]>max)
+										max=data[2];
+								}
+							}
+							break;
+						}
+					}
+					soll=grpSollYearKWP*(sollMonth[today.getMonth()]/nod)/100*getCurAnlagenKWP()
+					ist=sum/soll*100
+					x=D.right
+					if(flag&flagErtrag&&aXErtrag.length>1)
+					{
+						new Line(D.left+2,D.ScreenY(soll/ErtragMax*TagMax),D.right-1,D.ScreenY(soll/ErtragMax*TagMax),fsoll,2,getText(LBL_SOLL)+" "+(Math.floor(soll/100)/10)+" kWh")
+						for(i=0;i<aXErtrag.length-1;i++)
+						{
+							if(aXErtrag[i]>=D.left&&aXErtrag[i+1]<=D.right)
+							{
+								new Line(aXErtrag[i],D.ScreenY(aYErtrag[i]/ErtragMax*TagMax),aXErtrag[i+1],D.ScreenY(aYErtrag[i+1]/ErtragMax*TagMax),aFlagCol[0],2,getText(LBL_ERTRAG)+" "+(Math.floor(aYErtrag[i+1]/100)/10)+" kWh &asymp; "+runden(aYErtrag[i+1]/curAnlagenKWP,2)+" kWh/kWp - "+formatDT(aDErtrag[i]))
+							}
+						}
+						i=0
+						if(aXErtrag[i]+40>D.right)aXErtrag[i]=D.right-40;
+						new Bar(aXErtrag[i]-30,D.ScreenY(aYErtrag[i]/ErtragMax*TagMax)-20,aXErtrag[i]+6,D.ScreenY(aYErtrag[i]/ErtragMax*TagMax)-20,"","<nobr>"+(Math.floor(aYErtrag[i]/100)/10)+" kWh</nobr>",aFlagCol[0])
+						for(i=D.YGrid[0];i<=D.YGrid[2];i+=D.YGrid[1])
+						{
+							y=(i/D.YGrid[2])*ErtragMax*D.YGrid[2]/TagMax
+							new Bar(x+6,D.ScreenY(i)-8,x+6,D.ScreenY(i)+8,"","<nobr>"+(Math.floor(y/1000))+" kWh</nobr>",aFlagCol[0])
+						}
+						x+=70
+					}
+					if(flag&flagUdc&&aXU.length>1)
+					{
+						for(i=0;i<aXU.length-1;i++)
+						{
+							for(i2=0;i2<aYU[i].length;i2++)
+							{
+								if(aXU[i]>=D.left&&aXU[i+1]<=D.right&&(aYU[i+1][i2]>0||aYU[i][i2]>0))
+								{
+									new Line(aXU[i],D.ScreenY(aYU[i][i2]/UMax*TagMax),aXU[i+1],D.ScreenY(aYU[i+1][i2]/UMax*TagMax),aFlagColU[i2],2,"U "+(Math.floor(aYU[i+1][i2]))+" V - "+formatDT(aDU[i]))
+								}
+							}
+						}
+						for(i=D.YGrid[0];i<=D.YGrid[2];i+=D.YGrid[1])
+						{
+							y=(i/D.YGrid[2])*UMax*D.YGrid[2]/TagMax
+							new Bar(x+6,D.ScreenY(i)-8,x+6,D.ScreenY(i)+8,"","<nobr>"+(Math.floor(y))+" V</nobr>",aFlagCol[1])
+						}
+						if(aYU[0].length>1)
+						{
+							for(i=0;i<aYU[0].length;i++)
+							{
+								new Bar(x+6,D.ScreenY(D.YGrid[0])+20+i*17,x+6,D.ScreenY(D.YGrid[0])+40+i*17,"","<nobr>Udc"+(i+1)+"</nobr>",aFlagColU[i])
+							}
+						}
+						x+=60
+					}
+					if(isTemp&&flag&flagTemp&&aXC.length>3)
+					{
+						for(i=1;i<aXC.length-2;i++)
+						{
+							if(aXC[i]>=D.left&&aXC[i+1]<=D.right)
+							{
+								new Line(aXC[i],D.ScreenY(aYC[i]/CMax*TagMax),aXC[i+1],D.ScreenY(aYC[i+1]/CMax*TagMax),aFlagCol[3],2,Math.floor(aYC[i+1])+"\&deg;C - "+formatDT(aDC[i]))
+							}
+						}
+						for(i=D.YGrid[0];i<=D.YGrid[2];i+=D.YGrid[1])
+						{
+							y=(i/D.YGrid[2])*CMax*D.YGrid[2]/TagMax
+							new Bar(x+6,D.ScreenY(i)-8,x+6,D.ScreenY(i)+8,"","<nobr>"+(Math.floor(y))+" "+sTempUnit+"</nobr>",aFlagCol[3])
+						}
+						x+=60
+					}
+					if(sensor&2&&aXM.length>3)
+					{
+						if(MMin>0)
+							MMin=0
+						for(i=1;i<aXM.length-2;i++)
+						{
+							if(aXM[i]>=D.left&&aXM[i+1]<=D.right)
+							{
+								new Line(aXM[i],D.ScreenY((aYM[i]-MMin)/(MMax-MMin)*TagMax),aXM[i+1],D.ScreenY((aYM[i+1]-MMin)/(MMax-MMin)*TagMax),aSensorCol[1],2,Math.floor(aYM[i+1])+"\&deg;C - "+formatDT(aDM[i]))
+							}
+						}
+						for(i=D.YGrid[0];i<=D.YGrid[2];i+=D.YGrid[1])
+						{
+							y=MMin+i/TagMax*(MMax-MMin)
+							new Bar(x+6,D.ScreenY(i)-8,x+6,D.ScreenY(i)+8,"","<nobr>"+(Math.floor(y))+" "+sTempUnit+"</nobr>",aSensorCol[1])
+						}
+						x+=60
+					}
+					if(sensor&4&&aXA.length>3)
+					{
+						if(AMin>0)
+							AMin=0
+						for(i=1;i<aXA.length-2;i++)
+						{
+							if(aXA[i]>=D.left&&aXA[i+1]<=D.right)
+							{
+								new Line(aXA[i],D.ScreenY((aYA[i]-AMin)/(AMax-AMin)*TagMax),aXA[i+1],D.ScreenY((aYA[i+1]-AMin)/(AMax-AMin)*TagMax),aSensorCol[2],2,Math.floor(aYA[i+1])+"\&deg;C - "+formatDT(aDA[i]))
+							}
+						}
+						for(i=D.YGrid[0];i<=D.YGrid[2];i+=D.YGrid[1])
+						{
+							y=AMin+i/TagMax*(AMax-AMin)
+							new Bar(x+6,D.ScreenY(i)-8,x+6,D.ScreenY(i)+8,"","<nobr>"+(Math.floor(y))+" "+sTempUnit+"</nobr>",aSensorCol[2])
+						}
+						x+=60
+					}
+					if((((sensor&4)&&aSensorTyp[2]==3)||sensor&8)&&aXW.length>3)
+					{
+						for(i=1;i<aXW.length-2;i++)
+						{
+							if(aXW[i]>=D.left&&aXW[i+1]<=D.right)
+							{
+								new Line(aXW[i],D.ScreenY(aYW[i]/WMax*TagMax),aXW[i+1],D.ScreenY(aYW[i+1]/WMax*TagMax),aSensorCol[3],2,Math.floor(aYW[i+1])+" km/h - "+formatDT(aDW[i]));
+							}
+						}
+						for(i=D.YGrid[0];i<=D.YGrid[2];i+=D.YGrid[1])
+						{
+							y=i/TagMax*WMax;
+							new Bar(x+6,D.ScreenY(i)-8,x+6,D.ScreenY(i)+8,"","<nobr>"+(Math.floor(y*10)/10)+" km/h</nobr>",aSensorCol[3]);
+						}
+						x+=60;
+					}
+				}
+				function monatXScale(x)
+				{
+					var day,result="";
+					day=new Date(x).getDate();
+					if(day%2==0||day==1||day==nod)
+					{
+						result=""+day;
+					}
+					return result;
+				}
+				function monat()
+				{
+					D.SetBorder(Date.UTC(today.getFullYear(),today.getMonth(),1,0,0,0),Date.UTC(today.getFullYear(),today.getMonth(),nod,23,59,0,0),0,getMaxWRP());
+					D.YScale="function kWYScale";
+					D.XScalePosition="bottom-right";
+					D.XScale="function monatXScale";
+					D.GetXGrid();
+					D.XGridDelta=86400000;
+					D.Draw(sds_dia_bg,sds_black,false);
+					var balken_breite=deltax/nod;
+					var i,i2,x,y,oldY,dt;
+					var dDate;
+					var days=new Array(31);
+					for(i=0;i<31;i++)
+					{
+						days[i]="";
+					}
+					for(i=da.length-1;i>=0;i--)
+					{
+						dt=getWRToken(da[i],0);
+						if(dt.substring(3,8)==sToday.substring(3,8))
+						{
+							dDate=new Date(parseInt(dt.substring(6,8),10)+2000,parseInt(dt.substring(3,5),10)-1,parseInt(dt.substring(0,2),10));
+							x=dDate.getDate();
+							days[x-1]=da[i];
+						}
+					}
+					max=0;
+					min=100000000;
+					i=0;
+					sum=0;
+					eurSum=0;
+					x_tage=0;
+					wtage=0;
+					maxtag=0;
+					mintag=0;
+					maxx=0;
+					minx=100000000;
+					for(j=0;j<31;j++)
+						wdays[j]=null
+					while(i<31)
+					{
+						dt=getWRToken(days[i],0)
+						if(dt.substring(3,8)==sToday.substring(3,8))
+						{
+							x_tage++;
+							datum=new Date(parseInt(dt.substring(6,8),10)+2000,dt.substring(3,5)-1,dt.substring(0,2),14,0,0)
+							x=D.ScreenX(datum);
+							for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+							{
+								grpValue=grpData(wrI);
+								data=enumData(days[i],wrI);
+								eurSum+=data[1]*grpValue[1]/10000;
+							}
+							if((grpMode&&grp&Math.pow(2,19))||(invMode&&inv&Math.pow(2,31)))
+							{
+								y=0
+								for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+								{
+									if(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0&&cntWR>1)
+										continue
+									data=enumData(days[i],wrI);
+									y+=data[1];
+									sum+=data[1];
+								}
+								if(y>max)
+								{
+									max=y
+									maxtag=datum;
+									maxx=x;
+								}
+								if(y<min)
+								{
+									min=y;
+									mintag=datum;
+									minx=x;
+								}
+								if(y>0)
+								{
+									new Bar(x-5,D.ScreenY(y),x+5,D.ScreenY(0),sds_gelb,"",sds_white,runden(y/1000)+" kWh","GoDay("+datum.getFullYear()+","+datum.getMonth()+","+datum.getDate()+")");
+								}
+								wdays[i]=y
+							}
+							y=0
+							oldY=0
+							if(grpMode)
+							{
+								for(i2=1;i2<=18;i2++)
+								{
+									if(grp&Math.pow(2,i2))
+									{
+										grpSum=0
+										for(i3=1;i3<=AnlagenGrp[i2-1][1].length;i3++)
+										{
+											wrI=AnlagenGrp[i2-1][1][i3-1]
+											if(WRInfo[wrI-1][11]==0||(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]==0))
+											{
+												data=enumData(days[i],wrI);
+												y=data[1]
+												grpSum+=y
+											}
+											if(!(grp&Math.pow(2,19)))
+											{
+												if(!(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0&&cntWR>1))
+													sum+=y
+												wdays[i]+=y;
+											}
+										}
+										y=grpSum
+										if(y>0)
+										{
+											new Bar(x-0,D.ScreenY(oldY+y),x+8,D.ScreenY(oldY),WRCol[i2-1],"",sds_white,Math.floor(y/100)/10+" kWh","GoDay("+datum.getFullYear()+","+datum.getMonth()+","+datum.getDate()+")");
+											oldY+=y
+											if(oldY>max)
+												max=oldY
+										}
+									}
+								}
+							}
+							else if(invMode)
+							{
+								for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+								{
+									if(checkInvSel(wrI))
+									{
+										data=enumData(days[i],wrI);
+										y=data[1]
+										if(y>0)
+										{
+											new Bar(x-0,D.ScreenY(oldY+y),x+8,D.ScreenY(oldY),WRCol[getRelIndex(wrI)-1],"",sds_white,Math.floor(y/100)/10+" kWh","GoDay("+datum.getFullYear()+","+datum.getMonth()+","+datum.getDate()+")");
+											oldY+=y
+											if(oldY>max)
+												max=oldY
+										}
+										if(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0&&cntWR>1)
+											continue;
+										if(!(inv&Math.pow(2,31)))
+											sum+=y;
+										wdays[i]+=y;
+									}
+								}
+							}
+						}
+						i++;
+					}
+					soll=grpSollYearKWP*(sollMonth[today.getMonth()]/nod)/100*getCurAnlagenKWP()
+					new Line(D.left+2,D.ScreenY(soll),D.right-1,D.ScreenY(soll),fsoll,2,getText(LBL_TAGESSOLL)+" "+(Math.floor(soll/100)/10)+" kWh")
+					if(offset==0)
+						soll=grpSollYearKWP*(sollMonth[today.getMonth()]/nod*heute.getDate())/100*getCurAnlagenKWP();
+					else
+					{
+						soll=grpSollYearKWP*sollMonth[today.getMonth()]/100*getCurAnlagenKWP();
+					}
+					ist=sum/soll*100;
+				}
+				wtage=heute.getDate();
+				if(istSchaltjahr(today.getFullYear())&&today.getMonth()==1)
+				{
+					wtsoll=grpSollYearKWP*sollMonth[today.getMonth()]/100/28*29/nod*getCurAnlagenKWP();
+				}
+				else
+				{
+					wtsoll=grpSollYearKWP*sollMonth[today.getMonth()]/100/nod*getCurAnlagenKWP();
+				}
+				function jahr()
+				{
+					D.SetBorder(Date.UTC(today.getFullYear(),0,1,0,0,0),Date.UTC(today.getFullYear(),11,31,0,0,0),0,getMaxWRP());
+					D.YScale="function kWYScale"
+					D.XScalePosition="bottom-right"
+					D.XScale=4;
+					D.Draw(sds_dia_bg,sds_black,false);
+					var balken_breite=deltax/12;
+					var i,j,k,x,y,dt;
+					max=0;
+					i=0;
+					sum=0;
+					eurSum=0;
+					maxtag=0;
+					maxx=0;
+					B_Wert=new Array(12);
+					for(j=0;j<12;j++)
+					{
+						B_Wert[j]=new Array(null,0,0,0,0);
+					}
+					while(i<mo.length)
+					{
+						dt=getWRToken(mo[i],0)
+						if(dt.substring(6,8)==sToday.substring(6,8))
+						{
+							k=parseInt(dt.substr(3,2),10)-1;
+							datum=new Date(parseInt(dt.substring(6,8),10)+2000,dt.substring(3,5)-1,16,0,0,0)
+							x=D.ScreenX(datum);
+							for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+							{
+								grpValue=grpData(wrI);
+								data=enumData(mo[i],wrI);
+								eurSum+=data[1]*grpValue[1]/10000;
+								if(offset==0&&(dt.substring(3,5)-1)==heute.getMonth()&&dx>0)
+								{
+									data2=enumData(da[0],wrI)
+									eurSum+=data2[1]*grpValue[1]/10000;
+								}
+							}
+							if((grpMode&&grp&Math.pow(2,19))||(invMode&&inv&Math.pow(2,31)))
+							{
+								y=0
+								for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+								{
+									if(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0&&cntWR>1)
+										continue;
+									data=enumData(mo[i],wrI);
+									y+=data[1];
+									k=parseInt(dt.substr(3,2),10)-1;
+									if(offset==0&&(dt.substring(3,5)-1)==heute.getMonth()&&dx>0)
+									{
+										data2=enumData(da[0],wrI)
+										y+=data2[1];
+										B_Wert[k][2]=y;
+									}
+								}
+								if(y>max)
+								{
+									max=y;
+									maxtag=datum;
+									maxx=x;
+								}
+								if(y>0)
+								{
+									new Bar(x-(balken_breite/2-12),D.ScreenY(y),x+(balken_breite/2-10),D.ScreenY(0),sds_gelb,"",sds_white,runden(y/1000)+" kWh","GoMonth("+datum.getFullYear()+","+datum.getMonth()+")");
+								}
+								B_Wert[k][0]=datum
+								B_Wert[k][2]=y
+							}
+							y=0;
+							oldY=0;
+							oldYY=0;
+							if(grpMode)
+							{
+								for(i2=1;i2<=18;i2++)
+								{
+									if(grp&Math.pow(2,i2))
+									{
+										grpSum=0
+										for(i3=1;i3<=AnlagenGrp[i2-1][1].length;i3++)
+										{
+											wrI=AnlagenGrp[i2-1][1][i3-1];
+											if(WRInfo[wrI-1][11]==0||(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]==0))
+											{
+												data=enumData(mo[i],wrI);
+												y=data[1];
+												grpSum+=data[1];
+												if(!(grp&Math.pow(2,19)))
+												{
+													if(!(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0&&cntWR>1))
+													{
+														sum+=y;
+													}
+												}
+												if(offset==0&&(dt.substring(3,5)-1)==heute.getMonth()&&dx>0)
+												{
+													if(WRInfo[wrI-1][11]==0||(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]==0))
+													{
+														data2=enumData(da[0],wrI)
+														y+=data2[1]
+														grpSum+=data2[1]
+													}
+													if(!(grp&Math.pow(2,19)))
+													{
+														if(!(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0&&cntWR>1))
+															sum+=data2[1]
+													}
+												}
+											}
+										}
+										y=grpSum;
+										if(y>0)
+										{
+											new Bar(x-(balken_breite/2-12)+3,D.ScreenY(oldY+y),x+(balken_breite/2-10)+3,D.ScreenY(oldY),WRCol[i2-1],"",sds_white,Math.floor(y/1000)+" kWh","GoMonth("+datum.getFullYear()+","+datum.getMonth()+")");
+											oldY+=y
+											if(oldY>max)
+											{
+												max=oldY;
+												maxtag=datum;
+												maxx=x;
+											}
+										}
+									}
+								}
+							}
+							else if(invMode)
+							{
+								for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+								{
+									if(checkInvSel(wrI))
+									{
+										if(WRInfo[wrI-1][11]==0||(WRInfo[wrI-1][11]==2))
+										{
+											data=enumData(mo[i],wrI);
+											y=data[1]
+										}
+										if(!(inv&Math.pow(2,31)))
+										{
+											if(!(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0&&cntWR>1))
+												sum+=y
+										}
+										if(offset==0&&(dt.substring(3,5)-1)==heute.getMonth()&&dx>0)
+										{
+											if(WRInfo[wrI-1][11]==0||(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]==0))
+											{
+												data2=enumData(da[0],wrI)
+												y+=data2[1]
+											}
+											if(!(inv&Math.pow(2,31)))
+											{
+												if(!(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0&&cntWR>1))
+													sum+=data2[1];
+											}
+										}
+										if(y>0)
+										{
+											new Bar(x-(balken_breite/2-12)+3,D.ScreenY(oldY+y),x+(balken_breite/2-10)+3,D.ScreenY(oldY),WRCol[getRelIndex(wrI)-1],"",sds_white,Math.floor(y/1000)+" kWh","GoMonth("+datum.getFullYear()+","+datum.getMonth()+")");
+											oldY+=y
+											if(oldY>max)
+											{
+												max=oldY;
+												maxtag=datum;
+												maxx=x;
+											}
+										}
+										B_Wert[k][2]=oldY;
+									}
+								}
+								B_Wert[k][0]=datum;
+							}
+						}
+						i++;
+					}
+					for(i=0;i<12;i++)
+					{
+						datum=new Date(today.getFullYear(),i,16,0,0,0)
+						x=D.ScreenX(datum);
+						y=sollMonth[i]*grpSollYearKWP*getCurAnlagenKWP()/100;
+						wmsoll[i]=y;
+						B_Wert[i][1]=y;
+					}
+					soll=0;
+					if(offset==0)
+					{
+						y=heute.getMonth()+1;
+					}
+					else
+					{
+						y=12;
+					}
+					for(i=0;i<y;i++)
+					{
+						if(datum.getFullYear()<indate.getFullYear())
+						{
+							B_Wert[i][4]=0;
+							soll+=0;
+						}
+						else if(datum.getFullYear()==indate.getFullYear()&&i<indate.getMonth())
+						{
+							B_Wert[i][4]=0;
+							soll+=0;
+						}
+						else if(datum.getFullYear()==indate.getFullYear()&&i==indate.getMonth())
+						{
+							if(heute.getFullYear()==datum.getFullYear()&&i==heute.getMonth())
+							{
+								if(istSchaltjahr(datum.getFullYear())&&i==1)
+								{
+									var abzug=sollMonth[i]/28*29/nod*(heute.getDate()-(indate.getDate()-1));
+									B_Wert[i][4]=(sollMonth[indate.getMonth()]/28*29/nod*heute.getDate())-abzug;
+								}
+								else
+								{
+									var abzug=sollMonth[i]/nod*(indate.getDate()-1);
+									B_Wert[i][4]=(sollMonth[indate.getMonth()]/nod*heute.getDate())-abzug;
+								}
+								soll+=B_Wert[i][4];
+							}
+							else
+							{
+								B_Wert[i][4]=sollMonth[indate.getMonth()]/T_M[indate.getMonth()]*(T_M[indate.getMonth()]-(indate.getDate()-1));
+								soll+=B_Wert[i][4];
+							}
+						}
+						else
+						{
+							if(today.getFullYear()==heute.getFullYear()&&i==heute.getMonth())
+							{
+								if(istSchaltjahr(today.getFullYear())&&i==1)
+								{
+									B_Wert[i][4]=sollMonth[1]/28*29/nod*heute.getDate();
+								}
+								else
+								{
+									B_Wert[i][4]=sollMonth[heute.getMonth()]/nod*heute.getDate();
+								}
+								soll+=B_Wert[i][4];
+							}
+							else
+							{
+								if(istSchaltjahr(today.getFullYear())&&i==1)
+								{
+									B_Wert[i][4]=sollMonth[i]/28*29;
+								}
+								else
+								{
+									B_Wert[i][4]=sollMonth[i];
+								}
+								soll+=B_Wert[i][4];
+							}
+						}
+						B_Wert[i][4]=B_Wert[i][4]*grpSollYearKWP*curAnlagenKWP/100;
+					}
+					soll=soll*grpSollYearKWP*curAnlagenKWP/100;
+					var mo_max=0;
+					esoll=B_Wert[0][1];
+					sum=B_Wert[0][2];
+					for(i=1;i<12;i++)
+					{
+						esoll+=B_Wert[i][1];
+						sum+=B_Wert[i][2];
+					}
+					ist=sum/soll*100;
+					var progSollSum=0;
+					if(offset==0)
+					{
+						y=heute.getMonth()+1;
+						for(i=y-1;i<12;i++)
+						{
+							if(offset==0&&i==y-1)
+								progSollSum+=getSollMonth(heute.getMonth())/nod*(nod-heute.getDate());
+							else
+							{
+								progSollSum+=getSollMonth(i);
+							}
+						}
+					}
+					progSollSum+=sum/getCurAnlagenKWP();
+					prognose="("+getText(LBL_PROGNOSE)+" : "+Math.floor(progSollSum)+" kWh/kWp)";
+					for(i=0;i<12;i++)
+					{
+						datum=new Date(today.getFullYear(),i,16,0,0,0)
+						x=D.ScreenX(datum);
+						if(B_Wert[i][4]!=0)
+						{
+							new Line(x-(balken_breite/1.8-12),D.ScreenY(B_Wert[i][4]),x+(balken_breite/1.8-8),D.ScreenY(B_Wert[i][4]),"fuchsia",1,getText(LBL_SOLL)+" ("+getText(LBL_AUFLAUFEND)+"): "+runden(B_Wert[i][4]/1000)+" kWh &asymp; "+runden(B_Wert[i][4]/curAnlagenKWP)+" kWh/kWp &asymp; "+sollMonth[i]+" %","GoMonth("+datum.getFullYear()+","+i+")");
+						}
+						new Line(x-(balken_breite/1.8-12),D.ScreenY(B_Wert[i][1]),x+(balken_breite/1.8-8),D.ScreenY(B_Wert[i][1]),fsoll,2,getText(LBL_SOLL)+" "+runden(B_Wert[i][1]/1000)+" kWh &asymp; "+runden(B_Wert[i][1]/curAnlagenKWP)+" kWh/kWp &asymp; "+sollMonth[i]+" %","GoMonth("+datum.getFullYear()+","+i+")");
+					}
+				}
+				function getSollMonth(monat)
+				{
+					var wrI,i=0,sum=0,anzahl=0,sumSoll
+					while(i<mo.length)
+					{
+						dt=getWRToken(mo[i],0)
+						if(parseInt(dt.substring(3,5),10)==monat+1&&!(dt.substring(6,8)==sToday.substring(6,8)))
+						{
+							for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+							{
+								if(WRInfo[wrI-1][11]==0||(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]==0))
+								{
+									data=enumData(mo[i],wrI);
+									sum+=data[1];
+									anzahl++;
+								}
+							}
+						}
+						i++;
+					}
+					if(anzahl>0)
+					{
+						sum=sum/anzahl/getCurAnlagenKWP();
+					}
+					sumSoll=grpSollYearKWP/100*sollMonth[monat];
+					if(sum==0||sum<sumSoll*0.8)
+					{
+						sum=sumSoll;
+					}
+					else
+					{
+						sum=(sum*3+sumSoll)/4;
+					}
+					return sum;
+				}
+				function alleJahre()
+				{
+					var i,imax,mindate=99,maxdate=0,dt,delta,xskip=1,dy;
+					var maxWRP=getMaxWRP();
+					if(ye.length>0)
+					{
+						for(i=0;i<ye.length;i++)
+						{
+							dt=getWRToken(ye[i],0);
+							dy=parseInt(dt.substring(6,8),10);
+							if(dy<mindate)
+								mindate=dy;
+							if(dy>maxdate)
+								maxdate=dy;
+						}
+					}
+					else
+					{
+						mindate=6;
+					}
+					delta=maxdate-mindate+1
+					if(delta<=7)
+						maxdate=mindate+6;
+					else if(delta<=10)
+					{
+						maxdate=mindate+9;
+					}
+					else if(delta<=25)
+					{
+						maxdate=mindate+24;
+						xskip=2;
+					}
+					else
+					{
+						maxdate=mindate+48
+						xskip=3
+					}
+					delta=maxdate-mindate+1
+					jahreXScaleIndex=0
+					D.SetBorder(Date.UTC(mindate+2000,0,1,0,0,0),Date.UTC(maxdate+2000+1,0,1,0,0,0,0),0,maxWRP);
+					D.YScale="function kWYScale"
+					D.XScale=2
+					D.XScalePosition="bottom-right"
+					D.GetXGrid()
+					D.XGridDelta=(Date.UTC(maxdate+2000+1,0,1,0,0,0,0)-Date.UTC(mindate+2000,0,1,0,0,0))/delta;
+					D.Draw(sds_dia_bg,sds_black,false);
+					var balken_breite=Math.floor(deltax/(delta))
+					var i,x,y,dt;
+					max=0;
+					i=0;
+					sum=0;
+					eurSum=0;
+					B_Wert=new Array(ye.length)
+					while(i<ye.length)
+					{
+						y=0;
+						dt=getWRToken(ye[i],0);
+						datum=new Date(parseInt(dt.substring(6,8),10)+2000,5,31,0,0,0);
+						soll=0;
+						B_Wert[i]=new Array(null,0,0,0,0);
+						B_Wert[i][1]=0;
+						B_Wert[i][4]=0;
+						for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+						{
+							grpValue=grpData(wrI);
+							data=enumData(ye[i],wrI);
+							eurSum+=data[1]*grpValue[1]/10000;
+							if(datum.getFullYear()==today.getFullYear()&&dx>0)
+							{
+								data2=enumData(da[0],wrI)
+								eurSum+=data2[1]*grpValue[1]/10000;
+							}
+						}
+						if(datum.getFullYear()==indate.getFullYear())
+						{
+							var abzug=0;
+							for(var ix=0;ix<indate.getMonth();ix++)
+							{
+								abzug+=sollMonth[ix];
+							}
+							abzug+=sollMonth[ix]/T_M[ix]*(indate.getDate()-1);
+							y=100-abzug
+							B_Wert[i][1]=y;
+							B_Wert[i][4]=y;
+							if(datum.getFullYear()==today.getFullYear())
+							{
+								var abzug2=0;
+								eysoll=0
+								for(j=0;j<today.getMonth();j++)
+								{
+									eysoll+=sollMonth[j];
+								}
+								eysoll+=(sollMonth[today.getMonth()]/T_M[j]*today.getDate())
+								B_Wert[i][4]=(eysoll-abzug)
+							}
+						}
+						else if(datum.getFullYear()==today.getFullYear())
+						{
+							if(istSchaltjahr(datum.getFullYear()))
+							{
+								B_Wert[i][1]=100+(sollMonth[1]/T_M[1]*29-sollMonth[1])
+							}
+							else
+							{
+								B_Wert[i][1]=100;
+							}
+							var abzug=0;
+							eysoll=0
+							for(j=0;j<today.getMonth();j++)
+							{
+								if(istSchaltjahr(datum.getFullYear())&&j==1)
+								{
+									eysoll+=sollMonth[j]/T_M[j]*29;
+								}
+								else
+								{
+									eysoll+=sollMonth[j];
+								}
+							}
+							eysoll+=(sollMonth[today.getMonth()]/T_M[j]*today.getDate())
+							y=eysoll
+							B_Wert[i][4]=y
+						}
+						else
+						{
+							if(istSchaltjahr(datum.getFullYear()))
+							{
+								y=100+(sollMonth[1]/T_M[1]*29-sollMonth[1])
+							}
+							else
+							{
+								y=100
+							}
+							B_Wert[i][1]=y;
+							B_Wert[i][4]=y;
+						}
+						B_Wert[i][1]=B_Wert[i][1]*grpSollYearKWP*curAnlagenKWP/100
+						B_Wert[i][4]=B_Wert[i][4]*grpSollYearKWP*curAnlagenKWP/100
+						if((grpMode&&grp&Math.pow(2,19))||(invMode&&inv&Math.pow(2,31)))
+						{
+							for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+							{
+								if(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0&&cntWR>1)
+									continue;
+								if(WRInfo[wrI-1][11]==0||(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]==0))
+								{
+									data=enumData(ye[i],wrI);
+									y+=data[1];
+									B_Wert[i][2]=y;
+									sum+=data[1];
+									if(datum.getFullYear()==today.getFullYear()&&dx>0)
+									{
+										data2=enumData(da[0],wrI)
+										y+=data2[1]
+										B_Wert[i][2]=y;
+										sum+=data2[1]
+									}
+								}
+							}
+							if(y>max)
+								max=y
+							if(y>0)
+							{
+								x=D.ScreenX(datum);
+								new Bar(x-(balken_breite/2-balken_breite*.1),D.ScreenY(y),x+(balken_breite/2-balken_breite*.1),D.ScreenY(0),sds_gelb,"",sds_white,runden(y/1000)+" kWh","GoYear("+datum.getFullYear()+")");
+								B_Wert[i][0]=datum;
+							}
+						}
+						y=0
+						oldY=0
+						if(grpMode)
+						{
+							for(i2=1;i2<=18;i2++)
+							{
+								if(grp&Math.pow(2,i2))
+								{
+									grpSum=0
+									for(i3=1;i3<=AnlagenGrp[i2-1][1].length;i3++)
+									{
+										wrI=AnlagenGrp[i2-1][1][i3-1]
+										if(WRInfo[wrI-1][11]==0||(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]==0))
+										{
+											data=enumData(ye[i],wrI);
+											y=data[1]
+											B_Wert[i][2]=y
+											grpSum+=y
+											if(!(grp&Math.pow(2,19)))
+											{
+												if(!(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0&&cntWR>1))
+													sum+=y;
+											}
+											if(datum.getFullYear()==today.getFullYear()&&dx>0)
+											{
+												data2=enumData(da[0],wrI)
+												y+=data2[1]
+												B_Wert[i][2]=y
+												if(!(grp&Math.pow(2,19)))
+												{
+													if(!(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0&&cntWR>1))
+														sum+=data2[1]
+												}
+											}
+										}
+									}
+									y=grpSum
+									if(y>0)
+									{
+										x=D.ScreenX(datum);
+										new Bar(x-(balken_breite/2.2-16),D.ScreenY(oldY+y),x+(balken_breite/2.2-4),D.ScreenY(oldY),WRCol[i2-1],"",sds_white,Math.floor(y/1000)+" kWh","GoMonth("+datum.getFullYear()+","+datum.getMonth()+")");
+										oldY+=y
+										if(oldY>max)
+											max=oldY
+										if(!(inv&Math.pow(2,31)))
+										{
+											ys=grpSollYearKWP*getCurAnlagenKWP()
+											new Bar(x-(balken_breite/1.8-12),D.ScreenY(ys),x+(balken_breite/1.8-10),D.ScreenY(ys-getMaxWRP()/80),"#66FF00","",sds_white,Math.floor(ys/1000)+" kWh","GoMonth("+datum.getFullYear()+","+i+")");
+										}
+									}
+								}
+							}
+						}
+						else if(invMode)
+						{
+							for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+							{
+								if(checkInvSel(wrI))
+								{
+									if(WRInfo[wrI-1][11]==0||(WRInfo[wrI-1][11]==2))
+									{
+										data=enumData(ye[i],wrI);
+										y=data[1];
+										B_Wert[i][2]=y;
+										if(!(inv&Math.pow(2,31)))
+										{
+											sum+=y;
+										}
+										if(datum.getFullYear()==today.getFullYear()&&dx>0)
+										{
+											data2=enumData(da[0],wrI)
+											y+=data2[1];
+											B_Wert[i][2]=y
+											if(!(inv&Math.pow(2,31)))
+											{
+												sum+=data2[1]
+											}
+										}
+									}
+									if(y>0)
+									{
+										x=D.ScreenX(datum);
+										new Bar(x-(balken_breite/2.2-16),D.ScreenY(oldY+y),x+(balken_breite/2.2-4),D.ScreenY(oldY),WRCol[getRelIndex(wrI)-1],"",sds_white,Math.floor(y/1000)+" kWh","GoYear("+datum.getFullYear()+")");
+										oldY+=y;
+										B_Wert[i][0]=datum;
+										B_Wert[i][2]=oldY;
+										if(oldY>max)
+											max=oldY;
+									}
+								}
+							}
+						}
+						i++;
+					}
+					var ye_max=0;
+					esoll=B_Wert[0][4];
+					sum=B_Wert[0][2];
+					for(i=1;i<ye.length;i++)
+					{
+						esoll+=B_Wert[i][4];
+						sum+=B_Wert[i][2];
+						if(B_Wert[i][2]>B_Wert[ye_max][2])
+						{
+							ye_max=i;
+						}
+					}
+					B_Wert[ye_max][3]=1;
+					max=B_Wert[ye_max][2];
+					for(i=0;i<ye.length;i++)
+					{
+						x=D.ScreenX(B_Wert[i][0]);
+						if(!isNaN(B_Wert[i][4])&&B_Wert[i][4]!=0)
+						{
+							new Line(x-(balken_breite/1.8-10),D.ScreenY(B_Wert[i][4]),x+(balken_breite/1.8-11),D.ScreenY(B_Wert[i][4]),"fuchsia",1,getText(LBL_SOLL)+" ("+getText(LBL_AUFLAUFEND)+"): "+runden(B_Wert[i][4]/1000)+" kWh &asymp; "+runden(B_Wert[i][4]/curAnlagenKWP)+" kWh/kWp","GoYear("+B_Wert[i][0].getFullYear()+","+i+")")
+						}
+						new Line(x-(balken_breite/1.8-10),D.ScreenY(B_Wert[i][1]),x+(balken_breite/1.8-11),D.ScreenY(B_Wert[i][1]),fsoll,2,getText(LBL_SOLL)+" "+runden(B_Wert[i][1]/1000)+" kWh","GoMonth("+datum.getFullYear()+","+i+")");
+					}
+				}
+				function vergleichJahre()
+				{
+					xlinks=Date.UTC(2008,0,1,0,0,0);
+					xrechts=Date.UTC(2008,11,31,0,0,0);
+					xdiff=xrechts-xlinks;
+					xfaktor=xdiff/364;
+					D.SetBorder(xlinks,xrechts,0,getMaxWRP(3));
+					D.YScale="function kWYScale";
+					D.XScalePosition="bottom-right";
+					D.XScale=4;
+					D.Draw(sds_dia_bg,sds_black,false);
+					D.GetYGrid();
+					if(yy_diff>4)
+					{
+						yy_diff=4;
+						yy_start=fmt00(yy_stop-4);
+					}
+					var bJahr="";
+					var temp=0;
+					var y;
+					for(i=0;i<=yy_diff;i++)
+					{
+						y=0
+						dt=getWRToken(ye[i],0)
+						datum=new Date(parseInt(dt.substring(6,8),10)+2000,4,31,0,0,0)
+						for(wrI=1;wrI<=AnzahlWR;wrI++)
+						{
+							if(WRInfo[wrI-1][11]==0||(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]==0))
+							{
+								data=enumData(ye[i],wrI);
+								y+=data[1]
+								if(datum.getFullYear()==today.getFullYear()&&dx>0)
+								{
+									data2=enumData(da[0],wrI)
+									y+=data2[1]
+								}
+							}
+						}
+						if(y>temp)
+						{
+							temp=y;
+							bJahr=fmt00(datum.getFullYear()-2000)
+						}
+					}
+					setSollYear();
+					xt_start=145
+					yt_start=165
+					x0=xlinks
+					y0=0
+					new Bar(xt_start,yt_start+(-1)*20,xt_start+75,yt_start+20+(-1)*20,"",getText(LBL_SOLL),fsoll);
+					for(d=1;d<=solldays.length;d++)
+					{
+						x1=Math.ceil(d*xfaktor)+xlinks
+						y1=solldays[d]
+						nxd=new Date(x1)
+						nyd=getText(LBL_SOLL)+" "+fmt00(nxd.getDate())+"."+fmt00(nxd.getMonth()+1)+". : "+runden(y1/1000)+" kWh &asymp; "+runden(y1/AnlagenKWP)+" kWh/kWp"
+						new Line(D.ScreenX(x0),D.ScreenY(y0),D.ScreenX(x1),D.ScreenY(y1),fsoll,1,nyd,"");
+						x0=x1
+						y0=y1
+					}
+					for(ly=0;ly<=yy_diff;ly++)
+					{
+						setYear(ly,fmt00(parseInt(yy_start,10)+ly));
+						if(fmt00(parseInt(yy_start,10)+ly)==bJahr)
+						{
+							LineCol[5-yy_diff-1+ly]=sds_orange
+						}
+						x0=xlinks
+						y0=0
+						xt_start=145
+						yt_start=165
+						new Bar(xt_start,yt_start+ly*20,xt_start+75,yt_start+20+ly*20,"",2000+parseInt(yy_start,10)+ly,LineCol[5-yy_diff-1+ly]);
+						y1=0;
+						for(d=1;d<=days[ly].length;d++)
+						{
+							x1=Math.ceil(d*xfaktor)+xlinks
+							if(days[ly][d]>=0)
+							{
+								y1+=days[ly][d]
+							}
+							nxd=new Date(x1)
+							nyd=fmt00(nxd.getDate())+"."+fmt00(nxd.getMonth()+1)+".20"+fmt00(parseInt(yy_start,10)+ly)+" - "+runden(y1/1000)+" kWh &asymp; "+runden(y1/AnlagenKWP)+" kWh/kWp"
+							if(y1>0)
+							{
+								new Line(D.ScreenX(x0),D.ScreenY(y0),D.ScreenX(x1),D.ScreenY(y1),LineCol[5-yy_diff-1+ly],1,nyd,"GoYear("+(2000+parseInt(yy_start,10)+ly)+")");
+							}
+							x0=x1
+							y0=y1
+						}
+					}
+					var i,x,y,dt;
+					i=0;
+					sum=0
+					B_Wert=new Array(ye.length)
+					while(i<ye.length)
+					{
+						dt=getWRToken(ye[i],0)
+						datum=new Date(parseInt(dt.substring(6,8),10)+2000,5,31,0,0,0)
+						soll=0;
+						B_Wert[i]=new Array(null,0,0,0);
+						B_Wert[i][1]=0;
+						B_Wert[i][4]=0;
+						if(datum.getFullYear()==indate.getFullYear())
+						{
+							var abzug=0;
+							for(var ix=0;ix<indate.getMonth();ix++)
+							{
+								abzug+=sollMonth[ix];
+							}
+							abzug+=sollMonth[ix]/T_M[ix]*(indate.getDate()-1);
+							y=100-abzug
+							B_Wert[i][1]=y;
+							B_Wert[i][4]=y;
+							if(datum.getFullYear()==today.getFullYear())
+							{
+								var abzug2=0;
+								eysoll=0
+								for(j=0;j<today.getMonth();j++)
+								{
+									eysoll+=sollMonth[j];
+								}
+								eysoll+=(sollMonth[today.getMonth()]/T_M[j]*today.getDate())
+								B_Wert[i][4]=(eysoll-abzug)
+							}
+						}
+						else if(datum.getFullYear()==today.getFullYear())
+						{
+							if(istSchaltjahr(datum.getFullYear()))
+							{
+								B_Wert[i][1]=100+(sollMonth[1]/T_M[1]*29-sollMonth[1])
+							}
+							else
+							{
+								B_Wert[i][1]=100;
+							}
+							var abzug=0;
+							eysoll=0
+							for(j=0;j<today.getMonth();j++)
+							{
+								if(istSchaltjahr(datum.getFullYear())&&j==1)
+								{
+									eysoll+=sollMonth[j]/T_M[j]*29;
+								}
+								else
+								{
+									eysoll+=sollMonth[j];
+								}
+							}
+							eysoll+=(sollMonth[today.getMonth()]/T_M[j]*today.getDate())
+							y=eysoll
+							B_Wert[i][4]=y
+						}
+						else
+						{
+							if(istSchaltjahr(datum.getFullYear()))
+							{
+								y=100+(sollMonth[1]/T_M[1]*29-sollMonth[1])
+							}
+							else
+							{
+								y=100
+							}
+							B_Wert[i][1]=y;
+							B_Wert[i][4]=y;
+						}
+						B_Wert[i][1]=B_Wert[i][1]*grpSollYearKWP*curAnlagenKWP/100
+						B_Wert[i][4]=B_Wert[i][4]*grpSollYearKWP*curAnlagenKWP/100
+						if((grpMode&&grp&Math.pow(2,19))||(invMode&&inv&Math.pow(2,31)))
+						{
+							y=0
+							dt=getWRToken(ye[i],0)
+							datum=new Date(parseInt(dt.substring(6,8),10)+2000,5,31,0,0,0)
+							for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+							{
+								if(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0&&cntWR>1)
+									continue
+								data=enumData(ye[i],wrI);
+								y+=data[1]
+								B_Wert[i][2]=y
+								if(datum.getFullYear()==today.getFullYear()&&dx>0)
+								{
+									data2=enumData(da[0],wrI)
+									y+=data2[1]
+									B_Wert[i][2]=y
+								}
+							}
+							if(y>0)
+							{
+								B_Wert[i][0]=datum
+								B_Wert[i][2]=y
+							}
+						}
+						y=0
+						oldY=0
+						dt=getWRToken(ye[i],0)
+						datum=new Date(parseInt(dt.substring(6,8),10)+2000,5,31,0,0,0)
+						if(grpMode)
+						{
+							for(i2=1;i2<=18;i2++)
+							{
+								if(grp&Math.pow(2,i2))
+								{
+									grpSum=0
+									for(i3=1;i3<=AnlagenGrp[i2-1][1].length;i3++)
+									{
+										wrI=AnlagenGrp[i2-1][1][i3-1]
+										data=enumData(ye[i],wrI);
+										y=data[1]
+										B_Wert[i][2]=y
+										grpSum+=y
+										if(!(grp&Math.pow(2,19)))
+										{
+											if(!(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0&&cntWR>1))
+												sum+=y;
+										}
+										if(datum.getFullYear()==today.getFullYear()&&dx>0)
+										{
+											data2=enumData(da[0],wrI)
+											y+=data2[1]
+											B_Wert[i][2]=y
+											if(!(grp&Math.pow(2,19)))
+											{
+												if(!(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0&&cntWR>1))
+													sum+=data2[1]
+											}
+										}
+									}
+									y=grpSum
+									if(y>0)
+									{
+										x=D.ScreenX(datum);
+										if(modus==3)
+										{
+										}
+										oldY+=y
+										B_Wert[i][2]=oldY
+										if(!(inv&Math.pow(2,31)))
+										{
+											B_Wert[i][0]=datum
+										}
+									}
+								}
+							}
+						}
+						else if(invMode)
+						{
+							for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+							{
+								if(checkInvSel(wrI))
+								{
+									data=enumData(ye[i],wrI);
+									y=data[1]
+									B_Wert[i][2]=y
+									if(!(inv&Math.pow(2,31)))
+									{
+										if(!(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0&&cntWR>1))
+											sum+=y;
+									}
+									if(datum.getFullYear()==today.getFullYear()&&dx>0)
+									{
+										data2=enumData(da[0],wrI)
+										y+=data2[1]
+										B_Wert[i][2]=y
+										if(!(inv&Math.pow(2,31)))
+										{
+											if(!(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0&&cntWR>1))
+												sum+=data2[1]
+										}
+									}
+									if(y>0)
+									{
+										x=D.ScreenX(datum);
+										oldY+=y
+										B_Wert[i][2]=oldY
+										if(!(inv&Math.pow(2,31)))
+										{
+											B_Wert[i][0]=datum
+										}
+									}
+								}
+							}
+						}
+						i++;
+					}
+					var ye_max=0
+					esoll=B_Wert[0][4]
+					sum=B_Wert[0][2]
+					for(i=1;i<ye.length;i++)
+					{
+						esoll+=B_Wert[i][4]
+						sum+=B_Wert[i][2]
+						if(B_Wert[i][2]>B_Wert[ye_max][2])
+						{
+							ye_max=i
+						}
+					}
+					B_Wert[ye_max][3]=1
+					max=B_Wert[ye_max][2]
+				}
+				function writeTD(value,width,align,color,tooltip)
+				{
+					document.write("<td");
+					if(width!=null)
+						document.write(" width=\""+width+"\"");
+					if(align!=null)
+						document.write(" align=\""+align+"\"");
+					if(color!=null)
+						document.write(" bgcolor="+color);
+					if(tooltip!=null)
+						document.write(" title="+tooltip+"");
+					document.write(">"+value+"<\/td>");
+				}
+				function writeTABLE_START(height)
+				{
+					document.write("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"");
+					if(height!=null)
+						document.write(" height=\""+height+"\"");
+					document.write(" width=\"100%\">");
+					document.write("<tbody>");
+					document.write("<tr>");
+				}
+				function writeTABLE_END()
+				{
+					document.write("<\/tr>");
+					document.write("<\/tbody>");
+					document.write("<\/table>");
+				}
+				function calcStatus()
+				{
+					var i,i2,f1,f2,cnt=0,found,bez="",bez2="",ret=new Array(2);
+					f1=new Array(AnzahlWR);
+					f2=new Array(AnzahlWR);
+					for(i=0;i<AnzahlWR;i++)
+					{
+						found=false
+						if(curStatusCode[i]==255)
+							bez="Offline";
+						else
+						{
+							bez=getToken(StatusCodes[i],curStatusCode[i],",");
+						}
+						for(i2=0;i2<cnt;i2++)
+						{
+							if(f1[i2]==bez)
+							{
+								f2[i2]++;
+								found=true;
+								break;
+							}
+						}
+						if(!found)
+						{
+							f1[cnt]=bez;
+							f2[cnt]=1;
+							cnt++;
+						}
+					}
+					bez2="";
+					if(cnt>1)
+					{
+						for(i=0;i<cnt;i++)
+						{
+							if(i>0)
+								bez2+=", ";
+							if(f2[i]==1)
+								bez2+=f1[i];
+							else
+							{
+								bez2+=f2[i]+"x"+f1[i];
+							}
+						}
+					}
+					else
+					{
+						bez2=f1[0];
+					}
+					ret[0]=bez2;
+					found=false;
+					for(i=0;i<AnzahlWR;i++)
+					{
+						if(curFehlerCode[i]!=0)
+						{
+							bez=getToken(FehlerCodes[i],curFehlerCode[i],",");
+							found=true;
+						}
+					}
+					if(!found)
+						bez="";
+					ret[1]=bez;
+					return ret;
+				}
+		</script>
+		<div style="position: absolute; top: 440px;">
+			<table style="text-align: left; font-weight: bold; width: 800px;"border="0"cellpadding="0"cellspacing="0">
+				<tbody>
+					<tr>
+						<td style="text-align: center;">
+							<script type="text/JavaScript">
+									if(modus==0&&cntWR==1&&WRInfo[wrTreffer-1][5]>1)
+									{
+										if(WRInfo[wrTreffer-1][5]>=2)
+										{
+											if(WRInfo[wrTreffer-1][7][0]!=0)
+												document.write(WRInfo[wrTreffer-1][6][0]+" <img src='Pictures/string1.png'>&nbsp;&nbsp;&nbsp;")
+											if(WRInfo[wrTreffer-1][7][1]!=0)
+												document.write(WRInfo[wrTreffer-1][6][1]+" <img src='Pictures/string2.png'>&nbsp;&nbsp;&nbsp;")
+										}
+										if(WRInfo[wrTreffer-1][5]==3)
+										{
+											if(WRInfo[wrTreffer-1][7][2]!=0)
+												document.write(WRInfo[wrTreffer-1][6][2]+" <img src='Pictures/string3.png'>&nbsp;&nbsp;&nbsp;")
+										}
+									}
+							</script>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<script type="text/JavaScript">
+					if(modus==0&&cntWR==1&&WRInfo[wrTreffer-1][5]>1)
+						document.write(WRInfo[wrTreffer-1][5]!=0?"<br/>":"")
+			</script>
+			<script type="text/JavaScript">
+					var localPac=0,localPacNoS0=0,localPdc=0
+			</script>
+			<table bgcolor="#CED1FF" border="1" cellpadding="1" cellspacing="0" frame="border" rules="cols" width="750">
+				<tbody>
+					<tr bgcolor="#A59BC0">
+						<td width="50%">
+							<h1>
+								<script type="text/JavaScript">
+										document.write(getText(LBL_MOMENTAN))
+								</script>
+							</h1>
+						</td>
+						<td width="50%">
+							<h1>
+								<script type="text/JavaScript">
+										document.write(desc[modus])
+								</script>
+							</h1>
+						</td>
+					</tr>
+					<td>
+						<table border="0" cellpadding="0"cellspacing="0"width="100%">
+							<tbody>
+								<tr style="font-weight:bold;">
+									<td width="5%"></td>
+									<td width="40%">
+										<script type='text/JavaScript'>
+												document.write(getText(LBL_EINSPEISELSTG))
+										</script>
+									</td>
+									<td align="right"width="40%">
+										<script type="text/JavaScript">
+												if(mi>0)
+												{
+													for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+													{
+														if(WRInfo[wrI-1][11]==1||(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0&&cntWR>1))
+															continue
+														if(curStatusCode[wrI-1]!=255)
+														{
+															data=enumData(m[0],wrI);
+															localPac+=data[1]
+															if(WRInfo[wrI-1][11]==0)
+															{
+																localPacNoS0+=data[1]
+															}
+														}
+													}
+												}
+												if(localPacNoS0!=localPac&&localPacNoS0!=0)
+												{
+													document.write(localPac+"("+localPacNoS0+")");
+												}
+												else
+												{
+													document.write(localPac);
+												}
+										</script>
+									</td>
+									<td align="right"	width="12%">
+										W
+									</td>
+									<td width="3%"></td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+					<script type="text/JavaScript">
+							document.write("<\/td><td>")
+							writeTABLE_START("","font-weight:bold;")
+							writeTD(" ","5%");
+							writeTD(getText(LBL_ERTRAG),"40%","",sds_gelb);
+							if(inv&Math.pow(2,31)||modus>0)
+							{
+							}
+							else
+							{
+								sum=0
+								for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+								{
+									sum+=sumWR[wrI];
+								}
+							}
+							if(isNaN(sum))sum=0;
+							writeTD(modus==0?runden(sum/1000,2):runden(sum/1000,2),"33%","right",sds_gelb);
+							writeTD("kWh","19%","right",sds_gelb);
+							writeTD(" ","3%");
+							writeTABLE_END();
+							document.write("<\/td><\/tr><tr><td>")
+					</script>
+					<table border="0" cellpadding="0" cellspacing="0" height="15" width="100%">
+						<tbody>
+							<tr>
+								<td width="5%"></td>
+								<td width="40%">
+									<script type="text/JavaScript">
+											if(cntWR==1&&WRInfo[wrTreffer-1][5]>1)
+											{
+												if(WRInfo[wrTreffer-1][5]==2)
+													document.write(getText(LBL_GENERATOR)+" P1,2")
+												else
+												{
+													document.write(getText(LBL_GENERATOR)+" P1,2,3")
+												}
+											}
+											else
+											{
+												document.write(getText(LBL_GENLSTG)+" Pdc")
+											}
+									</script>
+								</td>
+								<td width="40%">
+									<table border="0" cellpadding="0" cellspacing="0" width="100%">
+										<tbody>
+											<tr>
+												<td align="right"width="33%">
+													<script type="text/JavaScript">
+															if(cntWR==1&&WRInfo[wrTreffer-1][5]>=3&&curStatusCode[wrTreffer-1]<255)
+															{
+																data=enumData(m[0],wrTreffer);
+																localPdc+=data[2]
+																document.write(data[2])
+															}
+															else
+															{
+																document.write("")
+															}
+													</script>
+												</td>
+												<td align="right"width="33%">
+													<script type="text/JavaScript">
+															if(cntWR==1&&WRInfo[wrTreffer-1][5]>=2&&curStatusCode[wrTreffer-1]<255)
+															{
+																data=enumData(m[0],wrTreffer);
+																if(WRInfo[wrTreffer-1][5]==2)
+																{
+																	localPdc+=data[2]
+																	document.write(data[2])
+																}
+																else
+																{
+																	localPdc+=data[3]
+																	document.write(data[3])
+																}
+															}
+															else
+															{
+																document.write("")
+															}
+													</script>
+												</td>
+												<td align="right"width="33%">
+													<script type="text/JavaScript">
+															if(cntWR==1&&WRInfo[wrTreffer-1][5]>=2&&curStatusCode[wrTreffer-1]!=255)
+															{
+																data=enumData(m[0],wrTreffer);
+																if(WRInfo[wrTreffer-1][5]==2)
+																{
+																	localPdc+=data[3];
+																	document.write(data[3]);
+																}
+																else
+																{
+																	localPdc+=data[4];
+																	document.write(data[4]);
+																}
+															}
+															else
+															{
+																var wrI,i;
+																localPdc=0;
+																for(wrI=getStartIndex();isEndIndex()==false;wrI=getNextIndex())
+																{
+																	if(WRInfo[wrI-1][11]==1||(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]>0&&cntWR>1))
+																		continue;
+																	if(curStatusCode[wrI-1]!=255)
+																	{
+																		data=enumData(m[0],wrI);
+																		for(i=1;i<=WRInfo[wrI-1][5];i++)
+																			localPdc+=data[1+i];
+																	}
+																}
+																if(localPdc>localPacNoS0||localPdc==0)
+																{
+																	document.write(localPdc);
+																}
+																else
+																{
+																	document.write("---");
+																}
+															}
+													</script>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<script type="text/JavaScript">
+											document.write("<\/td>");
+											writeTD("W","12%","right");
+											writeTD(" ","3%");
+											writeTABLE_END();
+											document.write("<\/td><td>");
+											writeTABLE_START();
+											if(Verguetung!=0&&ShowCredit!=0&&!isNaN(Verguetung))
+											{
+												writeTD(" ","5%");
+												writeTD(" ","40%");
+												e=eurSum/1000;
+												writeTD(runden(e,2),"33%","right");
+												writeTD(Currency,"19%","right");
+												writeTD(" ","3%");
+											}
+											writeTABLE_END();
+											document.write("<\/td><\/tr><tr><td>");
+											document.write("<\/td><\/tr><tr><td>");
+											writeTABLE_START("15");
+											writeTD(" ","5%");
+											writeTD(getText(LBL_WG),"45%");
+											var e=0;
+											if(localPdc!=0)
+												e=localPacNoS0/localPdc*100;
+											if(e<98.0)
+												writeTD(runden(e),"35%","right");
+											else
+											{
+												writeTD(">98","35%","right");
+											}
+											writeTD("%","12%","right");
+											writeTD(" ","3%");
+											writeTABLE_END();
+											document.write("<\/td><td>")
+											writeTABLE_START();
+											writeTD(" ","5%");
+											writeTD(getText(LBL_ERTRAG_SPEZ),"40%");
+											if(isNaN(sum))sum=0;
+											writeTD(runden(sum/getCurAnlagenKWP(),2),"33%","right");
+											writeTD("kWh/kWp","19%","right");
+											writeTD(" ","3%");
+											writeTABLE_END()
+											document.write("<\/td><\/tr><tr><td>")
+											writeTABLE_START()
+											writeTD(" ","5%");
+											writeTD(getText(LBL_STATUS),"15%");
+											var status;
+											status=calcStatus();
+											writeTD(status[0],"65%","right");
+											writeTD(" ","15%");
+											writeTABLE_END()
+											document.write("<\/td><td>")
+											writeTABLE_START()
+											writeTD(" ","5%");
+											writeTD(getText(LBL_MAXIMALWERT),"40%","",sds_orange);
+											if(modus==0&&flag&flagKwp)
+											{
+												writeTD(runden(max/Pspez,2),"33%","right",sds_orange);
+												writeTD("kW/kWp","19%","right",sds_orange);
+											}
+											else
+											{
+												writeTD(modus==0?max:runden(max/1000),"33%","right",sds_orange);
+												writeTD(modus==0?"W":"kWh","19%","right",sds_orange);
+											}
+											writeTD(" ","3%");
+											writeTABLE_END();
+											document.write("<\/td><\/tr><tr><td>");
+											writeTABLE_START();
+											writeTD(" ","5%");
+											writeTD(getText(LBL_FEHLER),"15%");
+											if(status[1]=="")
+												status[1]="----"
+											writeTD(status[1],"60%","right");
+											writeTD(" ","15%");
+											writeTABLE_END();
+											document.write("<\/td><td>");
+											writeTABLE_START();
+											writeTD(" ","5%");
+											if(modus==5||modus==6)
+											{
+												writeTD(getText(LBL_IST)+" &Oslash;","40%","","fuchsia");
+												writeTD(runden(DurchschnittA/1000,2),"33%","right","fuchsia");
+												writeTD("kWh/"+getText(LBL_TAG),"19%","right","fuchsia");
+											}
+											writeTD(modus<=2?getText(LBL_SOLL)+" "+(offset==0&&modus<=2?" ("+getText(LBL_AUFLAUFEND)+")":"")+" ":"","40%");
+											if(isNaN(soll))soll=0;
+											writeTD(modus<=2?runden(soll/1000,2):"","33%","right");
+											writeTD(modus<=2?"kWh":"","19%","right");
+											writeTD(" ","3%");
+											writeTABLE_END();
+											document.write("<\/td><\/tr><\/tbody><tbody><tr><td>");
+											if(modus==0&&flag&flagEEG)
+											{
+												writeTABLE_START();
+												writeTD(" ","5%");
+												writeTD(getText(LBL_EEG_QUOTE),"","",sds_eeg);
+												gesVerbrauch>0?writeTD(runden((istVerbrauchGedeckt/istErtragACSum)*100,2),"40%","right",sds_eeg):writeTD(runden(0,2),"40%","right",sds_eeg)
+												writeTD("%","12%","right",sds_eeg);
+												writeTD(" ","3%");
+												writeTABLE_END();
+											}
+											document.write("<\/td><td>");
+											writeTABLE_START();
+											writeTD(" ","5%");
+											if(soll>0)
+											{
+												writeTD(modus<=2?getText(LBL_IST)+" ":"","9%");
+												writeTD(modus<=2?prognose:"","53%","right");
+												if(modus==0)
+												{
+													writeTD(runden(ist),"10%","right");
+												}
+												else
+												{
+													writeTD(modus<=2?runden(ist-100,1,1):"","10%","right");
+												}
+												writeTD(modus<=2?"%":"","19%","right");
+											}
+											writeTD(" ","3%");
+											writeTABLE_END();
+											document.write("<\/td><\/tr>");
+									</script>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</tbody>
+			</table>
+			<div id="Layer21_CO2"style="position: absolute; left: 397px; height: 18px; width: 400px; z-index: 21;">
+				<script type="text/JavaScript">
+						document.write(getText(LBL_CO2)+": ")
+						var i,wrI,co2=0,ct;
+						for(i=0;i<ye.length;i++)
+						{
+							if(ErtragsZaehler)
+							{
+								data=enumData(ye[i],ErtragsZaehler)
+								co2+=data[1]
+								if(i==0&&dx>0)
+								{
+									data2=enumData(da[0],ErtragsZaehler)
+									co2+=data2[1]
+								}
+							}
+							else
+							{
+								for(wrI=1;wrI<=AnzahlWR;wrI++)
+								{
+									if(!(WRInfo[wrI-1][11]==0||(WRInfo[wrI-1][11]==2&&WRInfo[wrI-1][14]==0)))
+										continue
+									data=enumData(ye[i],wrI);
+									co2+=data[1]
+									if(i==0&&dx>0)
+									{
+										data2=enumData(da[0],wrI)
+										co2+=data2[1]
+									}
+								}
+							}
+						}
+						co2=co2/1000*0.7
+						if(co2<10000)
+							document.write(runden(co2)+" kg")
+						else
+						{
+							document.write(runden(co2/1000,2)+" to")
+						}
+				</script>
+			</div>
+			<div id="visu_version"style="position: absolute; left: 5px; height: 18px; width: 400px; z-index: 21;">
+				<script type="text/JavaScript">
+						document.write("<font size=1pt>(visu.html Version: "+visu_version+")</font>")
+				</script>
+			</div>
+			<br/>
+			<br/>
+			<script type="text/JavaScript">
+					var Month=new Array(getText(LBL_MON01),getText(LBL_MON02),getText(LBL_MON03),getText(LBL_MON04),getText(LBL_MON05),getText(LBL_MON06),getText(LBL_MON07),getText(LBL_MON08),getText(LBL_MON09),getText(LBL_MON10),getText(LBL_MON11),getText(LBL_MON12));
+					var tblau=sds_blau;
+					var tgelb=sds_gelb;
+					var torange=sds_orange;
+					var tcolor=tgelb;
+					hdate1=new Date().getFullYear();
+					mdate1=new Date().getMonth();
+					myear=new Date();
+					hyear=today.getFullYear();
+					myear=today.getMonth();
+					hoffset=-(hdate1-hyear)*12;
+					theute=hdate1+"."+mdate1;
+					tclick=hyear+"."+myear;
+					maxyear=0;
+					minyear=0;
+					maxmon=-1;
+					minmon=-1;
+					maxday=0;
+					minday=0;
+					document.write("<p align=left>")
+					if(maxtag!=0)
+					{
+						maxyear=maxtag.getFullYear();
+						maxmon=maxtag.getMonth();
+						maxday=maxtag.getDate();
+					}
+					var Rand=60;
+					if(modus==0)
+					{
+						if(AnzahlString==3)
+						{
+							Rand=0;
+						}
+						else if(AnzahlString==2)
+						{
+							Rand=25;
+						}
+					}
+					document.write("<div id='Layer22_TAB' style='position: absolute; left: "+Rand+"px; height: 18; width: 885px; z-index: 22;'>")
+					if((modus>0&&modus<5&&flag&flag_werte)||(modus==0&&flag&flagMultiStringWR&&MultistringWR==1))
+					{
+						switch(modus)
+						{
+							case 0:
+								if(flag&flagEEG&&eeg_debug==1)
+								{
+									document.write("<b><i><h3>"+getText(LBL_EEG_BILANZ)+"<\/h3><\/i><\/b>")
+								}
+								else
+								{
+									document.write("<b><i><h3>"+getText(LBL_STRINGHEADER)+"<\/h3><\/i><\/b>")
+								}
+								break;
+							case 1:
+								if(mintag!=0)
+								{
+									minyear=mintag.getFullYear();
+									minmon=mintag.getMonth();
+									minday=mintag.getDate();
+								}
+								document.write("<b><i><h3>"+getText(LBL_VISU_TAGESWERTE)+"<\/h3><\/i><\/b>");
+								break;
+							case 2:
+								document.write("<b><i><h3>"+getText(LBL_VISU_MONATSWERTE)+"<\/h3><\/i><\/b>");
+								break;
+							case 3:
+							case 4:
+								document.write("<b><i><h3>"+getText(LBL_VISU_JAHRESWERTE)+"<\/h3><\/i><\/b>");
+								break;
+							default:
+							}
+							document.write("<table border=1 cellpadding=3 cellspacing=3 style=\"border-collapse:collapse\"bordercolor=\"#5779D3\"\" bgcolor="+tcolor+">")
+							document.write("<tbody align='center'>");
+							document.write("<tr>");
+							switch(modus)
+							{
+								case 0:
+									if(flag&flagEEG&&eeg_debug==1)
+									{
+									}
+									else
+									{
+										writeTD("<b>"+getText(LBL_WECHSELRICHTER)+"<\/b>",105);
+									}
+									break;
+								case 1:
+									writeTD("<b>"+getText(LBL_VISU_DATUM)+"<\/b>",105);
+									break;
+								case 2:
+									writeTD("<b>"+today.getFullYear()+"<\/b>",105);
+									break;
+								case 3:
+								case 4:
+									writeTD("<b>"+getText(LBL_JAHR)+"<\/b>",105);
+									break;
+								default:
+							}
+							if(modus==0)
+							{
+								if(flag&flagEEG&&eeg_debug==1)
+								{
+								}
+								else
+								{
+									writeTD("<b>"+getText(LBL_TOP12_ERTRAG_ABSOLUT)+" AC <br/>[kWh]<\/b>",110);
+									writeTD("<b>"+getText(LBL_TOP12_ERTRAG_ABSOLUT)+" DC <br/>[kWh]<\/b>",110);
+									writeTD("<b>"+getText(LBL_WG)+"<br/>[Tag]<\/b>",110);
+									for(var s=0;s<AnzahlString;s++)
+									{
+										writeTD("<b>String "+(s+1)+"<br/>AC<br/>[kWh]<\/b>",110,"",StringCol[s]);
+									}
+								}
+							}
+							else
+							{
+								writeTD("<b>"+getText(LBL_TOP12_ERTRAG_ABSOLUT)+"<br/>[kWh]<\/b>",110);
+								writeTD("<b>"+getText(LBL_TOP12_ERTRAG_SPEZIFISCH)+"<br/> [kWh/kWp]<\/b>",115);
+								if(modus==1)
+								{
+									writeTD("<b>"+getText(LBL_ERTRAG)+" "+getText(LBL_SOLL)+"<br/>[kWh]<\/b>",140);
+								}
+								else
+								{
+									writeTD("<b>"+getText(LBL_SOLL)+" ("+getText(LBL_AUFLAUFEND)+")<br/>[kWh]<\/b>",140);
+								}
+								writeTD("<b>"+getText(LBL_ERTRAG)+"/"+getText(LBL_SOLL)+"<br/>[%]<\/b>",175);
+								document.write("<tr>")
+							}
+							switch(modus)
+							{
+								case 0:
+									if(flag&flagEEG&&eeg_debug==1)
+									{
+										writeTD(getText(LBL_VERBRAUCH_GES),180);
+										writeTD(runden(istVerbrauchGesamt,0)+" Wh",100,"right",sds_rot);
+										document.write("<tr>");
+										writeTD(getText(LBL_Z_ERZEUGT));
+										writeTD(runden(istVerbrauchGedeckt,0)+" Wh","","right",sds_eeg);
+										document.write("<tr>");
+										writeTD(getText(LBL_EEG_QUOTE));
+										istVerbrauchGedeckt>0?writeTD(runden((istVerbrauchGedeckt*100)/(istErtragACSum),2)+" %","","",sds_eeg):writeTD(runden(0,2)+" %","","",sds_eeg);
+									}
+									else
+									{
+										var s;
+										for(wrI=0;wrI<AnzahlWR;wrI++)
+										{
+											document.write("<tr>")
+											if(WRInfo[wrI][11]==0||WRInfo[wrI][11]==2&&WRInfo[wrI][14]==0)
+											{
+												writeTD(WRInfo[wrI][4]+"<br/>"+WRInfo[wrI][1],"","",tcolor,WRInfo[wrI][2]+"&nbsp;Wp&nbsp;"+getText(LBL_GENLSTG).replace(/ /g,"&nbsp;")+"&#x0a;&asymp;&nbsp;"+runden(WRInfo[wrI][2]/curAnlagenKWP*100)+"&#37;&nbsp;"+getText(LBL_PRZT_GESLSTG).replace(/ /g,"&nbsp;"));
+											}
+											if(WRInfo[wrI][11]==2&&WRInfo[wrI][14]==2)
+											{
+												writeTD(WRInfo[wrI][4]+"<br/>"+WRInfo[wrI][1],"","",tcolor);
+											}
+											if(WRInfo[wrI][11]==2&&WRInfo[wrI][14]==1)
+											{
+												writeTD(WRInfo[wrI][4]+"<br/>"+WRInfo[wrI][1],"","",sds_eeg,getText(LBL_COUNTER_YIELD).replace(/ /g,"&nbsp;")+":&nbsp;"+WRInfo[wrI][2].toString()+"&nbsp;Wp&nbsp;");
+											}
+											if(istErtragAC[wrI]>0&&WRInfo[wrI][11]!=1)
+											{
+												if(WRInfo[wrI][11]==2&&WRInfo[wrI][14]==2)
+												{
+													writeTD(runden(istErtragAC[wrI]/1000,2),"","",tcolor);
+												}
+												else if(WRInfo[wrI][11]==2&&WRInfo[wrI][14]==1)
+												{
+													writeTD(runden(istErtragAC[wrI]/1000,2)+"<br/><font size=1pt><i>("+runden(istErtragAC[wrI]/istErtragACSum*100,2)+" %)<\/i><\/font>","","",sds_eeg);
+												}
+												else
+												{
+													writeTD(runden(istErtragAC[wrI]/1000,2)+"<br/><font size=1pt><i>("+runden(istErtragAC[wrI]/istErtragACSum*100,2)+" %)<\/i><\/font>","","",tcolor,"&asymp;&nbsp;"+runden(istErtragAC[wrI]/WRInfo[wrI][2],2)+"kWh/kWp&nbsp;&#13;&#40;&asymp;"+runden(istErtragAC[wrI]/curAnlagenKWP,2)+"&nbsp;kWh/kWp&nbsp;"+getText(LBL_PRZT_GESLSTG).replace(/ /g,"&nbsp;")+"&#41;");
+												}
+												if(WRInfo[wrI][11]==2)
+												{
+													for(s=0;s<(AnzahlString+2);s++)
+													{
+														writeTD("","","","#FFFFFF");
+													}
+												}
+												else
+												{
+													if(istErtragDC[wrI]!=0)
+													{
+														if(sollErtragDC[wrI]!=0)
+														{
+															var abw=100-(istErtragDCMonitored[wrI]<sollErtragDC[wrI]?istErtragDCMonitored[wrI]/sollErtragDC[wrI]*100:sollErtragDC[wrI]/istErtragDCMonitored[wrI]*100);
+															var abws=(istErtragDCMonitored[wrI]<sollErtragDC[wrI]?"-":"+")+runden(abw,1).toString();
+															var col=tcolor;
+															if(abw>=15)
+															{
+																col=istErtragDCMonitored[wrI]<sollErtragDC[wrI]?"red":sds_orange;
+															}
+															writeTD(runden(istErtragDC[wrI]/1000,2)+"<br/><font size=1pt>"+getText(LBL_IRR)+"="+runden(sollErtragDC[wrI]/1000,2)+","+getText(LBL_IST)+"="+runden(istErtragDCMonitored[wrI]/1000,2)+"<br/>("+abws+" %)<\/font>","","",col);
+														}
+														else
+														{
+															writeTD(runden(istErtragDC[wrI]/1000,2),"","",tcolor);
+														}
+														if(istErtragAC[wrI]/istErtragDC[wrI]>0.98)
+														{
+															writeTD(">98 %","","",tcolor);
+														}
+														else
+														{
+															writeTD(runden(istErtragAC[wrI]/istErtragDC[wrI]*100)+" %","","",tcolor);
+														}
+													}
+													else
+													{
+														writeTD("<font size=1pt><i>"+getText(LBL_NO_DATA)+"</i></font>","","","#FFFFFF");
+														writeTD("<font size=1pt><i>"+getText(LBL_NO_DATA)+"</i></font>","","","#FFFFFF");
+													}
+													if(WRInfo[wrI][5]>1)
+													{
+														for(s=0;s<WRInfo[wrI][5];s++)
+														{
+															if(WRInfo[wrI][7][s]!=0)
+															{
+																if(istErtragACStrings[wrI][s]!=0)
+																{
+																	writeTD(WRInfo[wrI][6][s]+"<br/>"+runden(istErtragACStrings[wrI][s]/1000,2)+"<br/><i><font size=1pt> ("+runden(istErtragACStrings[wrI][s]*100/istErtragAC[wrI])+" %)<br/>(\&asymp; "+runden((istErtragDCStrings[wrI][s]/1000),2)+" kWh DC)<\/font><\/i>","","",tcolor,"");
+																}
+																else if(WRInfo[wrI][9][s]==0)
+																{
+																	writeTD("<font size=1pt><i>"+getText(LBL_STRING_POWER_UNDEFINED)+"</i></font>","","","#FFFFFF");
+																}
+																else
+																{
+																	writeTD("<font size=1pt><i>"+getText(LBL_NO_DATA)+"</i></font>","","","#FFFFFF");
+																}
+															}
+														}
+														for(ss=s;ss<AnzahlString;ss++)
+														{
+															writeTD("","","","#FFFFFF");
+														}
+													}
+													else
+													{
+														for(s=0;s<AnzahlString;s++)
+														{
+															writeTD("","","","#FFFFFF");
+														}
+													}
+												}
+											}
+											else
+											{
+												if(WRInfo[wrI][11]!=1)
+												{
+													writeTD(getText(LBL_NO_DATA),"","","#FFC0CB","");
+													for(s=0;s<AnzahlString+2;s++)
+													{
+														writeTD("","","","#FFFFFF");
+													}
+												}
+											}
+										}
+										document.write("<tr>")
+										writeTD("<b>"+getText(LBL_VISU_SUMME)+"<\/b>");
+										if(istErtragACSum==istErtragACSumNoS0||istErtragACSumNoS0==0)
+										{
+											writeTD("<b>"+runden(istErtragACSum/1000,2)+"<\/b>");
+										}
+										else
+										{
+											writeTD("<b>"+runden(istErtragACSum/1000,2)+"<\/b><br\/>("+runden(istErtragACSumNoS0/1000,2)+")");
+										}
+										if(istErtragDCSum!=0)
+										{
+											if(sollErtragDCSum!=0)
+											{
+												var abw=100-(istErtragDCSumMonitored<sollErtragDCSum?istErtragDCSumMonitored/sollErtragDCSum*100:sollErtragDCSum/istErtragDCSumMonitored*100);
+												var abws=(istErtragDCSumMonitored<sollErtragDCSum?"-":"+")+runden(abw,1).toString();
+												var col=tcolor;
+												if(abw>=15)
+												{
+													col=istErtragDCMonitored[wrI]<sollErtragDC[wrI]?"red":sds_orange;
+												}
+												writeTD("<b>"+runden(istErtragDCSum/1000,2)+"</b><br/><font size=1pt>"+getText(LBL_IRR)+"="+runden(sollErtragDCSum/1000,2)+","+getText(LBL_IST)+"="+runden(istErtragDCSumMonitored/1000,2)+"<br/>("+abws+" %)<\/font>","","",col);
+											}
+											else
+												writeTD("<b>"+runden(istErtragDCSum/1000,2)+"<\/b>");
+											if(istErtragACSumNoS0/istErtragDCSum>0.98)
+											{
+												writeTD("<b>>98 %<\/b>","","",tcolor);
+											}
+											else if(istErtragDCSum>0)
+											{
+												writeTD("<b>"+runden(istErtragACSumNoS0/istErtragDCSum*100)+" %<\/b>","","",tcolor);
+											}
+											else
+											{
+												writeTD("<b>"+runden(0,2)+"<\/b>","","",tcolor);
+											}
+										}
+										else
+										{
+											writeTD("","","","#FFFFFF");
+											writeTD("","","","#FFFFFF");
+										}
+										for(s=0;s<AnzahlString;s++)
+										{
+											writeTD("","","","#FFFFFF");
+										}
+									}
+									break;
+								case 1:
+									var tdatum2=new Array(31);
+									akt_tage=0;
+									esum=0;
+									for(i=0;i<31;i++)
+									{
+										if(wdays[i]!=null)
+										{
+											esum=esum+wdays[i];
+											akt_tage++;
+										}
+									}
+									wToday=fmt00(today.getMonth()+1)+"."+fmt00(today.getFullYear()-2000);
+									tdatum1=new Date();
+									tyear=today.getFullYear();
+									tmonth=(today.getMonth()+1);
+									esum=0;
+									esoll=0;
+									for(i=0;i<31;i++)
+									{
+										if(wdays[i]!=null)
+										{
+											esum=esum+wdays[i];
+											tdatum2[i]=new Date(tyear,tmonth,i);
+											toffset=(-Math.floor((tdatum1-tdatum2[i])/86400000))-akt_tage+1;
+											if(theute==tclick)
+												toffset=-(akt_tage-i-1);
+											tcolor=tgelb;
+											writeTD("<a href=visu.html?mode=0\&offset="+toffset+"\&flag="+flag+"\&grp="+grp+"\&inv="+inv+"\&url="+slDaten+"\&sensor="+sensor+">"+fmt00(i+1)+"."+wToday+"<\/a>","","",tcolor);
+											writeTD(runden(wdays[i]/1000,2),"","",tcolor);
+											if(!isNaN(wtsoll))
+											{
+												writeTD(runden(wdays[i]/curAnlagenKWP),"","",tcolor);
+												writeTD(runden(wtsoll/1000,2),"","",tcolor,"&nbsp;&asymp;&nbsp;"+runden(wtsoll/curAnlagenKWP)+"&nbsp;kWh/kWp");
+												wptsoll=wdays[i]/wtsoll*100;
+												if(wptsoll<100)
+													writeTD("<font color=#B30000>"+runden(wptsoll-100,1,1)+"<\/font>","","",tcolor);
+												else
+												{
+													writeTD(runden(wptsoll-100,1,1),"","",tcolor);
+												}
+											}
+											document.write("<\/tr>");
+										}
+									}
+									document.write("<tr>");
+									writeTD("<b>"+getText(LBL_VISU_SUMME)+"<\/b>");
+									writeTD("<b>"+runden(esum/1000)+"<\/b>");
+									if(!isNaN(soll))
+									{
+										writeTD("<b>"+runden(esum/curAnlagenKWP)+"<\/b>");
+										writeTD("<b>"+runden(soll/1000)+"<\/b>");
+										wptsoll=esum/soll*100;
+										if(wptsoll<100)
+											writeTD("<b><font color=#B30000>"+runden(wptsoll-100,1,1)+"%<\/font><\/b>");
+										else
+										{
+											writeTD("<b>"+runden(wptsoll-100,1,1)+"%<\/b>");
+										}
+									}
+									break;
+								case 2:
+									esum=0
+									esoll=0
+									MonHeute=parseInt(heute.getMonth(),10)
+									Jahre=parseInt(heute.getFullYear()-today.getFullYear(),10)
+									if(Jahre>0)
+										MonHeute=11;
+									esum=0
+									esoll=0
+									for(j=0;j<=MonHeute;j++)
+									{
+										if(B_Wert[j][1]!=0)
+										{
+											esum=esum+B_Wert[j][2]
+											esoll=esoll+B_Wert[j][1]
+										}
+									}
+									for(j=0;j<=MonHeute;j++)
+									{
+										if(B_Wert[j][1]!=0)
+										{
+											tcolor=tgelb
+											writeTD("<a href=visu.html?mode=1\&offset=-"+(Jahre*12-j+heute.getMonth())+"\&flag="+flag+"\&grp="+grp+"\&inv="+inv+"\&url="+slDaten+"\&sensor="+sensor+">"+Month[j]+"<\/a>","","",tcolor);
+											writeTD(runden(B_Wert[j][2]/1000),"","",tcolor);
+											if(!isNaN(B_Wert[j][4]))
+											{
+												if(today.getFullYear()>indate.getFullYear()&&today.getFullYear()<heute.getFullYear())
+												{
+													writeTD(runden(B_Wert[j][2]/curAnlagenKWP)+"<i><font size=1pt> ("+runden(B_Wert[j][2]/esum*100)+"%)<\/font><\/i>","","",tcolor);
+													writeTD(runden(B_Wert[j][4]/1000)+"<i><font size=1pt> ("+runden(sollMonth[j])+"%)<\/font><\/i>","","",tcolor,"&nbsp;&asymp;&nbsp;"+runden(B_Wert[j][4]/curAnlagenKWP)+"&nbsp;kWh/kWp");
+												}
+												else
+												{
+													writeTD(runden(B_Wert[j][2]/curAnlagenKWP),"","",tcolor);
+													writeTD(runden(B_Wert[j][4]/1000),"","",tcolor,"&nbsp;&asymp;&nbsp;"+runden(B_Wert[j][4]/curAnlagenKWP)+"&nbsp;kWh/kWp");
+												}
+												wpmsoll=B_Wert[j][2]/B_Wert[j][4]*100
+												if(wpmsoll<100)
+													writeTD("<font color=#B30000>"+runden(wpmsoll-100,1,1)+"<\/font>","","",tcolor);
+												else
+												{
+													writeTD(runden(wpmsoll-100,1,1),"","",tcolor);
+												}
+											}
+											document.write("<\/tr>")
+										}
+									}
+									document.write("<tr>")
+									writeTD("<b>"+getText(LBL_VISU_SUMME)+"<\/b>");
+									writeTD("<b>"+runden(esum/1000)+"<\/b>");
+									if(!isNaN(soll)&&soll!=0)
+									{
+										writeTD("<b>"+runden(esum/curAnlagenKWP)+"<\/b>");
+										writeTD("<b>"+runden(soll/1000)+"<\/b>");
+										wpmsoll=esum/soll*100
+										if(wpmsoll<100)
+										{
+											writeTD("<font color=#B30000><b>"+runden(wpmsoll-100,1,1)+"%<\/b><\/font>");
+										}
+										else
+										{
+											writeTD("<b>"+runden(wpmsoll-100,1,1)+"%<\/b>");
+										}
+									}
+									break;
+								case 3:
+								case 4:
+									for(i=0;i<ye.length;i++)
+									{
+										startyear=today.getFullYear();
+										tcolor=tgelb;
+										writeTD("<a href=visu.html?mode=2\&offset="+(-i)+"\&flag="+flag+"\&grp="+grp+"\&inv="+inv+"\&url="+slDaten+"\&sensor="+sensor+">"+(parseInt(ye[i].substr(6,2),10)+2000)+"<\/a>","","",tcolor);
+										writeTD(runden(B_Wert[i][2]/1000),"","",tcolor);
+										if(!isNaN(B_Wert[i][4]))
+										{
+											writeTD(runden(B_Wert[i][2]/curAnlagenKWP),"","",tcolor);
+											writeTD(runden(B_Wert[i][4]/1000),"","",tcolor,"&nbsp;&asymp;&nbsp;"+runden(B_Wert[i][1]/curAnlagenKWP)+"&nbsp;kWh/kWp");
+											if(B_Wert[i][4]!=0)
+											{
+												wpysoll=B_Wert[i][2]/B_Wert[i][4]*100;
+											}
+											else
+											{
+												wpysoll=0
+											}
+											if(wpysoll<100)
+												writeTD("<font color=#B30000>"+runden(wpysoll-100,1,1)+"<\/font>","","",tcolor);
+											else
+											{
+												writeTD(runden(wpysoll-100,1,1),"","",tcolor);
+											}
+										}
+										document.write("<\/tr>")
+									}
+									tcolor=tgelb
+									document.write("<tr>")
+									writeTD("<b>"+getText(LBL_VISU_SUMME)+"<\/b>");
+									writeTD("<b>"+runden(sum/1000)+"<\/b>");
+									if(!isNaN(esoll)&&esoll!=0)
+									{
+										writeTD("<b>"+runden(sum/curAnlagenKWP)+"<\/b>");
+										writeTD("<b>"+runden(esoll/1000)+"<\/b>");
+										wpysoll=sum*100/esoll;
+										if(wpysoll<100)
+											writeTD("<b><font color=#B30000>"+runden(wpysoll-100,1,1)+"<\/font><\/b>");
+										else
+										{
+											writeTD("<b>"+runden(wpysoll-100,1,1)+"<\/b>");
+										}
+									}
+									break;
+								default:
+								}
+								writeTABLE_END();
+							}
+							document.write("<\/p>")
+							document.write("<br\/><br\/>")
+			</script>
+		</div>
+		<script type="text/JavaScript" src="js/wz_tooltip.js"></script>
+	</body>
+</html>

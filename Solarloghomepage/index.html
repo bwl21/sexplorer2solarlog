@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="keywords" content="SolarLog, SolarLog100, SolarLog400,SolarLog800, Solare Datensysteme, Datenlogger, Solar, Solaranlage, Photovoltaik, Überwachung, Statistik, Auswertung, Online, Internet, Banner, Email, SMS, Störungen"></meta>
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"></meta>
+    <script type="text/javascript">
+function Werteliste (querystring) {
+  if (querystring == '') return;
+  var wertestring = querystring.slice(1);
+  var paare = wertestring.split("&");
+  var paar, name, wert;
+  for (var i = 0; i < paare.length; i++) {
+    paar = paare[i].split("=");
+    name = paar[0];
+    wert = paar[1];
+    name = unescape(name).replace("+", " ");
+    wert = unescape(wert).replace("+", " ");
+    this[name] = wert;
+  }
+}
+var liste = new Werteliste(location.search);
+</script>
+    
+    <script type="text/JavaScript">parent.configScript=liste["config"]</script>
+    <script type="text/JavaScript">document.write("<script type='text/JavaScript' src='" + parent.configScript + "'><\/script>")</script>
+    <script type="text/javascript">
+      document.write("<script type='text/JavaScript' src='"+slDaten+"base_vars.js'><\/script>")
+    </script>
+    <script type="text/javascript">
+      document.write("<title>SolarLog - "+HPTitel+"</title>")
+    </script>
+  </head>
+  <frameset cols="170,*" framespacing="1" frameborder="yes" border="1"/>
+    <frame src="links.html" name="links"/>
+    <frame src="anlageninfo.html" name="visu"/>
+</html>
