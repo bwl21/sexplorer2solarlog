@@ -21,7 +21,7 @@ function Werteliste (querystring) {
 var liste = new Werteliste(location.search);
 </script>
     
-    <script type="text/JavaScript">parent.configScript=liste["config"]</script>
+    <script type="text/JavaScript">parent.configScript=liste["config"] || "config.js"</script>
     <script type="text/JavaScript">document.write("<script type='text/JavaScript' src='" + parent.configScript + "'><\/script>")</script>
     <script type="text/javascript">
       document.write("<script type='text/JavaScript' src='"+slDaten+"base_vars.js'><\/script>")
