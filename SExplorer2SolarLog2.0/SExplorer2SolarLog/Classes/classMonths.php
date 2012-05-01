@@ -8,11 +8,13 @@
  */
  
  /**
-  * $Date: 2012/05/01 10:31:52 $
- * $Id: classMonths.php cc60d8753ddd 2012/05/01 10:31:52 Bernhard $
- * $LocalRevision: 144 $
- * $Revision: cc60d8753ddd $
+ * $RCSfile: classMonths.php $
+ * $Date: 2012/05/01 12:34:06 $
+ * $Id: classMonths.php 2169596c5230 2012/05/01 12:34:06 Bernhard $
+ * $LocalRevision: 146 $
+ * $Revision: 2169596c5230 $
  */
+ 
 /*
   Diese Datei ist ein Teil von InverterData2SolarLog.
 

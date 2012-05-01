@@ -8,12 +8,15 @@
  *                Bernhard Weichel <http://www.weichel21.de>
  * written and tested with PHP 5.4
  */
+ 
  /**
- * $Date: 2012/05/01 10:31:52 $
- * $Id: classInverterDataFactory.php cc60d8753ddd 2012/05/01 10:31:52 Bernhard $
- * $LocalRevision: 144 $
- * $Revision: cc60d8753ddd $
+ * $RCSfile: classInverterDataFactory.php $
+ * $Date: 2012/05/01 12:34:06 $
+ * $Id: classInverterDataFactory.php 2169596c5230 2012/05/01 12:34:06 Bernhard $
+ * $LocalRevision: 146 $
+ * $Revision: 2169596c5230 $
  */
+ 
 
 class InverterDataFactory {
 

@@ -9,12 +9,16 @@
  *
  * Copyright 2012 PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
  *
- *
- * $Date: 2012/05/01 09:31:09 $
- * $Id: update.php dd967cfed769 2012/05/01 09:31:09 Bernhard $
- * $LocalRevision: 140 $
- * $Revision: dd967cfed769 $
  */
+  
+ /**
+ * $RCSfile: update.php $
+ * $Date: 2012/05/01 12:34:06 $
+ * $Id: update.php 2169596c5230 2012/05/01 12:34:06 Bernhard $
+ * $LocalRevision: 146 $
+ * $Revision: 2169596c5230 $
+ */
+ 
 
 /**
  * Program to convert datafiles from SExplorer TLX Solar-inverters into the SolarLog dataformat
