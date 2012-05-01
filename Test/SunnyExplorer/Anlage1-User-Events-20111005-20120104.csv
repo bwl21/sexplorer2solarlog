@@ -1,0 +1,52 @@
+sep=;
+Version CSV1|Tool SE|Linebreaks CR/LF|Delimiter semicolon
+
+DeviceType;DeviceLocation;SusyId;SerNo;TimeStamp;EntryId;EventCode;EventType;Category;Group;Tag
+SB 5000TL-20;SN: 2100530599;78;2100530599;01.12.2011 17:56;1;10010;Event;Info;Gerätekomponenten;Neustart Diagnosesystem
+SB 5000TL-20;SN: 2100530599;78;2100530599;02.12.2011 08:29;12;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;03.12.2011 08:27;50;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;03.12.2011 10:42;52;90;Incoming;Info;Gerät;Netzparameter verriegelt
+SB 5000TL-20;SN: 2100530599;78;2100530599;03.12.2011 10:54;53;90;Outgoing;Info;Gerät;Netzparameter verriegelt
+SB 5000TL-20;SN: 2100530599;78;2100530599;04.12.2011 08:25;66;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;05.12.2011 08:50;82;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;06.12.2011 09:00;108;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;07.12.2011 08:44;132;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;08.12.2011 08:30;148;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;09.12.2011 08:54;170;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;10.12.2011 08:39;179;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;11.12.2011 08:30;204;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;12.12.2011 09:01;223;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;13.12.2011 08:57;245;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;14.12.2011 08:47;261;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;15.12.2011 08:40;277;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;16.12.2011 09:16;295;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;17.12.2011 08:46;314;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;18.12.2011 08:52;327;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;19.12.2011 09:12;352;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;20.12.2011 09:05;367;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;20.12.2011 09:39;369;39;Incoming;Info;DC-Seite;Warten auf DC-Startbedingungen
+SB 5000TL-20;SN: 2100530599;78;2100530599;20.12.2011 09:53;373;39;Outgoing;Info;DC-Seite;Warten auf DC-Startbedingungen
+SB 5000TL-20;SN: 2100530599;78;2100530599;20.12.2011 11:52;381;39;Incoming;Info;DC-Seite;Warten auf DC-Startbedingungen
+SB 5000TL-20;SN: 2100530599;78;2100530599;20.12.2011 13:26;387;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;20.12.2011 13:58;389;39;Incoming;Warning;DC-Seite;Warten auf DC-Startbedingungen
+SB 5000TL-20;SN: 2100530599;78;2100530599;20.12.2011 15:03;396;39;Outgoing;Info;DC-Seite;Warten auf DC-Startbedingungen
+SB 5000TL-20;SN: 2100530599;78;2100530599;21.12.2011 08:59;410;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;22.12.2011 09:01;423;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;23.12.2011 08:54;435;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;24.12.2011 08:39;455;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;25.12.2011 08:42;471;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;26.12.2011 08:57;490;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;27.12.2011 09:09;509;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;28.12.2011 08:47;525;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;29.12.2011 08:45;537;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;29.12.2011 09:19;539;39;Incoming;Info;DC-Seite;Warten auf DC-Startbedingungen
+SB 5000TL-20;SN: 2100530599;78;2100530599;29.12.2011 09:26;543;39;Outgoing;Info;DC-Seite;Warten auf DC-Startbedingungen
+SB 5000TL-20;SN: 2100530599;78;2100530599;30.12.2011 09:05;560;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;31.12.2011 08:59;579;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;01.01.2012 08:42;613;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;01.01.2012 23:06;617;10109;Event;Info;Gerät;Zeitstellung erfolgt / neue Zeit
+SB 5000TL-20;SN: 2100530599;78;2100530599;01.01.2012 23:06;616;10108;Event;Info;Gerät;Zeitstellung erfolgt / alte Zeit
+SB 5000TL-20;SN: 2100530599;78;2100530599;02.01.2012 09:03;634;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;03.01.2012 08:44;650;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;04.01.2012 09:09;678;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;04.01.2012 10:56;679;10102;Event;Info;Gerät;Parameter 'OptiTrac Global Peak eingeschaltet' erfolgreich gesetzt
