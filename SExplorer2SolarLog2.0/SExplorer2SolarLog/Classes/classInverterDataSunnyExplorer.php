@@ -114,10 +114,10 @@ class classInverterDataSunnyExplorer implements classInverterDataInterface {
 	 * 									.
 	 */
 	private $data = array();
-	
-	
+
+
 	function __construct() {
-	    
+
 	}
 
 	/**
@@ -242,7 +242,7 @@ class classInverterDataSunnyExplorer implements classInverterDataInterface {
 						//So lange suchen, bis die Zeile mit dem Datum gefunden wird
 						while (($arr = fgetcsv($handle, 0, DELIMITER)) !== false) {
 							if (!$dateFound) { //Datum Daten suchen
-								$dateFound = $arr[SEXPLORER_DATE_COLUMN - 1] == SEXPLORER_DATE_FORMAT;
+								$dateFound = substr($arr[SEXPLORER_DATE_COLUMN - 1],0,  strlen(SEXPLORER_DATE_FORMAT)) == SEXPLORER_DATE_FORMAT;
 								if ($dateFound) {
 									if (is_null($wrAnz)) {
 										$wrAnz = floor(count($arr) / 2);
