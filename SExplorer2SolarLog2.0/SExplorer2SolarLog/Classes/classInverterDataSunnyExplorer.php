@@ -6,6 +6,15 @@
  * Copyright 2012 PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
  * written and tested with PHP 5.4
  */
+ 
+ /**
+ * $RCSfile: classInverterDataSunnyExplorer.php $
+ * $Date: 2012/05/03 18:05:50 $
+ * $Id: classInverterDataSunnyExplorer.php 49dd51ddfdbf 2012/05/03 18:05:50 Bernhard $
+ * $LocalRevision: 148 $
+ * $Revision: 49dd51ddfdbf $
+ */
+ 
 /*
   Diese Datei ist ein Teil von SExplorer2SolarLog.
 

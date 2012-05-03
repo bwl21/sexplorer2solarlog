@@ -5,6 +5,15 @@
  * Copyright 2012 PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
  * written and tested with PHP 5.4
  */
+ 
+ /**
+ * $RCSfile: classBaseVars.php $
+ * $Date: 2012/05/01 12:33:07 $
+ * $Id: classBaseVars.php 3cfaa24f728a 2012/05/01 12:33:07 Bernhard $
+ * $LocalRevision: 145 $
+ * $Revision: 3cfaa24f728a $
+ */
+ 
 /*
   Diese Datei ist ein Teil von InverterData2SolarLog.
 

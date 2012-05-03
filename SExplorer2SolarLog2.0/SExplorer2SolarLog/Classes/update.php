@@ -1,4 +1,24 @@
-﻿<?php
+<?php
+
+/**
+ * Beschreibung von $RCSfile: update.php $
+ *
+ * Hauptproramm zur Konvertierung von SMA SunnyExplorer nach SolarLog
+ *
+ * @author PhotonenSammler <photonensammler@freenet.de>
+ *
+ * Copyright 2012 PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
+ *
+ */
+  
+ /**
+ * $RCSfile: update.php $
+ * $Date: 2012/05/01 12:34:06 $
+ * $Id: update.php 2169596c5230 2012/05/01 12:34:06 Bernhard $
+ * $LocalRevision: 146 $
+ * $Revision: 2169596c5230 $
+ */
+ 
 
 /**
  * Program to convert datafiles from SExplorer TLX Solar-inverters into the SolarLog dataformat

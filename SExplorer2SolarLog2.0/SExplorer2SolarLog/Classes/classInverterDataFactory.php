@@ -1,5 +1,23 @@
 <?php
 
+/**
+ *
+ * Factory class to select the Inverter frontend solar-inverters to be converted into the SolarLog dataformat
+ * @author Bernhard Weichel (www.weichel21.de)
+ * Copyright 2012 PhotonenSammler <photonensammler@freenet.de> <http://www.photonensammler.eu>
+ *                Bernhard Weichel <http://www.weichel21.de>
+ * written and tested with PHP 5.4
+ */
+ 
+ /**
+ * $RCSfile: classInverterDataFactory.php $
+ * $Date: 2012/05/01 12:34:06 $
+ * $Id: classInverterDataFactory.php 2169596c5230 2012/05/01 12:34:06 Bernhard $
+ * $LocalRevision: 146 $
+ * $Revision: 2169596c5230 $
+ */
+ 
+
 class InverterDataFactory {
 
 
