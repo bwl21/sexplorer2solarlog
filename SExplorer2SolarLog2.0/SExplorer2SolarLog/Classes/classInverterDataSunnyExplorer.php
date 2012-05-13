@@ -9,10 +9,10 @@
  
  /**
  * $RCSfile: classInverterDataSunnyExplorer.php $
- * $Date: 2012/05/03 18:05:50 $
- * $Id: classInverterDataSunnyExplorer.php 49dd51ddfdbf 2012/05/03 18:05:50 Bernhard $
- * $LocalRevision: 148 $
- * $Revision: 49dd51ddfdbf $
+ * $Date: 2012/05/13 20:30:35 $
+ * $Id: classInverterDataSunnyExplorer.php 4dae32f3a0aa 2012/05/13 20:30:35 Bernhard $
+ * $LocalRevision: 150 $
+ * $Revision: 4dae32f3a0aa $
  */
  
 /*
@@ -127,7 +127,16 @@ class classInverterDataSunnyExplorer implements classInverterDataInterface {
 
 	function __construct() {
 
+
+
 	}
+	/**
+	 * delete a value for a date
+	 *
+	 * this is to satisfy the interface. It is not necessary for SunnyExplorer
+	 */
+		public function deleteValue($forDate){}
+		
 
 	/**
 	 * @param timestamp||string||0 $startDate
@@ -436,6 +445,8 @@ class classInverterDataSunnyExplorer implements classInverterDataInterface {
 	public function __destruct() {
 		unset($this->data);
 	}
+	
+
 
 }
 

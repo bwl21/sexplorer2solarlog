@@ -10,10 +10,10 @@
  
  /**
  * $RCSfile: classInverterDataInterface.php $
- * $Date: 2012/05/01 12:34:06 $
- * $Id: classInverterDataInterface.php 2169596c5230 2012/05/01 12:34:06 Bernhard $
- * $LocalRevision: 146 $
- * $Revision: 2169596c5230 $
+ * $Date: 2012/05/13 20:30:35 $
+ * $Id: classInverterDataInterface.php 4dae32f3a0aa 2012/05/13 20:30:35 Bernhard $
+ * $LocalRevision: 150 $
+ * $Revision: 4dae32f3a0aa $
  */
  
 /*
@@ -189,6 +189,16 @@ interface classInverterDataInterface {
 	 * @return string||false
 	 */
 	public function getOldestDate();
+
+
+	/**
+	 * delte a value for a date
+	 * the function is used if more then one inverter used and e.g. the first inverter has data
+	 * and the second inverter has no data
+	 */
+	public function deleteValue($forDate);
+
+
 }
 
 ?>

@@ -9,10 +9,10 @@
  
  /**
  * $RCSfile: classInverterDataDanfoss.php $
- * $Date: 2012/05/01 12:34:06 $
- * $Id: classInverterDataDanfoss.php 2169596c5230 2012/05/01 12:34:06 Bernhard $
- * $LocalRevision: 146 $
- * $Revision: 2169596c5230 $
+ * $Date: 2012/05/13 20:30:35 $
+ * $Id: classInverterDataDanfoss.php 4dae32f3a0aa 2012/05/13 20:30:35 Bernhard $
+ * $LocalRevision: 150 $
+ * $Revision: 4dae32f3a0aa $
  */
  
 /*
@@ -243,10 +243,7 @@ class classInverterData implements classInverterDataInterface {
 			$dataPath = LOCAL_INVERTER_DATA_PATH;
 			foreach ($searchFileNames as $fileName) {
 				$x = glob($dataPath . '/' . $fileName);
-				if ($x === false) {
-					trigger_error(date('Y-m-d H:i:s') . ' fatal error when looking for files in "' . $dataPath . '/' . $searchFileNames . '" in ' . __METHOD__ . ' line ' . __LINE__);
-//					die(3);
-				} elseif(count($x)>0) {
+				if (($x !== false)&&(count($x)>0)) {
 					$fileNames[] = $x;
 				}
 			}
@@ -350,9 +347,24 @@ class classInverterData implements classInverterDataInterface {
 					}
 				}
 			}
-			unset($values, $werte, $werte1, $tempSerNoWr);
+			$c=count($tempSerNoWr);
+			unset($werte, $werte1, $tempSerNoWr);
+			if($c>1){ //Prüfen, ob für alle WR auch Daten vorhanden sind
+				foreach($this->data as $key=>$values){
+					if(count($values)<$c){
+						unset($this->data[$key]);
+					}
+				}
+			}
+			unset($values);
 			self::sort();
 		} //keine neuen Dateien gefunden
+	}
+
+	public function deleteValue($forDate){
+		if(isset($this->data[$forDate])){
+			unset($this->data[$forDate]);
+		}
 	}
 
 	/**
