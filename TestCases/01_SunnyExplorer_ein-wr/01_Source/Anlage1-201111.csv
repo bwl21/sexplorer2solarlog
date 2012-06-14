@@ -1,0 +1,10 @@
+sep=;
+Version CSV1|Tool SE|Linebreaks CR/LF|Delimiter semicolon|Decimalpoint comma|Precision 3
+
+;SN: 2100530599
+;SB 5000TL-20
+;2100530599
+;Gesamtertrag
+;Counter
+dd.MM.yyyy;kWh
+30.11.2011;0,000

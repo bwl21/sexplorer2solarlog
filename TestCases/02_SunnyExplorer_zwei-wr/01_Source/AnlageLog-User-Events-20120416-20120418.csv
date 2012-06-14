@@ -1,0 +1,8 @@
+sep=;
+Version CSV1|Tool SE|Linebreaks CR/LF|Delimiter semicolon
+
+DeviceType;DeviceLocation;SusyId;SerNo;TimeStamp;EntryId;EventCode;EventType;Category;Group;Tag
+SB 4000TL-21;SN: 2130002605;138;2130002605;16.04.2012 07:22;3186;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 4000TL-21;SN: 2130002605;138;2130002605;16.04.2012 20:06;3212;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 4000TL-21;SN: 2130002605;138;2130002605;17.04.2012 06:58;3220;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 4000TL-21;SN: 2130002605;138;2130002605;18.04.2012 06:57;3231;10223;Event;Info;Gerät;Intervallzeit abgelaufen

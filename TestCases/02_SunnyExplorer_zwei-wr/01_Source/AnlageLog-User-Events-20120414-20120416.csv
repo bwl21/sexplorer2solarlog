@@ -1,0 +1,20 @@
+sep=;
+Version CSV1|Tool SE|Linebreaks CR/LF|Delimiter semicolon
+
+DeviceType;DeviceLocation;SusyId;SerNo;TimeStamp;EntryId;EventCode;EventType;Category;Group;Tag
+SB 4000TL-21;SN: 2130002605;138;2130002605;14.04.2012 07:21;3042;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 4000TL-20;SN: 2100071167;78;2100071167;14.04.2012 15:25;8835;8;Incoming;Info;Netzüberwachung;Warten auf Netzspannung
+SB 4000TL-21;SN: 2130002605;138;2130002605;14.04.2012 15:25;3047;801;Incoming;Info;Netzüberwachung;Warten auf Netzspannung
+SB 4000TL-20;SN: 2100071167;78;2100071167;14.04.2012 15:33;8845;10010;Event;Info;Gerätekomponenten;Neustart Diagnosesystem
+SB 4000TL-20;SN: 2100071167;78;2100071167;14.04.2012 15:34;8850;8;Incoming;Info;Netzüberwachung;Warten auf Netzspannung
+SB 4000TL-21;SN: 2130002605;138;2130002605;14.04.2012 15:35;3065;801;Incoming;Info;Netzüberwachung;Warten auf Netzspannung
+SB 4000TL-20;SN: 2100071167;78;2100071167;14.04.2012 15:41;8863;8;Incoming;Warning;Netzüberwachung;Warten auf Netzspannung
+SB 4000TL-21;SN: 2130002605;138;2130002605;14.04.2012 15:41;3078;801;Incoming;Warning;Netzüberwachung;Warten auf Netzspannung
+SB 4000TL-20;SN: 2100071167;78;2100071167;14.04.2012 15:53;8877;8;Incoming;Error;Netzüberwachung;Netzausfall
+SB 4000TL-21;SN: 2130002605;138;2130002605;14.04.2012 15:53;3092;801;Incoming;Error;Netzüberwachung;Netzausfall
+SB 4000TL-21;SN: 2130002605;138;2130002605;14.04.2012 16:16;3115;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 4000TL-21;SN: 2130002605;138;2130002605;14.04.2012 16:39;3141;801;Outgoing;Info;Netzüberwachung;Netzausfall
+SB 4000TL-20;SN: 2100071167;78;2100071167;14.04.2012 16:39;8926;8;Outgoing;Info;Netzüberwachung;Netzausfall
+SB 4000TL-21;SN: 2130002605;138;2130002605;15.04.2012 07:30;3155;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 4000TL-21;SN: 2130002605;138;2130002605;16.04.2012 07:22;3186;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 4000TL-21;SN: 2130002605;138;2130002605;16.04.2012 20:06;3212;10223;Event;Info;Gerät;Intervallzeit abgelaufen

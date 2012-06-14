@@ -1,0 +1,15 @@
+sep=;
+Version CSV1|Tool SE|Linebreaks CR/LF|Delimiter semicolon
+
+DeviceType;DeviceLocation;SusyId;SerNo;TimeStamp;EntryId;EventCode;EventType;Category;Group;Tag
+SB 4000TL-21;SN: 2130002605;138;2130002605;16.02.2012 10:56;2143;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 4000TL-20;SN: 2100071167;78;2100071167;16.02.2012 11:04;8275;39;Incoming;Info;DC-Seite;Warten auf DC-Startbedingungen
+SB 4000TL-21;SN: 2130002605;138;2130002605;16.02.2012 12:10;2147;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 4000TL-21;SN: 2130002605;138;2130002605;16.02.2012 12:48;2148;3901;Incoming;Info;DC-Seite;Warten auf DC-Startbedingungen
+SB 4000TL-20;SN: 2100071167;78;2100071167;16.02.2012 13:13;8282;39;Incoming;Warning;DC-Seite;Warten auf DC-Startbedingungen
+SB 4000TL-20;SN: 2100071167;78;2100071167;16.02.2012 13:30;8289;39;Outgoing;Info;DC-Seite;Warten auf DC-Startbedingungen
+SB 4000TL-21;SN: 2130002605;138;2130002605;16.02.2012 14:25;2154;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 4000TL-21;SN: 2130002605;138;2130002605;16.02.2012 15:02;2156;3901;Incoming;Warning;DC-Seite;Warten auf DC-Startbedingungen
+SB 4000TL-21;SN: 2130002605;138;2130002605;16.02.2012 15:11;2163;3901;Outgoing;Info;DC-Seite;Warten auf DC-Startbedingungen
+SB 4000TL-21;SN: 2130002605;138;2130002605;17.02.2012 09:22;2171;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 4000TL-21;SN: 2130002605;138;2130002605;18.02.2012 08:45;2192;10223;Event;Info;Gerät;Intervallzeit abgelaufen

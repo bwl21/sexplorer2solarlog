@@ -1,0 +1,9 @@
+sep=;
+Version CSV1|Tool SE|Linebreaks CR/LF|Delimiter semicolon
+
+DeviceType;DeviceLocation;SusyId;SerNo;TimeStamp;EntryId;EventCode;EventType;Category;Group;Tag
+SB 5000TL-20;SN: 2100530599;78;2100530599;14.02.2012 08:26;1414;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;14.02.2012 09:00;1416;39;Incoming;Info;DC-Seite;Warten auf DC-Startbedingungen
+SB 5000TL-20;SN: 2100530599;78;2100530599;14.02.2012 09:04;1420;39;Outgoing;Info;DC-Seite;Warten auf DC-Startbedingungen
+SB 5000TL-20;SN: 2100530599;78;2100530599;15.02.2012 08:14;1437;10223;Event;Info;Gerät;Intervallzeit abgelaufen
+SB 5000TL-20;SN: 2100530599;78;2100530599;16.02.2012 08:13;1459;10223;Event;Info;Gerät;Intervallzeit abgelaufen
