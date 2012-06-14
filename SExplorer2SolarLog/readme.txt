@@ -1,4 +1,7 @@
-$Id$
+$Id: readme.txt 1d6569029977 2012/06/14 12:58:00 Bernhard $
+
+This application is no longer matinained.
+use InverterData2SoloarLog instead
 
 Installation:
 =============
