@@ -10,11 +10,11 @@
  */
  
  /**
- * $RCSfile$
- * $Date$
- * $Id$
- * $LocalRevision$
- * $Revision$
+ * $RCSfile: classInverterDataFactory.php $
+ * $Date: 2012/06/16 17:58:52 $
+ * $Id: classInverterDataFactory.php 4cdc2d05a44c 2012/06/16 17:58:52 Bernhard $
+ * $LocalRevision: 160 $
+ * $Revision: 4cdc2d05a44c $
  */
  
 
@@ -32,13 +32,13 @@ class InverterDataFactory {
 		switch ($inverterType) {
 
 			case "SunnyExplorer":
-				include_once 'classInverterDataSunnyExplorer.php';
+				include_once realpath(dirname(__FILE__)).'/classInverterDataSunnyExplorer.php';
 				$inverter = new classInverterDataSunnyExplorer();
 				break;
 					
 			case "Danfoss":
-				include_once 'classInverterDataDannfoss.php';
-				$inverter = new classDannfossData();
+				include_once realpath(dirname(__FILE__)).'/classInverterDataDanfoss.php';
+				$inverter = new classDanfossData();
 				break;
 				 
 			default:

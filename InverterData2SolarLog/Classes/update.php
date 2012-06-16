@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Beschreibung von $RCSfile$
+ * Beschreibung von $RCSfile: update.php $
  *
  * Hauptproramm zur Konvertierung von SMA SunnyExplorer nach SolarLog
  *
@@ -12,11 +12,11 @@
  */
   
  /**
- * $RCSfile$
- * $Date$
- * $Id$
- * $LocalRevision$
- * $Revision$
+ * $RCSfile: update.php $
+ * $Date: 2012/06/16 17:58:52 $
+ * $Id: update.php 4cdc2d05a44c 2012/06/16 17:58:52 Bernhard $
+ * $LocalRevision: 160 $
+ * $Revision: 4cdc2d05a44c $
  */
  
 
@@ -63,16 +63,16 @@
  * for more information visit http://photonensammler.homedns.org/SExplorer2SolarLog
  */
 
-include_once 'Classes/classDays.php';
-include_once 'Classes/classSLDataFile.php'; 
-include_once 'Classes/classMinYYMMDD.php';
-include_once 'Classes/classMin_day.php';
-include_once 'Classes/classBaseVars.php';
-include_once 'Classes/classMinCur.php';
-include_once 'Classes/classYears.php';
-include_once 'Classes/classMonths.php';
-include_once 'Classes/classDaysHist.php';
-include_once 'Classes/classInverterDataFactory.php';
+include_once realpath(dirname(__FILE__)).'/classDays.php';
+include_once realpath(dirname(__FILE__)).'/classSLDataFile.php'; 
+include_once realpath(dirname(__FILE__)).'/classMinYYMMDD.php';
+include_once realpath(dirname(__FILE__)).'/classMin_day.php';
+include_once realpath(dirname(__FILE__)).'/classBaseVars.php';
+include_once realpath(dirname(__FILE__)).'/classMinCur.php';
+include_once realpath(dirname(__FILE__)).'/classYears.php';
+include_once realpath(dirname(__FILE__)).'/classMonths.php';
+include_once realpath(dirname(__FILE__)).'/classDaysHist.php';
+include_once realpath(dirname(__FILE__)).'/classInverterDataFactory.php';
 
 //###########################################################################################################
 //######################## main # Hauptprogramm #############################################################

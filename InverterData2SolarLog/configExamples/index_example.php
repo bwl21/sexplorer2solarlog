@@ -9,15 +9,15 @@
 /*
   Diese Datei ist ein Teil von InverterData2SolarLog.
 
-  InverterData2SolarLog ist Freie Software: Sie k�nnen es unter den Bedingungen
+  InverterData2SolarLog ist Freie Software: Sie können es unter den Bedingungen
   der GNU General Public License, wie von der Free Software Foundation,
-  Version 3 der Lizenz oder jeder sp�teren ver�ffentlichten Version,
+  Version 3 der Lizenz oder jeder spateren veröffentlichten Version,
   weiterverbreiten und/oder modifizieren.
 
-  InverterData2SolarLog wird in der Hoffnung, dass es n�tzlich sein wird, aber
-  OHNE JEDE GEW�HELEISTUNG, bereitgestellt; sogar ohne die implizite
-  Gew�hrleistung der MARKTF�HIGKEIT oder EIGNUNG F�R EINEN BESTIMMTEN ZWECK.
-  Siehe die GNU General Public License f�r weitere Details.
+  InverterData2SolarLog wird in der Hoffnung, dass es nützlich sein wird, aber
+  OHNE JEDE GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite
+  Gewährleistung der MARKTFAHIGKEIT oder EIGNUNG FüR EINEN BESTIMMTEN ZWECK.
+  Siehe die GNU General Public License für weitere Details.
 
   <http://www.gnu.org/licenses/>
 

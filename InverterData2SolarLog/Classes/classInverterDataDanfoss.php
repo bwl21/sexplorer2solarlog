@@ -8,11 +8,11 @@
  */
  
  /**
- * $RCSfile$
- * $Date$
- * $Id$
- * $LocalRevision$
- * $Revision$
+ * $RCSfile: classInverterDataDanfoss.php $
+ * $Date: 2012/06/16 17:58:52 $
+ * $Id: classInverterDataDanfoss.php 4cdc2d05a44c 2012/06/16 17:58:52 Bernhard $
+ * $LocalRevision: 160 $
+ * $Revision: 4cdc2d05a44c $
  */
  
 /*
@@ -69,7 +69,7 @@
 include_once 'config.danfoss.php';
 include_once 'classInverterDataInterface.php';
 
-class classInverterData implements classInverterDataInterface {
+class classDanfossData implements classInverterDataInterface {
 
 	/**
 	 * format of $this->data
