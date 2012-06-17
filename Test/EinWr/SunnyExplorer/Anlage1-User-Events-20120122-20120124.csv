@@ -1,7 +1,0 @@
-sep=;
-Version CSV1|Tool SE|Linebreaks CR/LF|Delimiter semicolon
-
-DeviceType;DeviceLocation;SusyId;SerNo;TimeStamp;EntryId;EventCode;EventType;Category;Group;Tag
-SB 5000TL-20;SN: 2100530599;78;2100530599;22.01.2012 08:39;1024;10223;Event;Info;Gerät;Intervallzeit abgelaufen
-SB 5000TL-20;SN: 2100530599;78;2100530599;23.01.2012 08:30;1040;10223;Event;Info;Gerät;Intervallzeit abgelaufen
-SB 5000TL-20;SN: 2100530599;78;2100530599;24.01.2012 08:55;1050;10223;Event;Info;Gerät;Intervallzeit abgelaufen
