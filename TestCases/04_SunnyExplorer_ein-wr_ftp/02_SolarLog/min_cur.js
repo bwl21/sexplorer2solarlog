@@ -1,1 +1,1 @@
-var Datum = "16.06.12"var Uhrzeit = "19:30:00"var Pac = 384var aPdc = new Array(396,0,0)var curStatusCode = new Array(1)curStatusCode[0] = 1var curFehlerCode = new Array(1)curFehlerCode[0] = 0
+var Datum = "22.06.12"var Uhrzeit = "11:00:00"var Pac = 1164var aPdc = new Array(1200,0,0)var curStatusCode = new Array(1)curStatusCode[0] = 1var curFehlerCode = new Array(1)curFehlerCode[0] = 0
