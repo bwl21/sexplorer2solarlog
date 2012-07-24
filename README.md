@@ -1,5 +1,5 @@
 sexplorer2solarlog
 ==================
 
-main focus is now [InverterData2Solarlog](../InverterData2Solarlog)
+main focus is now [InverterData2SolarLog](../InverterData2SolarLog)
 once more
